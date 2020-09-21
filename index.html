@@ -15,7 +15,7 @@
 
 </head>
 
-<body class="is-preload" onload="includeHTML()">
+<body class="is-preload">
 
     <!-- Wrapper -->
     <div id="wrapper">
@@ -156,10 +156,10 @@
             <div class="inner">
 
                 <!-- Menu -->
-                <div w3-include-html="menu.html"></div>
+                <div w3-include-html="part/menu.html"></div>
 
                 <!-- News -->
-                <div w3-include-html="news.html"></div>
+                <div w3-include-html="part/news.html"></div>
 
                 <!-- Contact -->
                 <div w3-include-html="part/contact.html"></div>
@@ -175,7 +175,7 @@
     </div>
 
     <!-- Scripts -->
-
+    <script>includeHTML();</script>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/browser.min.js"></script>
     <script src="assets/js/breakpoints.min.js"></script>
