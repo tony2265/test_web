@@ -11,11 +11,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
-    <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <script src="assets/js/include.js"></script>
 
 </head>
 
-<body class="is-preload">
+<body class="is-preload" onload="includeHTML()">
 
     <!-- Wrapper -->
     <div id="wrapper">
@@ -159,7 +159,7 @@
                 <div w3-include-html="menu.html"></div>
 
                 <!-- News -->
-                <div w3-include-html="part/news.html"></div>
+                <div w3-include-html="news.html"></div>
 
                 <!-- Contact -->
                 <div w3-include-html="part/contact.html"></div>
@@ -175,10 +175,6 @@
     </div>
 
     <!-- Scripts -->
-    
-    <script>
-        w3.includeHTML();
-    </script>
 
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/browser.min.js"></script>
