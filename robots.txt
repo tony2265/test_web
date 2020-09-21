@@ -1,0 +1,5 @@
+# robots.txt for http://test.dreamcity.studio/
+
+User-agent: *
+Disallow: /
+Disallow: /part/
