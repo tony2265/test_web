@@ -1,0 +1,1 @@
+RewriteRule ^(.*)$ https://www.dreamcity.studio/ [R=301,L]
