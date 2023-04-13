@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Login and Avatar Display</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta
+      name="google-signin-client_id"
+      content="307956122015-he5a5l5lrl1utcha8rnk16ko7n97j8fu.apps.googleusercontent.com"
+    />
+    <style>
+      img {
+        max-width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Google Login and Avatar Display</h1>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <img id="avatar" src="" alt="User Avatar" />
+
+    <script>
+      function onSignIn(googleUser) {
+        var accessToken = googleUser.getAuthResponse().access_token;
+
+        gapi.client.load(
+          "https://people.googleapis.com/$discovery/rest",
+          "v1",
+          function () {
+            var request = gapi.client.people.people.get({
+              resourceName: "people/me",
+              personFields: "photos",
+            });
+
+            request.execute(function (response) {
+              var avatarUrl = response.photos[0].url;
+              document.getElementById("avatar").src = avatarUrl;
+            });
+          },
+          { apiKey: "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", accessToken: accessToken }
+        );
+      }
+    </script>
+  </body>
+</html>
