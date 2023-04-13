@@ -3,32 +3,16 @@
   <head>
     <title>Google Login and Avatar Display</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <style>
-      img {
-        max-width: 200px;
-      }
-    </style>
-  </head>
+
+</head>
   <body>
     <h1>Google Login and Avatar Display</h1>
+
     <div
       id="g_id_onload"
       data-client_id="574577788873-rgrojpv60ea0h4imtl3pdpg0m7q8m7g3.apps.googleusercontent.com"
-      data-context="use"
-      data-ux_mode="popup"
-      data-login_uri="https://test.dreamcity.studio/"
-      data-auto_prompt="false"
-    ></div>
-
-    <div
-      class="g_id_signin"
-      data-type="standard"
-      data-shape="rectangular"
-      data-theme="outline"
-      data-text="signin_with"
-      data-size="large"
-      data-logo_alignment="left"
-    ></div>
+      data-callback="onSignIn1"></div>
+      <div class="g_id_signin" data-type="standard"></div>
 
     目前狀態：
 
