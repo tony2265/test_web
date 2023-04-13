@@ -13,7 +13,7 @@
     <h1>Google Login and Avatar Display</h1>
     <div
       id="g_id_onload"
-      data-client_id="307956122015-he5a5l5lrl1utcha8rnk16ko7n97j8fu.apps.googleusercontent.com"
+      data-client_id="574577788873-rgrojpv60ea0h4imtl3pdpg0m7q8m7g3.apps.googleusercontent.com"
       data-context="use"
       data-ux_mode="popup"
       data-login_uri="https://test.dreamcity.studio/"
@@ -30,5 +30,25 @@
       data-logo_alignment="left"
     ></div>
 
+    目前狀態：
+
+<span id="GOOGLE_STATUS_1"></span>
+
+<script>
+	// 登入之後
+	function onSignIn1(response) {
+		var credential = response.credential,
+			profile = JSON.parse(decodeURIComponent(escape(window.atob(credential.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))))), // 對 JWT 進行解碼
+			target = document.getElementById("GOOGLE_STATUS_1"),
+			html = "";
+
+		html += "ID: " + profile.sub + "<br/>";
+		html += "會員暱稱： " + profile.name + "<br/>";
+		html += "會員頭像：" + profile.picture + "<br/>";
+		html += "會員 email：" + profile.email + "<br/>";
+		target.innerHTML = html;
+	}
+</script>
+    
   </body>
 </html>
