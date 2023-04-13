@@ -2,11 +2,7 @@
 <html>
   <head>
     <title>Google Login and Avatar Display</title>
-    <!-- <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta
-      name="google-signin-client_id"
-      content="307956122015-he5a5l5lrl1utcha8rnk16ko7n97j8fu.apps.googleusercontent.com"
-    /> -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
       img {
         max-width: 200px;
@@ -14,47 +10,25 @@
     </style>
   </head>
   <body>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-
     <h1>Google Login and Avatar Display</h1>
-    <div id="g_id_onload"
-     data-client_id="307956122015-he5a5l5lrl1utcha8rnk16ko7n97j8fu.apps.googleusercontent.com"
-     data-context="use"
-     data-ux_mode="popup"
-     data-login_uri="https://test.dreamcity.studio/"
-     data-auto_prompt="false">
-</div>
+    <div
+      id="g_id_onload"
+      data-client_id="307956122015-he5a5l5lrl1utcha8rnk16ko7n97j8fu.apps.googleusercontent.com"
+      data-context="use"
+      data-ux_mode="popup"
+      data-login_uri="https://test.dreamcity.studio/"
+      data-auto_prompt="false"
+    ></div>
 
-<div class="g_id_signin"
-     data-type="standard"
-     data-shape="rectangular"
-     data-theme="outline"
-     data-text="signin_with"
-     data-size="large"
-     data-logo_alignment="left">
-</div>
-    <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div>
-    <img id="avatar" src="" alt="User Avatar" />
-    <a href="#" onclick="signOut();">Sign out</a> -->
-<!-- 
-    <script>
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-shape="rectangular"
+      data-theme="outline"
+      data-text="signin_with"
+      data-size="large"
+      data-logo_alignment="left"
+    ></div>
 
-        function onSignIn(googleUser) {
-            var profile = googleUser.getBasicProfile();
-            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + profile.getName());
-            console.log('Image URL: ' + profile.getImageUrl());
-            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-        }
-        
-        function signOut() {
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function () {
-            console.log('User signed out.');
-            });
-        }
-
-
-    </script> -->
   </body>
 </html>
