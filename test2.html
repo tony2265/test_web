@@ -17,27 +17,22 @@
     <h1>Google Login and Avatar Display</h1>
     <div class="g-signin2" data-onsuccess="onSignIn"></div>
     <img id="avatar" src="" alt="User Avatar" />
+    <a href="#" onclick="signOut();">Sign out</a>
 
     <script>
-        function onSignIn(googleUser) {
-            var accessToken = googleUser.getAuthResponse().access_token;
-            
-            gapi.load('client', function() {
-                gapi.client.init({
-                apiKey: "GOCSQPX-mJF0hxGZHU5TkFnIPMwxyP8WQqy",
-                discoveryDocs: ["https://people.googleapis.com/$discovery/rest?version=v1"],
-                accessToken: accessToken
-                }).then(function() {
-                var request = gapi.client.people.people.get({
-                    resourceName: 'people/me',
-                    personFields: 'photos'
-                });
 
-                request.execute(function(response) {
-                    var avatarUrl = response.photos[0].url;
-                    document.getElementById("avatar").src = avatarUrl;
-                });
-                });
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        }
+        
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+            console.log('User signed out.');
             });
         }
 
