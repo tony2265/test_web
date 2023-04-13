@@ -19,26 +19,29 @@
     <img id="avatar" src="" alt="User Avatar" />
 
     <script>
-      function onSignIn(googleUser) {
-        var accessToken = googleUser.getAuthResponse().access_token;
+        function onSignIn(googleUser) {
+            var accessToken = googleUser.getAuthResponse().access_token;
+            
+            gapi.load('client', function() {
+                gapi.client.init({
+                apiKey: "GOCSQPX-mJF0hxGZHU5TkFnIPMwxyP8WQqy",
+                discoveryDocs: ["https://people.googleapis.com/$discovery/rest?version=v1"],
+                accessToken: accessToken
+                }).then(function() {
+                var request = gapi.client.people.people.get({
+                    resourceName: 'people/me',
+                    personFields: 'photos'
+                });
 
-        gapi.client.load(
-          "https://people.googleapis.com/$discovery/rest",
-          "v1",
-          function () {
-            var request = gapi.client.people.people.get({
-              resourceName: "people/me",
-              personFields: "photos",
+                request.execute(function(response) {
+                    var avatarUrl = response.photos[0].url;
+                    document.getElementById("avatar").src = avatarUrl;
+                });
+                });
             });
+        }
 
-            request.execute(function (response) {
-              var avatarUrl = response.photos[0].url;
-              document.getElementById("avatar").src = avatarUrl;
-            });
-          },
-          { apiKey: "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", accessToken: accessToken }
-        );
-      }
+
     </script>
   </body>
 </html>
