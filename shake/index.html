@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>陀螺儀測試</title>
+  </head>
+  <body>
+    <button id="requestPermissionBtn">請求陀螺儀權限</button>
+    <div id="displayData">
+      <p>Alpha: <span id="alpha">0</span></p>
+      <p>Beta: <span id="beta">0</span></p>
+      <p>Gamma: <span id="gamma">0</span></p>
+    </div>
+    <script>
+      document
+        .getElementById("requestPermissionBtn")
+        .addEventListener("click", requestDeviceOrientationPermission);
+
+      function requestDeviceOrientationPermission() {
+        window.alert("請求陀螺儀權限");
+        if (typeof DeviceOrientationEvent.requestPermission === "function") {
+            window.alert("function"); 
+
+          DeviceOrientationEvent.requestPermission()
+            .then((permissionState) => {
+              if (permissionState === "granted") {
+                window.addEventListener("deviceorientation", handleDeviceOrientation);
+              } else {
+                alert("未獲得陀螺儀權限");
+              }
+            })
+            .catch(console.error);
+        } else {
+          // 如果瀏覽器不支持 requestPermission 方法，則直接添加事件監聽器
+          window.addEventListener("deviceorientation", handleDeviceOrientation);
+        }
+      }
+
+      function handleDeviceOrientation(event) {
+        var alpha = document.getElementById("alpha"),
+          beta = document.getElementById("beta"),
+          gamma = document.getElementById("gamma");
+
+        alpha.innerHTML = Math.round(event.alpha);
+        beta.innerHTML = Math.round(event.beta);
+        gamma.innerHTML = Math.round(event.gamma);
+      }
+    </script>
+  </body>
+</html>
