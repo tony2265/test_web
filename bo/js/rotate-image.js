@@ -6,7 +6,6 @@ var luminance = 0;
 var rotation = 0;
 
 // 初始化
-csmapi.set_endpoint('http://6.iottalk.tw:9999');
 
 function updateLuminance() {
 	// 設定要 pull 的裝置和資訊
