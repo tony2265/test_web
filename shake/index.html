@@ -10,30 +10,38 @@
         }
     </style>
     <script>
-        function init() {
-            if (window.DeviceMotionEvent) {
-                window.addEventListener("devicemotion", handleDeviceMotion);
+        function requestDeviceMotionPermission() {
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('devicemotion', handleDeviceMotion);
+                        } else {
+                            alert('未獲得加速度感測器權限');
+                        }
+                    })
+                    .catch(console.error);
             } else {
-                document.getElementById("displayData").innerHTML = "你的瀏覽器不支援加速度感測器";
+                // 如果瀏覽器不支持 requestPermission 方法，則直接添加事件監聽器
+                window.addEventListener('devicemotion', handleDeviceMotion);
             }
         }
 
         function handleDeviceMotion(event) {
-            var ax = document.getElementById("accelerationX"),
-                ay = document.getElementById("accelerationY"),
-                az = document.getElementById("accelerationZ");
+            var accelerationX = document.getElementById("accelerationX"),
+                accelerationY = document.getElementById("accelerationY"),
+                accelerationZ = document.getElementById("accelerationZ");
 
-            ax.innerHTML = event.acceleration.x ? event.acceleration.x.toFixed(2) : "不支援";
-            ay.innerHTML = event.acceleration.y ? event.acceleration.y.toFixed(2) : "不支援";
-            az.innerHTML = event.acceleration.z ? event.acceleration.z.toFixed(2) : "不支援";
+            accelerationX.innerHTML = event.acceleration.x.toFixed(2);
+            accelerationY.innerHTML = event.acceleration.y.toFixed(2);
+            accelerationZ.innerHTML = event.acceleration.z.toFixed(2);
         }
     </script>
 </head>
-<body onload="init()">
-    <div id="displayData">
-        <p>加速度 X 軸: <span id="accelerationX">0</span></p>
-        <p>加速度 Y 軸: <span id="accelerationY">0</span></p>
-        <p>加速度 Z 軸: <span id="accelerationZ">0</span></p>
-    </div>
+<body onload="requestDeviceMotionPermission()">
+    <h1>加速度感測器測試</h1>
+    <p>X 軸加速度: <span id="accelerationX">0</span> m/s²</p>
+    <p>Y 軸加速度: <span id="accelerationY">0</span> m/s²</p>
+    <p>Z 軸加速度: <span id="accelerationZ">0</span> m/s²</p>
 </body>
 </html>
