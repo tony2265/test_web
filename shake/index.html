@@ -34,9 +34,14 @@
         let acceleration = { x: 0, y: 0, z: 0 };
 
         function handleDeviceMotion(event) {
-            acceleration.x = event.acceleration.x;
-            acceleration.y = event.acceleration.y;
-            acceleration.z = event.acceleration.z;
+            // acceleration.x = event.acceleration.x;
+            // acceleration.y = event.acceleration.y;
+            // acceleration.z = event.acceleration.z;
+
+            acceleration.x = event.accelerationIncludingGravity.x;
+            acceleration.y = event.accelerationIncludingGravity.y;
+            acceleration.z = event.accelerationIncludingGravity.z;
+
 
             var accelerationX = document.getElementById("accelerationX"),
                 accelerationY = document.getElementById("accelerationY"),
