@@ -1,51 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>陀螺儀測試</title>
-  </head>
-  <body>
-    <button id="requestPermissionBtn">請求陀螺儀權限</button>
-    <div id="displayData">
-      <p>Alpha: <span id="alpha">0</span></p>
-      <p>Beta: <span id="beta">0</span></p>
-      <p>Gamma: <span id="gamma">0</span></p>
-    </div>
-    <script>
-      document
-        .getElementById("requestPermissionBtn")
-        .addEventListener("click", requestDeviceOrientationPermission);
-
-      function requestDeviceOrientationPermission() {
-        window.alert("請求陀螺儀權限");
-        if (typeof DeviceOrientationEvent.requestPermission === "function") {
-            window.alert("function"); 
-
-          DeviceOrientationEvent.requestPermission()
-            .then((permissionState) => {
-              if (permissionState === "granted") {
-                window.addEventListener("deviceorientation", handleDeviceOrientation);
-              } else {
-                alert("未獲得陀螺儀權限");
-              }
-            })
-            .catch(console.error);
-        } else {
-          // 如果瀏覽器不支持 requestPermission 方法，則直接添加事件監聽器
-          window.addEventListener("deviceorientation", handleDeviceOrientation);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加速度感測器測試</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
         }
-      }
+    </style>
+    <script>
+        function init() {
+            if (window.DeviceMotionEvent) {
+                window.addEventListener("devicemotion", handleDeviceMotion);
+            } else {
+                document.getElementById("displayData").innerHTML = "你的瀏覽器不支援加速度感測器";
+            }
+        }
 
-      function handleDeviceOrientation(event) {
-        var alpha = document.getElementById("alpha"),
-          beta = document.getElementById("beta"),
-          gamma = document.getElementById("gamma");
+        function handleDeviceMotion(event) {
+            var ax = document.getElementById("accelerationX"),
+                ay = document.getElementById("accelerationY"),
+                az = document.getElementById("accelerationZ");
 
-        alpha.innerHTML = Math.round(event.alpha);
-        beta.innerHTML = Math.round(event.beta);
-        gamma.innerHTML = Math.round(event.gamma);
-      }
+            ax.innerHTML = event.acceleration.x ? event.acceleration.x.toFixed(2) : "不支援";
+            ay.innerHTML = event.acceleration.y ? event.acceleration.y.toFixed(2) : "不支援";
+            az.innerHTML = event.acceleration.z ? event.acceleration.z.toFixed(2) : "不支援";
+        }
     </script>
-  </body>
+</head>
+<body onload="init()">
+    <div id="displayData">
+        <p>加速度 X 軸: <span id="accelerationX">0</span></p>
+        <p>加速度 Y 軸: <span id="accelerationY">0</span></p>
+        <p>加速度 Z 軸: <span id="accelerationZ">0</span></p>
+    </div>
+</body>
 </html>
