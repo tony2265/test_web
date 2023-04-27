@@ -9,7 +9,7 @@ const dai = function (profile, ida) {
                 .substring(1);
         }
         // return s() + s() + s();
-        return "bulb111";
+        return "callview";
     })();
 
     if (profile.is_sim == undefined){

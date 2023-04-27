@@ -1,9 +1,9 @@
 $(function () {
     csmapi.set_endpoint ('https://6.iottalk.tw');
     var profile = {
-        'dm_name': 'Bulb',
+        'dm_name': 'call_view',
         'idf_list': [],
-        'odf_list': [Luminance, Color_O],
+        'odf_list': [id_score],
     }
     
     var r = 255 ;
@@ -20,15 +20,9 @@ $(function () {
         );
     }
 
-    function Luminance (data) {
-        lum = data[0]
-        draw();
-    }
-
-    function Color_O (data) {
+    function id_score (data) {
         r = data[0];
         g = data[1];
-        b = data[2];
         draw();
     }
 
