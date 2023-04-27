@@ -9,9 +9,9 @@ const dai = function (profile, ida) {
                 .substring(1);
         }
         // return s() + s() + s();
-        return "bulb111";
+        return "call029";
     })();
-
+    console.log(mac_addr);
     if (profile.is_sim == undefined){
         profile.is_sim = false;
     }
@@ -36,7 +36,9 @@ const dai = function (profile, ida) {
     for (var i = 0; i < profile.idf_list.length; i++) {
         idf_name = profile.idf_list[i].name;
         if(idf_name[idf_name.length-2] == '_'){
+            console.log(idf_name);
             idf_name = idf_name.substr(0, idf_name.length-2) + '-' + idf_name.substr(idf_name.length-1);
+            console.log(idf_name);
         }
         idf_func[idf_name] = profile.idf_list[i];
 		profile.idf_list[i] = idf_name;
@@ -83,10 +85,10 @@ const dai = function (profile, ida) {
         dan.deregister(deregisterCallback);
     }
 
-    // window.onunload = deregister;
-    // window.onbeforeunload = deregister;
-    // window.onclose = deregister;
-    // window.onpagehide = deregister;
+    //window.onunload = deregister;
+    //window.onbeforeunload = deregister;
+    //window.onclose = deregister;
+    //window.onpagehide = deregister;
 
     dan.init(push, pull, csmapi.get_endpoint(), mac_addr, profile, init_callback);
 };
