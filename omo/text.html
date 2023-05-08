@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+    <base href="./">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>實木床座 VIK F-2 來店贈品 - 活動</title>
+    <script>
+        window.opsdkAsyncInit = function() {
+            OPSDK.init({
+                activityId: '1',
+            });
+        };
+
+        // 2. 新增優惠券的 callback 函數範例
+        addCouponCallback = function(success, message, resultCode, httpStatus) {
+            if (success) {
+                alert('恭喜獲得!!' + message);
+            } else {
+                if (httpStatus < 500) {
+                    alert('領取發生錯誤：' + message + ' (' + httpStatus + ')');
+                }
+            }
+            console.log(success, message, resultCode, httpStatus);
+        };
+
+    </script>
+    <script async defer crossorigin="anonymous" src="https://www.omohoplus.com/sdk/OmohoPlusSDK.js"></script>
+</head>
+
+<body>
+    <form>
+        活動名稱：實木床座 VIK F-2 來店贈品<p>
+            姓名：<input type="text" name="customername" value="李大仁" /><BR />
+            手機：<input type="text" name="customerphone" value="0912345678" /><BR />
+            Email：<input type="text" name="customeremail" value="test@gmail.com" onchange="return OPSDK.validEmail(validEmailCallback);" /><BR />
+            最近門市：<span id="storeSelectPanel"></span>
+            <button type="button" onclick="return OPSDK.addCoupon(addCouponCallback);">送出(使用callback函數)</button>
+            <button type="button" onclick="return OPSDK.addCoupon();">送出</button>
+    </form>
+</body>
+
+</html>
