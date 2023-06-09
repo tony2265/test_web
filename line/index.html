@@ -9,15 +9,44 @@
 
     <script>
         function main() {
-            liff.init({ liffId: "1661378044-2poPQy7z" })
+            liff.init({ liffId: "1661378044-qMy8MZo3" })
                 .then(() => {
+                    // Set up event handler for share button
                     document.getElementById('shareButton').addEventListener('click', () => {
                         if (!liff.isLoggedIn()) {
                             liff.login();
                         } else {
                             const message = {
-                                type: 'text',
-                                text: 'This is a message.'
+                                "type": "bubble",
+                                "hero": {
+                                    "type": "image",
+                                    "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
+                                    "size": "full",
+                                    "aspectRatio": "20:13",
+                                    "aspectMode": "cover",
+                                    "action": {
+                                        "type": "uri",
+                                        "uri": "http://linecorp.com/"
+                                    }
+                                },
+                                "footer": {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "spacing": "sm",
+                                    "contents": [
+                                        {
+                                            "type": "button",
+                                            "style": "link",
+                                            "height": "sm",
+                                            "action": {
+                                                "type": "uri",
+                                                "label": "分享",
+                                                "uri": "https://liff.line.me/1661378044-qMy8MZo3"
+                                            }
+                                        }
+                                    ],
+                                    "flex": 0
+                                }
                             };
                             liff.shareTargetPicker([message])
                                 .catch((err) => {
