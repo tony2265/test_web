@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My LIFF App</title>
+    <script src="https://static.line-scdn.net/liff/edge/versions/2.16.0/sdk.js"></script>
+</head>
+<body>
+    <button id="shareButton">Share</button>
+
+    <script>
+        function main() {
+            liff.init({ liffId: "1661378044-2poPQy7z" })
+                .then(() => {
+                    document.getElementById('shareButton').addEventListener('click', () => {
+                        if (!liff.isLoggedIn()) {
+                            liff.login();
+                        } else {
+                            const message = {
+                                type: 'text',
+                                text: 'This is a message.'
+                            };
+                            liff.shareTargetPicker([message])
+                                .catch((err) => {
+                                    console.log('Error', err);
+                                });
+                        }
+                    });
+                })
+                .catch((err) => {
+                    console.log('Error', err);
+                });
+        }
+        main();
+    </script>
+</body>
+</html>
