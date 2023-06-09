@@ -1,65 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant-TW" data-react-helmet="lang">
 <head>
-    <title>My LIFF App</title>
-    <script src="https://static.line-scdn.net/liff/edge/versions/2.16.0/sdk.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no user-scalable=0">
+<title>LINE 訊息分享</title>
+<meta name="description" content="Powered by OpenAI">
+<meta property="og:title" content="LINE 訊息分享">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png">
+<meta property="og:url" content="https://urli.ai">
+<meta property="og:description" content="Powered by OpenAI">
+<meta name="twitter:card" content>
+<meta name="twitter:image" content="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png">
+<meta name="twitter:title" content="LINE 訊息分享">
+<meta name="twitter:description" content="Powered by OpenAI">
+<link rel="icon" type="image/x-icon" href="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png" />
 </head>
+<style>
+    #main {
+        position: fixed;
+        width: 100%;
+        height: 40px;
+        bottom: 60px;
+        font-family: 'Noto Sans TC', 'PingFang TC', '微軟正黑體';
+    }
+    #back {
+        width: 250px;
+        height: 40px;
+        font-size: 1.2rem;
+        color: #ffffff;
+        line-height: 40px;
+        text-align: center;
+        background-color: #00C100;
+        border-radius: 5px;
+        margin: auto;
+        cursor: pointer;
+        display: none;
+    }
+</style>
 <body>
-    <button id="shareButton">Share</button>
-
-    <script>
-        function main() {
-            liff.init({ liffId: "1661378044-qMy8MZo3" })
-                .then(() => {
-                    // Set up event handler for share button
-                    document.getElementById('shareButton').addEventListener('click', () => {
-                        if (!liff.isLoggedIn()) {
-                            liff.login();
-                        } else {
-                            const message = {
-                                "type": "bubble",
-                                "hero": {
-                                    "type": "image",
-                                    "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
-                                    "size": "full",
-                                    "aspectRatio": "20:13",
-                                    "aspectMode": "cover",
-                                    "action": {
-                                        "type": "uri",
-                                        "uri": "http://linecorp.com/"
-                                    }
-                                },
-                                "footer": {
-                                    "type": "box",
-                                    "layout": "vertical",
-                                    "spacing": "sm",
-                                    "contents": [
-                                        {
-                                            "type": "button",
-                                            "style": "link",
-                                            "height": "sm",
-                                            "action": {
-                                                "type": "uri",
-                                                "label": "分享",
-                                                "uri": "https://liff.line.me/1661378044-qMy8MZo3"
-                                            }
-                                        }
-                                    ],
-                                    "flex": 0
-                                }
-                            };
-                            liff.shareTargetPicker([message])
-                                .catch((err) => {
-                                    console.log('Error', err);
-                                });
-                        }
-                    });
-                })
-                .catch((err) => {
-                    console.log('Error', err);
-                });
-        }
-        main();
-    </script>
+<div id="main">
+<div id="data-block"></div>
+<div id="back">關閉視窗</div>
+</div>
+<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </body>
 </html>
+<script type="text/javascript">
+window.onload = function () {
+    var url_string = window.location.href
+    var url = new URL(url_string)
+    var muid = url.searchParams.get("muid")
+    var tuid = url.searchParams.get("tuid")
+    var flexMessage = {
+      "type": "bubble",
+      "hero": {
+        "type": "image",
+        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
+        "size": "full",
+        "aspectRatio": "20:13",
+        "aspectMode": "cover",
+        "action": {
+          "type": "uri",
+          "uri": "http://linecorp.com/"
+        }
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "button",
+            "style": "link",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "分享",
+              "uri": "https://liff.line.me/1661378044-qMy8MZo3"
+            }
+          }
+        ],
+        "flex": 0
+      }
+    }
+    liff
+      .init({
+          liffId: "1661378044-qMy8MZo3"
+      })
+      .then(() => {
+        if (liff.isInClient()) {
+            liffShare();
+        } else {
+          if (liff.isLoggedIn()) {
+            liffShare();
+          } else {
+            liff.login({
+              redirectUri: url_string
+            })
+          }
+        }
+      })
+      .catch((err) => {
+          console.log(err);
+          liff.closeWindow();
+      })
+
+    function liffShare() {
+        if (liff.isApiAvailable('shareTargetPicker')) {
+            liff.shareTargetPicker([flexMessage]).then(
+                function(res) {
+                console.log(res)
+                liff.closeWindow()
+            }
+            ).catch(function (res) {
+                console.log(res)
+                alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。")
+            })
+        } else {
+            alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。")
+            document.getElementById('back').style.display = "block"
+            liff.closeWindow()
+        }
+    }
+
+    document.getElementById('back').addEventListener('click', function() {
+        liff.closeWindow();
+    });
+};
+</script>
