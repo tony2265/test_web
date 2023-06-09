@@ -53,36 +53,40 @@ window.onload = function () {
     // var muid = url.searchParams.get("muid")
     // var tuid = url.searchParams.get("tuid")
     var flexMessage = {
-      "type": "bubble",
-      "hero": {
-        "type": "image",
-        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
-        "size": "full",
-        "aspectRatio": "20:13",
-        "aspectMode": "cover",
-        "action": {
-          "type": "uri",
-          "uri": "http://linecorp.com/"
-        }
-      },
-      "footer": {
-        "type": "box",
-        "layout": "vertical",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "button",
-            "style": "link",
-            "height": "sm",
-            "action": {
-              "type": "uri",
-              "label": "分享",
-              "uri": "https://liff.line.me/1661378044-qMy8MZo3"
+        "type": "flex",
+        "altText": "分享到LINE",
+        "contents": {
+            "type": "bubble",
+            "hero": {
+                "type": "image",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
+                "size": "full",
+                "aspectRatio": "20:13",
+                "aspectMode": "cover",
+                "action": {
+                    "type": "uri",
+                    "uri": "http://linecorp.com/"
+                }
+            },
+            "footer": {
+                "type": "box",
+                "layout": "vertical",
+                "spacing": "sm",
+                "contents": [
+                    {
+                        "type": "button",
+                        "style": "link",
+                        "height": "sm",
+                        "action": {
+                            "type": "uri",
+                            "label": "分享",
+                            "uri": "https://liff.line.me/1661378044-qMy8MZo3"
+                        }
+                    }
+                ],
+                "flex": 0
             }
-          }
-        ],
-        "flex": 0
-      }
+        }
     }
     liff
       .init({
