@@ -1,49 +1,25 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>QR Code Scanner</title>
-    <script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
+  <head>
+    <title>Instascan</title>
+    <script type="text/javascript" src="https://tzeng17.com/game/GivemeFind/js/instascan.min.js"></script>	
 </head>
-<body>
-    <div id="reader" style="width: 300px; height: 300px;"></div>
-    <button id="startBtn">開始掃描</button>
-    <button id="stopBtn">停止掃描</button>
-    <h3>掃描結果:</h3>
-    <div id="result"></div>
-
-    <script>
-        const qrCodeReader = new Html5Qrcode("reader");
-        const resultContainer = document.getElementById('result');
-        const startBtn = document.getElementById('startBtn');
-        const stopBtn = document.getElementById('stopBtn');
-        stopBtn.disabled = true;
-
-        startBtn.onclick = () => {
-            qrCodeReader.start(
-                { facingMode: "environment" },
-                config,
-                qrCodeMessage => {
-                    resultContainer.innerText = qrCodeMessage;
-                },
-                errorMessage => {
-                    console.log(`QR Code scan error: ${errorMessage}`);
-                }
-            ).then(() => {
-                startBtn.disabled = true;
-                stopBtn.disabled = false;
-            }).catch(err => {
-                console.log(`QR Code start error: ${err}`);
-            });
-        };
-
-        stopBtn.onclick = () => {
-            qrCodeReader.stop().then(() => {
-                startBtn.disabled = false;
-                stopBtn.disabled = true;
-            }).catch(err => {
-                console.log(`QR Code stop error: ${err}`);
-            });
-        };
+  <body>
+    <video id="preview"></video>
+    <script type="text/javascript">
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      scanner.addListener('scan', function (content) {
+        console.log(content);
+      });
+      Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+      }).catch(function (e) {
+        console.error(e);
+      });
     </script>
-</body>
+  </body>
 </html>
