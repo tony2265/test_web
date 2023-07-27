@@ -15,6 +15,7 @@
     <video id="preview"></video>
     <div id="result"></div>
     <script type="text/javascript">
+
       let scanner = new Instascan.Scanner({
         video: document.getElementById('preview'),
         mirror: false,
@@ -24,13 +25,21 @@
       });
       Instascan.Camera.getCameras().then(function(cameras) {
         if (cameras.length > 0) {
-          scanner.start(cameras[0]);
+          // Change to use the back camera
+          let selectedCam = cameras[0];
+          for(let i = 0; i < cameras.length; i++) {
+            if(cameras[i].name.indexOf('back') !== -1) {
+              selectedCam = cameras[i];
+            }
+          }
+          scanner.start(selectedCam);
         } else {
           console.error('No cameras found.');
         }
       }).catch(function(e) {
         console.error(e);
       });
+
     </script>
   </body>
 </html>
