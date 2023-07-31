@@ -51,24 +51,27 @@
 
 </html>
 <script type="text/javascript">
-    let data1;
-
-    fetch('data1.json')
-    .then(response => response.json())
-    .then(data => {
-        data1 = data;
-    });
 
     window.onload = function () {
+
+
+        fetch('data1.json')
+        .then(response => response.json())
+        .then(data => {
+            var flexMessage = {
+                "type": "flex",
+                "altText": "分享到LINE",
+                "contents": data
+            }
+        });
+
         var url_string = window.location.href
         var url = new URL(url_string)
-        // var muid = url.searchParams.get("muid")
-        // var tuid = url.searchParams.get("tuid")
-        var flexMessage = {
-            "type": "flex",
-            "altText": "分享到LINE",
-            "contents": data1
-        }
+        // var flexMessage = {
+        //     "type": "flex",
+        //     "altText": "分享到LINE",
+        //     "contents": data1
+        // }
 
         liff
             .init({
