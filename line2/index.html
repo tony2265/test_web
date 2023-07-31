@@ -51,12 +51,12 @@
 
 </html>
 <script type="text/javascript">
-    let flexMessage;
+    let data1;
 
-    fetch('data.json')
+    fetch('data1.json')
     .then(response => response.json())
     .then(data => {
-        flexMessage = data;
+        data1 = data;
     });
 
     window.onload = function () {
@@ -67,7 +67,7 @@
         var flexMessage = {
             "type": "flex",
             "altText": "分享到LINE",
-            "contents": flexMessage
+            "contents": data1
         }
 
         liff
