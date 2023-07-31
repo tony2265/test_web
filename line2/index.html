@@ -54,6 +54,8 @@
 <script type="text/javascript">
     window.onload = function () {
 
+        var flexMessage;
+
         // Get query parameter from URL
         var urlParams = new URLSearchParams(window.location.search);
         var jsonFile = urlParams.get('jsonFile');
@@ -62,7 +64,7 @@
         fetch(jsonFile + '.json')
         .then(response => response.json())
         .then(data => {
-            var flexMessage = {
+            flexMessage = {
                 "type": "flex",
                 "altText": "分享到LINE",
                 "contents": data
@@ -116,5 +118,5 @@
     
         });
     };
-    </script>
+</script>
     
