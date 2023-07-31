@@ -53,23 +53,7 @@
 
 <script type="text/javascript">
     window.onload = function () {
-
-        var flexMessage;
-
-        // Get query parameter from URL
-        var urlParams = new URLSearchParams(window.location.search);
-        var liffState = urlParams.get('liff.state');
-        // Check if liff.state exists
-        if (liffState) {
-            // Parse the URL encoded liff.state
-            var liffStateParams = new URLSearchParams(decodeURIComponent(liffState));
-            var jsonFile = liffStateParams.get('jsonFile');
-        } else {
-            var jsonFile = urlParams.get('jsonFile');
-        }
-
-        // Use the query parameter to determine which JSON file to fetch
-        fetch(jsonFile + '.json')
+        fetch('data1.json')
         .then(response => response.json())
         .then(data => {
             flexMessage = {
