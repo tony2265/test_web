@@ -50,11 +50,9 @@
 </body>
 
 </html>
+
 <script type="text/javascript">
-
     window.onload = function () {
-
-
         fetch('data1.json')
         .then(response => response.json())
         .then(data => {
@@ -63,58 +61,54 @@
                 "altText": "分享到LINE",
                 "contents": data
             }
-        });
-
-        var url_string = window.location.href
-        var url = new URL(url_string)
-        // var flexMessage = {
-        //     "type": "flex",
-        //     "altText": "分享到LINE",
-        //     "contents": data1
-        // }
-
-        liff
-            .init({
-                liffId: "1661407197-23zKqP4j"
-            })
-            .then(() => {
-                if (liff.isInClient()) {
-                    liffShare();
-                } else {
-                    if (liff.isLoggedIn()) {
+    
+            var url_string = window.location.href
+    
+            liff
+                .init({
+                    liffId: "1661407197-23zKqP4j"
+                })
+                .then(() => {
+                    if (liff.isInClient()) {
                         liffShare();
                     } else {
-                        liff.login({
-                            redirectUri: url_string
-                        })
+                        if (liff.isLoggedIn()) {
+                            liffShare();
+                        } else {
+                            liff.login({
+                                redirectUri: url_string
+                            })
+                        }
                     }
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-                liff.closeWindow();
-            })
-
-        function liffShare() {
-            if (liff.isApiAvailable('shareTargetPicker')) {
-                liff.shareTargetPicker([flexMessage]).then(
-                    function (res) {
-                        console.log(res)
-                        liff.closeWindow()
-                    }
-                ).catch(function (res) {
-                    console.log(res)
-                    alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。")
                 })
-            } else {
-                alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。QQ")
-                document.getElementById('back').style.display = "block"
-                liff.closeWindow()
+                .catch((err) => {
+                    console.log(err);
+                    liff.closeWindow();
+                })
+    
+            function liffShare() {
+                if (liff.isApiAvailable('shareTargetPicker')) {
+                    liff.shareTargetPicker([flexMessage]).then(
+                        function (res) {
+                            console.log(res)
+                            liff.closeWindow()
+                        }
+                    ).catch(function (res) {
+                        console.log(res)
+                        alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。")
+                    })
+                } else {
+                    alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。QQ")
+                    document.getElementById('back').style.display = "block"
+                    liff.closeWindow()
+                }
             }
-        }
-
-        document.getElementById('back').addEventListener('click', function () {
-            liff.closeWindow();
+    
+            document.getElementById('back').addEventListener('click', function () {
+                liff.closeWindow();
+            });
+    
         });
     };
-</script>
+    </script>
+    
