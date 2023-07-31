@@ -56,7 +56,7 @@
         fetch('data1.json')
         .then(response => response.json())
         .then(data => {
-            flexMessage = {
+            var flexMessage = {
                 "type": "flex",
                 "altText": "分享到LINE",
                 "contents": data
