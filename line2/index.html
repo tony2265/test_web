@@ -58,7 +58,15 @@
 
         // Get query parameter from URL
         var urlParams = new URLSearchParams(window.location.search);
-        var jsonFile = urlParams.get('jsonFile');
+        var liffState = urlParams.get('liff.state');
+        // Check if liff.state exists
+        if (liffState) {
+            // Parse the URL encoded liff.state
+            var liffStateParams = new URLSearchParams(decodeURIComponent(liffState));
+            var jsonFile = liffStateParams.get('jsonFile');
+        } else {
+            var jsonFile = urlParams.get('jsonFile');
+        }
 
         // Use the query parameter to determine which JSON file to fetch
         fetch(jsonFile + '.json')
