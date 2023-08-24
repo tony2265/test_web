@@ -1,609 +1,262 @@
 {
-    "type": "carousel",
-    "contents": [
-      {
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "image",
-              "margin": "none",
-              "gravity": "top",
-              "size": "full",
-              "aspectRatio": "18:1",
-              "aspectMode": "cover",
-              "align": "start",
-              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
-            }
-          ]
-        },
-        "hero": {
-          "type": "image",
-          "size": "full",
-          "aspectRatio": "1:1",
-          "margin": "none",
-          "align": "center",
-          "gravity": "top",
-          "aspectMode": "cover",
-          "url": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E9%97%9C%E5%8D%A11-1-1024x1024.jpg",
-          "action": {
-            "type": "uri",
-            "label": "action",
-            "uri": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E9%97%9C%E5%8D%A11-1-1024x1024.jpg"
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "micro",
+      "hero": {
+        "type": "image",
+        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
+        "size": "full",
+        "aspectMode": "cover",
+        "aspectRatio": "320:213"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Brown Cafe",
+            "weight": "bold",
+            "size": "sm",
+            "wrap": true
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "contents": [
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png"
+              },
+              {
+                "type": "text",
+                "text": "4.0",
+                "size": "xs",
+                "color": "#8c8c8c",
+                "margin": "md",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "sm",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "東京旅行",
+                    "wrap": true,
+                    "color": "#8c8c8c",
+                    "size": "xs",
+                    "flex": 5
+                  }
+                ]
+              }
+            ]
           }
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "紅色福袋路線：12➡️5➡️7➡️2➡️1",
-              "size": "md",
-              "weight": "bold",
-              "margin": "md"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "button",
-                  "action": {
-                    "type": "uri",
-                    "label": "將點位分享給隊友 👉",
-                    "uri": "https://liff.line.me/1661407197-KDDrjyV6"
-                  },
-                  "style": "primary"
-                }
-              ],
-              "margin": "xxl"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "button",
-                  "action": {
-                    "type": "message",
-                    "label": "已完成校園巡禮，下一步",
-                    "text": "集合隊友，找服務台答題拿禮物！"
-                  },
-                  "style": "primary"
-                }
-              ],
-              "margin": "md"
-            }
-          ]
-        }
-      },
-      {
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "image",
-              "margin": "none",
-              "gravity": "top",
-              "size": "full",
-              "aspectRatio": "18:1",
-              "aspectMode": "cover",
-              "align": "start",
-              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
-            }
-          ]
-        },
-        "hero": {
-          "type": "image",
-          "size": "full",
-          "aspectRatio": "20:13",
-          "margin": "none",
-          "align": "center",
-          "gravity": "top",
-          "aspectMode": "cover",
-          "url": "https://ir.nctu.edu.tw/bitstream/11536/86039/1/bd8900102g001-0001-i.jpg"
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "NO.12 龍賦",
-              "size": "xl",
-              "weight": "bold",
-              "margin": "md"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "楊英風雕塑",
-                  "color": "#8C8C8C",
-                  "align": "center",
-                  "gravity": "center",
-                  "wrap": true,
-                  "flex": 1,
-                  "size": "xxs",
-                  "offsetBottom": "-1px"
-                }
-              ],
-              "position": "relative",
-              "flex": 0,
-              "width": "75px",
-              "height": "25px",
-              "cornerRadius": "100px",
-              "alignItems": "center",
-              "justifyContent": "space-evenly",
-              "offsetEnd": "-90px",
-              "spacing": "md",
-              "margin": "md",
-              "borderWidth": "1px",
-              "borderColor": "#444444"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "「龍賦」又名「龍騰」，與「祥龍獻瑞」、「龍嘯太虛」同屬不銹鋼「飛龍系列」。本系列將象徵躍進與力量的龍脫去麟角獸形，以代表資訊科技的磁帶線條象意龍騰之姿，成功融合了傳統與現代、人文與科技。",
-                  "size": "sm",
-                  "color": "#3A3838",
-                  "margin": "md",
-                  "wrap": true
-                }
-              ],
-              "flex": 1,
-              "spacing": "xs",
-              "margin": "sm"
-            }
-          ],
-          "paddingAll": "22px",
-          "paddingTop": "5px",
-          "position": "relative"
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "了解更多楊英風雕塑故事 >",
-                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "image",
-              "margin": "none",
-              "gravity": "top",
-              "size": "full",
-              "aspectRatio": "18:1",
-              "aspectMode": "cover",
-              "align": "start",
-              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
-            }
-          ]
-        },
-        "hero": {
-          "type": "image",
-          "size": "full",
-          "aspectRatio": "20:13",
-          "margin": "none",
-          "align": "center",
-          "gravity": "top",
-          "aspectMode": "cover",
-          "url": "https://news.lib.nycu.edu.tw/wp-content/uploads/2019/02/8-4.png"
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "NO.5 海鷗",
-              "size": "xl",
-              "weight": "bold",
-              "margin": "md"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "楊英風雕塑",
-                  "color": "#8C8C8C",
-                  "align": "center",
-                  "gravity": "center",
-                  "wrap": true,
-                  "flex": 1,
-                  "size": "xxs",
-                  "offsetBottom": "-1px"
-                }
-              ],
-              "position": "relative",
-              "flex": 0,
-              "width": "75px",
-              "height": "25px",
-              "cornerRadius": "100px",
-              "alignItems": "center",
-              "justifyContent": "space-evenly",
-              "offsetEnd": "-90px",
-              "spacing": "md",
-              "margin": "md",
-              "borderWidth": "1px",
-              "borderColor": "#444444"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "「海鷗」以中國線描筆法勾勒出半抽象的海浪與海鷗造型，意寓「海鷗」飛躍四海，天下為家的豁達胸襟，以及不斷追求完美的理想境界。1999年，交通大學與楊英風藝術教育基金會共同成立「楊英風藝術研究中心」，基金會為感謝交大支持，致贈此作品為合作紀念物。",
-                  "size": "sm",
-                  "color": "#3A3838",
-                  "margin": "md",
-                  "wrap": true
-                }
-              ],
-              "flex": 1,
-              "spacing": "xs",
-              "margin": "sm"
-            }
-          ],
-          "paddingAll": "22px",
-          "paddingTop": "5px",
-          "position": "relative"
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "了解更多楊英風雕塑故事 >",
-                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "image",
-              "margin": "none",
-              "gravity": "top",
-              "size": "full",
-              "aspectRatio": "18:1",
-              "aspectMode": "cover",
-              "align": "start",
-              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
-            }
-          ]
-        },
-        "hero": {
-          "type": "image",
-          "size": "full",
-          "aspectRatio": "20:13",
-          "margin": "none",
-          "align": "center",
-          "gravity": "top",
-          "aspectMode": "cover",
-          "url": "https://www.yuyuyang.com.tw/source/6%E3%80%81%E4%BD%9C%E5%93%81%E5%88%86%E5%B8%83/(%E5%8C%97%E9%83%A8%E5%9C%B0%E5%8D%80)/2000%E6%96%B0%E7%AB%B9%E4%BA%A4%E5%A4%A7%E4%BD%9C%E5%93%81/-%E4%BA%A4%E5%A4%A7.jpg"
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "NO.7 茁生",
-              "size": "xl",
-              "weight": "bold",
-              "margin": "md"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "楊英風雕塑",
-                  "color": "#8C8C8C",
-                  "align": "center",
-                  "gravity": "center",
-                  "wrap": true,
-                  "flex": 1,
-                  "size": "xxs",
-                  "offsetBottom": "-1px"
-                }
-              ],
-              "position": "relative",
-              "flex": 0,
-              "width": "75px",
-              "height": "25px",
-              "cornerRadius": "100px",
-              "alignItems": "center",
-              "justifyContent": "space-evenly",
-              "offsetEnd": "-90px",
-              "spacing": "md",
-              "margin": "md",
-              "borderWidth": "1px",
-              "borderColor": "#444444"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "「茁生」顧名思義，在展現萬物成長茁壯的生息過程，擺放在大學校園裡別具意義。交大向以培育資訊與研究精英著稱，以此作品來代表校風特質，別具深意。",
-                  "size": "sm",
-                  "color": "#3A3838",
-                  "margin": "md",
-                  "wrap": true
-                }
-              ],
-              "flex": 1,
-              "spacing": "xs",
-              "margin": "sm"
-            }
-          ],
-          "paddingAll": "22px",
-          "paddingTop": "5px",
-          "position": "relative"
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "了解更多楊英風雕塑故事 >",
-                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "image",
-              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png",
-              "margin": "none",
-              "gravity": "top",
-              "size": "full",
-              "aspectRatio": "18:1",
-              "aspectMode": "cover",
-              "align": "start"
-            }
-          ]
-        },
-        "hero": {
-          "type": "image",
-          "url": "https://ir.nctu.edu.tw/bitstream/11536/86112/1/bd9600101g001-0001-i.jpg",
-          "size": "full",
-          "aspectRatio": "20:13",
-          "margin": "none",
-          "align": "center",
-          "gravity": "top",
-          "aspectMode": "cover"
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "NO.2 緣慧潤生",
-              "size": "xl",
-              "weight": "bold",
-              "margin": "md"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "楊英風雕塑",
-                  "color": "#8C8C8C",
-                  "align": "center",
-                  "gravity": "center",
-                  "wrap": true,
-                  "flex": 1,
-                  "size": "xxs",
-                  "offsetBottom": "-1px"
-                }
-              ],
-              "position": "relative",
-              "flex": 0,
-              "width": "75px",
-              "height": "25px",
-              "cornerRadius": "100px",
-              "alignItems": "center",
-              "justifyContent": "space-evenly",
-              "offsetEnd": "-90px",
-              "spacing": "md",
-              "margin": "md",
-              "borderWidth": "1px",
-              "borderColor": "#444444"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "「緣慧潤生」是大師為祝賀交大百年校慶，配合校園設計的景觀雕塑，也是交大設置的首件大師雕塑作品。整組作品由和諧平衡的宇宙觀，和尊重自然的生命理念出發，並善用曲線鏡面來與週遭環境辯證客我、詮釋虛實，期勉學子把握因緣，體會宇宙循環，使生機無限。",
-                  "size": "sm",
-                  "color": "#3A3838",
-                  "margin": "md",
-                  "wrap": true
-                }
-              ],
-              "flex": 1,
-              "spacing": "xs",
-              "margin": "sm"
-            }
-          ],
-          "paddingAll": "22px",
-          "paddingTop": "5px",
-          "position": "relative"
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "了解更多楊英風雕塑故事 >",
-                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "image",
-              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png",
-              "margin": "none",
-              "gravity": "top",
-              "size": "full",
-              "aspectRatio": "18:1",
-              "aspectMode": "cover",
-              "align": "start"
-            }
-          ]
-        },
-        "hero": {
-          "type": "image",
-          "url": "https://3.bp.blogspot.com/-yiAB8pZurPo/UtpSeB-P9qI/AAAAAAAABpE/svoATNpIz1U/s1600/DSC03955.JPG",
-          "size": "full",
-          "aspectRatio": "20:13",
-          "margin": "none",
-          "align": "center",
-          "gravity": "top",
-          "aspectMode": "cover"
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "NO.1 鳳凰來儀",
-              "size": "xl",
-              "weight": "bold",
-              "margin": "md"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "楊英風雕塑",
-                  "color": "#8C8C8C",
-                  "align": "center",
-                  "gravity": "center",
-                  "wrap": true,
-                  "flex": 1,
-                  "size": "xxs",
-                  "offsetBottom": "-1px"
-                }
-              ],
-              "position": "relative",
-              "flex": 0,
-              "width": "75px",
-              "height": "25px",
-              "cornerRadius": "100px",
-              "alignItems": "center",
-              "justifyContent": "space-evenly",
-              "offsetEnd": "-90px",
-              "spacing": "md",
-              "margin": "md",
-              "borderWidth": "1px",
-              "borderColor": "#444444"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "「鳳凰來儀」是楊英風為1970年大阪萬博會，中華民國館前的景觀所創作。通體塗成吉祥喜氣的紅色，完全表現出歡樂、迎賓、開展的環境主題，可說是中國傳統圖騰與現代工業材質完美結合的典範。",
-                  "size": "sm",
-                  "color": "#3A3838",
-                  "margin": "md",
-                  "wrap": true
-                }
-              ],
-              "flex": 1,
-              "spacing": "xs",
-              "margin": "sm"
-            }
-          ],
-          "paddingAll": "22px",
-          "paddingTop": "5px",
-          "position": "relative"
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "了解更多楊英風雕塑故事 >",
-                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
-              }
-            }
-          ]
-        }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
       }
-    ]
-  }
+    },
+    {
+      "type": "bubble",
+      "size": "micro",
+      "hero": {
+        "type": "image",
+        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip11.jpg",
+        "size": "full",
+        "aspectMode": "cover",
+        "aspectRatio": "320:213"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Brow&Cony's Restaurant",
+            "weight": "bold",
+            "size": "sm",
+            "wrap": true
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "contents": [
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png"
+              },
+              {
+                "type": "text",
+                "text": "4.0",
+                "size": "sm",
+                "color": "#8c8c8c",
+                "margin": "md",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "sm",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "東京旅行",
+                    "wrap": true,
+                    "color": "#8c8c8c",
+                    "size": "xs",
+                    "flex": 5
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "micro",
+      "hero": {
+        "type": "image",
+        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip12.jpg",
+        "size": "full",
+        "aspectMode": "cover",
+        "aspectRatio": "320:213"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Tata",
+            "weight": "bold",
+            "size": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "contents": [
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "xs",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png"
+              },
+              {
+                "type": "text",
+                "text": "4.0",
+                "size": "sm",
+                "color": "#8c8c8c",
+                "margin": "md",
+                "flex": 0
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "sm",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "東京旅行",
+                    "wrap": true,
+                    "color": "#8c8c8c",
+                    "size": "xs",
+                    "flex": 5
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
+      }
+    }
+  ]
+}
