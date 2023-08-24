@@ -5,62 +5,48 @@
       "type": "bubble",
       "body": {
         "type": "box",
-        "layout": "vertical", 
+        "layout": "vertical",
         "contents": [
           {
-            "type": "image",
-            "url": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E9%97%9C%E5%8D%A13-1024x1024.jpg",
-            "size": "full",
-            "aspectMode": "cover",
-            "aspectRatio": "1:1",
-            "gravity": "top"
+            "type": "text",
+            "text": "藍色福袋路線：12➡️9➡️7➡️13➡️1",
+            "size": "md",
+            "weight": "bold",
+            "margin": "md",
+            "wrap": true
           },
           {
             "type": "box",
             "layout": "vertical",
             "contents": [
               {
-                "type": "text",
-                "text": "藍色福袋路線:12➡️9➡️7➡️13➡️1",
-                "size": "md",
-                "weight": "bold",
-                "margin": "md",
-                "wrap": true
-              },
-              {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                  {
-                    "type": "button",
-                    "action": {
-                      "type": "uri",
-                      "label": "將點位分享給隊友 👉",
-                      "uri": "https://liff.line.me/1661407197-Lkbak5X8"
-                    },
-                    "style": "primary"
-                  }
-                ],
-                "margin": "xxl"
-              },
-              {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                  {
-                    "type": "button",
-                    "action": {
-                      "type": "message",
-                      "label": "已完成校園巡禮,下一步",
-                      "text": "集合隊友,找服務台答題拿禮物!"
-                    },
-                    "style": "primary",
-                    "margin": "none"
-                  }
-                ],
-                "margin": "md"
+                "type": "button",
+                "action": {
+                  "type": "uri",
+                  "label": "將點位分享給隊友 👉",
+                  "uri": "http://linecorp.com/"
+                },
+                "style": "primary"
               }
-            ]
+            ],
+            "margin": "xxl"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "button",
+                "action": {
+                  "type": "message",
+                  "label": "已完成校園巡禮，下一步",
+                  "text": "集合隊友，找服務台答題拿禮物！"
+                },
+                "style": "primary",
+                "margin": "none"
+              }
+            ],
+            "margin": "md"
           }
         ]
       }
