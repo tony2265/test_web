@@ -44,8 +44,23 @@
             "text": "紅色福袋路線：12➡️5➡️7➡️2➡️1",
             "weight": "bold",
             "size": "md"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "button",
+                "action": {
+                  "type": "uri",
+                  "label": "將點位分享給隊友 👉",
+                  "uri": "https://liff.line.me/1661407197-KDDrjyV6"
+                },
+                "style": "primary"
+              }
+            ],
+            "margin": "xxl"
           }          
-          
         ]
       }
     }
