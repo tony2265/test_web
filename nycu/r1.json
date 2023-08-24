@@ -19,6 +19,8 @@
           }
         ]
       },
+
+
       "hero": {
         "type": "image",
         "size": "full",
@@ -41,9 +43,10 @@
           {
             "type": "text",
             "text": "紅色福袋路線：12➡️5➡️7➡️2➡️1",
+            "size": "md",
             "weight": "bold",
-            "size": "md"
-          },
+            "margin": "md"
+              },
           
           {
             "type": "box",
