@@ -8,14 +8,11 @@
     <meta name="description" content="Powered by OpenAI">
     <meta property="og:title" content="LINE 訊息分享">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png">
     <meta property="og:url" content="https://urli.ai">
     <meta property="og:description" content="Powered by OpenAI">
     <meta name="twitter:card" content>
-    <meta name="twitter:image" content="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png">
     <meta name="twitter:title" content="LINE 訊息分享">
     <meta name="twitter:description" content="Powered by OpenAI">
-    <link rel="icon" type="image/x-icon" href="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png" />
 </head>
 <style>
     #main {
@@ -43,31 +40,14 @@
 
 <body>
     <div id="main">
-        <div id="data-block"></div>
         <div id="back">關閉視窗</div>
     </div>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-</body>
+    <script type="text/javascript">
+        window.onload = function () {
+            var url_string = window.location.href;
 
-</html>
-
-<script type="text/javascript">
-    window.onload = function () {
-        fetch('data2.json')
-        .then(response => response.json())
-        .then(data => {
-            var flexMessage = {
-                "type": "flex",
-                "altText": "分享到LINE",
-                "contents": data
-            }
-    
-            var url_string = window.location.href
-    
-            liff
-                .init({
-                    liffId: "1661407197-Lkbak5X8"
-                })
+            liff.init({ liffId: "1661407197-Lkbak5X8" })
                 .then(() => {
                     if (liff.isInClient()) {
                         liffShare();
@@ -75,40 +55,39 @@
                         if (liff.isLoggedIn()) {
                             liffShare();
                         } else {
-                            liff.login({
-                                redirectUri: url_string
-                            })
+                            liff.login({ redirectUri: url_string });
                         }
                     }
                 })
                 .catch((err) => {
                     console.log(err);
                     liff.closeWindow();
-                })
-    
+                });
+
             function liffShare() {
                 if (liff.isApiAvailable('shareTargetPicker')) {
-                    liff.shareTargetPicker([flexMessage]).then(
-                        function (res) {
-                            console.log(res)
-                            liff.closeWindow()
-                        }
-                    ).catch(function (res) {
-                        console.log(res)
-                        alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。")
-                    })
+                    liff.shareTargetPicker([
+                        { type: "text", text: "藍色福袋路徑" }
+                    ])
+                        .then(function (res) {
+                            console.log(res);
+                            liff.closeWindow();
+                        })
+                        .catch(function (res) {
+                            console.log(res);
+                            alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。");
+                        });
                 } else {
-                    alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。QQ")
-                    document.getElementById('back').style.display = "block"
-                    liff.closeWindow()
+                    alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。QQ");
+                    document.getElementById('back').style.display = "block";
+                    liff.closeWindow();
                 }
             }
-    
+
             document.getElementById('back').addEventListener('click', function () {
                 liff.closeWindow();
             });
-    
-        });
-    };
-</script>
-    
+        };
+    </script>
+</body>
+</html>
