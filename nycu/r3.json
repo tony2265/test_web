@@ -60,7 +60,24 @@
               }
             ],
             "margin": "xxl"
-          }          
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "button",
+                "action": {
+                  "type": "message",
+                  "label": "已完成校園巡禮，下一步",
+                  "text": "集合隊友，找服務台答題拿禮物！"
+                },
+                "style": "primary"
+              }
+            ],
+            "margin": "xxl"
+          }
+
         ]
       }
     }
