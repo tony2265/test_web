@@ -8,9 +8,11 @@
     <meta name="description" content="Powered by OpenAI">
     <meta property="og:title" content="LINE 訊息分享">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png">
     <meta property="og:url" content="https://urli.ai">
     <meta property="og:description" content="Powered by OpenAI">
     <meta name="twitter:card" content>
+    <meta name="twitter:image" content="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png">
     <meta name="twitter:title" content="LINE 訊息分享">
     <meta name="twitter:description" content="Powered by OpenAI">
     <link rel="icon" type="image/x-icon" href="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png" />
@@ -48,65 +50,180 @@
 </body>
 
 </html>
-
 <script type="text/javascript">
     window.onload = function () {
-        fetch('m.json')
-        .then(response => response.json())
-        .then(data => {
-            var flexMessage = {
-                "type": "flex",
-                "altText": "分享到LINE",
-                "contents": data
-            }
-    
-            var url_string = window.location.href
-    
-            liff
-                .init({
-                    liffId: "1661407197-V5NZGrqJ"
-                })
-                .then(() => {
-                    if (liff.isInClient()) {
-                        liffShare();
-                    } else {
-                        if (liff.isLoggedIn()) {
-                            liffShare();
-                        } else {
-                            liff.login({
-                                redirectUri: url_string
-                            })
+        var url_string = window.location.href
+        var url = new URL(url_string)
+        // var muid = url.searchParams.get("muid")
+        // var tuid = url.searchParams.get("tuid")
+        var flexMessage = {
+            "type": "flex",
+            "altText": "分享到LINE",
+            "contents": {
+                "type": "bubble",
+                "header": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                        {
+                            "type": "image",
+                            "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png",
+                            "margin": "none",
+                            "align": "start",
+                            "gravity": "top",
+                            "size": "full",
+                            "aspectMode": "cover",
+                            "aspectRatio": "18:1"
                         }
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                    liff.closeWindow();
-                })
-    
-            function liffShare() {
-                if (liff.isApiAvailable('shareTargetPicker')) {
-                    liff.shareTargetPicker([flexMessage]).then(
-                        function (res) {
-                            console.log(res)
-                            liff.closeWindow()
+                    ]
+                },
+                "hero": {
+                    "type": "image",
+                    "url": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E6%9C%AA%E5%91%BD%E5%90%8D-1.png",
+                    "size": "xl"
+                },
+                "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                        {
+                            "type": "text",
+                            "text": " 你好！我是NYCU Vtuer 妮酷！",
+                            "weight": "bold",
+                            "align": "center",
+                            "color": "#3163C3"
+                        },
+                        {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "請多多關注我～我會帶給大家很多溫暖和校園小知識的(˙˘˙ ﾐэ)Э！",
+                                    "wrap": true,
+                                    "size": "xxs",
+                                    "margin": "sm"
+                                }
+                            ],
+                            "margin": "lg"
+                        },
+                        {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [
+                                {
+                                    "type": "text",
+                                    "text": "👋 點擊下方關注我吧～",
+                                    "size": "xs",
+                                    "align": "center",
+                                    "gravity": "center",
+                                    "color": "#0079FB",
+                                    "weight": "bold"
+                                }
+                            ],
+                            "spacing": "none",
+                            "margin": "lg"
+                        },
+                        {
+                            "type": "separator",
+                            "margin": "sm"
                         }
-                    ).catch(function (res) {
-                        console.log(res)
-                        alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。")
-                    })
-                } else {
-                    alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。QQ")
-                    document.getElementById('back').style.display = "block"
-                    liff.closeWindow()
+                    ]
+                },
+                "footer": {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                        {
+                            "type": "image",
+                            "url": "https://hpwines.com.tw/wp-content/uploads/2018/12/FB-Icon.png",
+                            "margin": "none",
+                            "size": "xxs",
+                            "action": {
+                                "type": "uri",
+                                "label": "action",
+                                "uri": "https://www.facebook.com/profile.php?id=100063902504747"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png",
+                            "margin": "none",
+                            "size": "xxs",
+                            "action": {
+                                "type": "uri",
+                                "label": "action",
+                                "uri": "https://www.instagram.com/nycu_niku2020/"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/LINE_logo.svg/1200px-LINE_logo.svg.png",
+                            "margin": "none",
+                            "size": "xxs",
+                            "action": {
+                                "type": "uri",
+                                "label": "action",
+                                "uri": "https://lin.ee/7eiQPvS"
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "url": "https://e7.pngegg.com/pngimages/125/937/png-clipart-youtube-logo-youtube-angle-logo-thumbnail.png",
+                            "margin": "none",
+                            "size": "xxs",
+                            "action": {
+                                "type": "uri",
+                                "label": "action",
+                                "uri": "https://www.youtube.com/channel/UCeevozmutD04k-2S1eDEgYg"
+                            }
+                        }
+                    ]
                 }
             }
-    
-            document.getElementById('back').addEventListener('click', function () {
+        }
+        liff
+            .init({
+                liffId: "1661407197-V5NZGrqJ"
+            })
+            .then(() => {
+                if (liff.isInClient()) {
+                    liffShare();
+                } else {
+                    if (liff.isLoggedIn()) {
+                        liffShare();
+                    } else {
+                        liff.login({
+                            redirectUri: url_string
+                        })
+                    }
+                }
+            })
+            .catch((err) => {
+                console.log(err);
                 liff.closeWindow();
-            });
-    
+            })
+
+        function liffShare() {
+            if (liff.isApiAvailable('shareTargetPicker')) {
+                liff.shareTargetPicker([flexMessage]).then(
+                    function (res) {
+                        console.log(res)
+                        liff.closeWindow()
+                    }
+                ).catch(function (res) {
+                    console.log(res)
+                    alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。")
+                })
+            } else {
+                alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。QQ")
+                document.getElementById('back').style.display = "block"
+                liff.closeWindow()
+            }
+        }
+
+        document.getElementById('back').addEventListener('click', function () {
+            liff.closeWindow();
         });
     };
 </script>
-    
