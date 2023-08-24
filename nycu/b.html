@@ -69,24 +69,23 @@
                     liffId: "1661407197-Lkbak5X8"
                 })
                 .then(() => {
-                    try {
-                        if (liff.isInClient()) {
+                    if (liff.isInClient()) {
+                        liffShare();
+                    } else {
+                        if (liff.isLoggedIn()) {
                             liffShare();
                         } else {
-                            if (liff.isLoggedIn()) {
-                                liffShare();
-                            } else {
-                                liff.login({
-                                    redirectUri: url_string
-                                })
-                            }
+                            liff.login({
+                                redirectUri: url_string
+                            })
                         }
-                    } catch (err) {
-                        console.error("在初始化 LINE LIFF 或分享過程中發生錯誤：", err);
-                        alert("發生錯誤，請查看主控台獲取更多資訊。");
                     }
                 })
-
+                .catch((err) => {
+                    console.log(err);
+                    liff.closeWindow();
+                })
+    
             function liffShare() {
                 if (liff.isApiAvailable('shareTargetPicker')) {
                     liff.shareTargetPicker([flexMessage]).then(
@@ -94,10 +93,10 @@
                             console.log(res)
                             liff.closeWindow()
                         }
-                    ).catch(function (err) {
-                        console.error("分享過程中發生錯誤：", err);
-                        alert("分享過程中發生錯誤，請查看主控台獲取更多資訊。");
-                    });
+                    ).catch(function (res) {
+                        console.log(res)
+                        alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。")
+                    })
                 } else {
                     alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。QQ")
                     document.getElementById('back').style.display = "block"
