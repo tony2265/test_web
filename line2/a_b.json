@@ -1,0 +1,611 @@
+{
+    "type": "carousel",
+    "contents": [
+      {
+        "type": "bubble",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "margin": "none",
+              "gravity": "top",
+              "size": "full",
+              "aspectRatio": "18:1",
+              "aspectMode": "cover",
+              "align": "start",
+              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
+            }
+          ]
+        },
+        "hero": {
+          "type": "image",
+          "size": "full",
+          "aspectRatio": "1:1",
+          "margin": "none",
+          "align": "center",
+          "gravity": "top",
+          "aspectMode": "cover",
+          "url": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E9%97%9C%E5%8D%A13-1024x1024.jpg",
+          "action": {
+            "type": "uri",
+            "label": "action",
+            "uri": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E9%97%9C%E5%8D%A13-1024x1024.jpg"
+          }
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "藍色福袋路線：12➡️9➡️7➡️13➡️1",
+              "size": "md",
+              "weight": "bold",
+              "margin": "md",
+              "wrap": true
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "button",
+                  "action": {
+                    "type": "uri",
+                    "label": "將點位分享給隊友 👉",
+                    "uri": "http://linecorp.com/"
+                  },
+                  "style": "primary"
+                }
+              ],
+              "margin": "xxl"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "button",
+                  "action": {
+                    "type": "message",
+                    "label": "已完成校園巡禮，下一步",
+                    "text": "集合隊友，找服務台答題拿禮物！"
+                  },
+                  "style": "primary",
+                  "margin": "none"
+                }
+              ],
+              "margin": "md"
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "margin": "none",
+              "gravity": "top",
+              "size": "full",
+              "aspectRatio": "18:1",
+              "aspectMode": "cover",
+              "align": "start",
+              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
+            }
+          ]
+        },
+        "hero": {
+          "type": "image",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "margin": "none",
+          "align": "center",
+          "gravity": "top",
+          "aspectMode": "cover",
+          "url": "https://ir.nctu.edu.tw/bitstream/11536/86039/1/bd8900102g001-0001-i.jpg"
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "NO.12 龍賦",
+              "size": "xl",
+              "weight": "bold",
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "楊英風雕塑",
+                  "color": "#8C8C8C",
+                  "align": "center",
+                  "gravity": "center",
+                  "wrap": true,
+                  "flex": 1,
+                  "size": "xxs",
+                  "offsetBottom": "-1px"
+                }
+              ],
+              "position": "relative",
+              "flex": 0,
+              "width": "75px",
+              "height": "25px",
+              "cornerRadius": "100px",
+              "alignItems": "center",
+              "justifyContent": "space-evenly",
+              "offsetEnd": "-90px",
+              "spacing": "md",
+              "margin": "md",
+              "borderWidth": "1px",
+              "borderColor": "#444444"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "「龍賦」又名「龍騰」，與「祥龍獻瑞」、「龍嘯太虛」同屬不銹鋼「飛龍系列」。本系列將象徵躍進與力量的龍脫去麟角獸形，以代表資訊科技的磁帶線條象意龍騰之姿，成功融合了傳統與現代、人文與科技。",
+                  "size": "sm",
+                  "color": "#3A3838",
+                  "margin": "md",
+                  "wrap": true
+                }
+              ],
+              "flex": 1,
+              "spacing": "xs",
+              "margin": "sm"
+            }
+          ],
+          "paddingAll": "22px",
+          "paddingTop": "5px",
+          "position": "relative"
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "button",
+              "action": {
+                "type": "uri",
+                "label": "了解更多楊英風雕塑故事 >",
+                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png",
+              "margin": "none",
+              "gravity": "top",
+              "size": "full",
+              "aspectRatio": "18:1",
+              "aspectMode": "cover",
+              "align": "start"
+            }
+          ]
+        },
+        "hero": {
+          "type": "image",
+          "url": "https://www.yuyuyang.com.tw/source/6%E3%80%81%E4%BD%9C%E5%93%81%E5%88%86%E5%B8%83/(%E5%8C%97%E9%83%A8%E5%9C%B0%E5%8D%80)/2000%E6%96%B0%E7%AB%B9%E4%BA%A4%E5%A4%A7%E4%BD%9C%E5%93%81/0101-%E9%B3%B3%E5%87%8C%E9%9C%84%E6%BC%A2-%E4%BA%A4%E5%A4%A7(%E6%9F%AF%E9%8C%AB%E6%9D%B0%E6%94%9D).jpg",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "margin": "none",
+          "align": "center",
+          "gravity": "top",
+          "aspectMode": "cover"
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "NO.9 鳳凌霄漢",
+              "size": "xl",
+              "weight": "bold",
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "楊英風雕塑",
+                  "color": "#8C8C8C",
+                  "align": "center",
+                  "gravity": "center",
+                  "wrap": true,
+                  "flex": 1,
+                  "size": "xxs",
+                  "offsetBottom": "-1px"
+                }
+              ],
+              "position": "relative",
+              "flex": 0,
+              "width": "75px",
+              "height": "25px",
+              "cornerRadius": "100px",
+              "alignItems": "center",
+              "justifyContent": "space-evenly",
+              "offsetEnd": "-90px",
+              "spacing": "md",
+              "margin": "md",
+              "borderWidth": "1px",
+              "borderColor": "#444444"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "「鳳凌霄漢」以簡潔有力的五道鋼片，開展出鳳凰凌霄展翼的力與美。鳳凰是中國人最喜愛的靈禽瑞鳥，象徵中國人對於超然的理想境界的神往。傳說中鳳擇「至德之世」而降，而似乎一切真善美，均是乘著鳳翼翩然而至，期許交大學子像鳳凰一般，以智慧迎向未來。",
+                  "size": "sm",
+                  "color": "#3A3838",
+                  "margin": "md",
+                  "wrap": true
+                }
+              ],
+              "flex": 1,
+              "spacing": "xs",
+              "margin": "sm"
+            }
+          ],
+          "paddingAll": "22px",
+          "paddingTop": "5px",
+          "position": "relative"
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "button",
+              "action": {
+                "type": "uri",
+                "label": "了解更多楊英風雕塑故事 >",
+                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "margin": "none",
+              "gravity": "top",
+              "size": "full",
+              "aspectRatio": "18:1",
+              "aspectMode": "cover",
+              "align": "start",
+              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
+            }
+          ]
+        },
+        "hero": {
+          "type": "image",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "margin": "none",
+          "align": "center",
+          "gravity": "top",
+          "aspectMode": "cover",
+          "url": "https://www.yuyuyang.com.tw/source/6%E3%80%81%E4%BD%9C%E5%93%81%E5%88%86%E5%B8%83/(%E5%8C%97%E9%83%A8%E5%9C%B0%E5%8D%80)/2000%E6%96%B0%E7%AB%B9%E4%BA%A4%E5%A4%A7%E4%BD%9C%E5%93%81/-%E4%BA%A4%E5%A4%A7.jpg"
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "NO.7 茁生",
+              "size": "xl",
+              "weight": "bold",
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "楊英風雕塑",
+                  "color": "#8C8C8C",
+                  "align": "center",
+                  "gravity": "center",
+                  "wrap": true,
+                  "flex": 1,
+                  "size": "xxs",
+                  "offsetBottom": "-1px"
+                }
+              ],
+              "position": "relative",
+              "flex": 0,
+              "width": "75px",
+              "height": "25px",
+              "cornerRadius": "100px",
+              "alignItems": "center",
+              "justifyContent": "space-evenly",
+              "offsetEnd": "-90px",
+              "spacing": "md",
+              "margin": "md",
+              "borderWidth": "1px",
+              "borderColor": "#444444"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "「茁生」顧名思義，在展現萬物成長茁壯的生息過程，擺放在大學校園裡別具意義。交大向以培育資訊與研究精英著稱，以此作品來代表校風特質，別具深意。",
+                  "size": "sm",
+                  "color": "#3A3838",
+                  "margin": "md",
+                  "wrap": true
+                }
+              ],
+              "flex": 1,
+              "spacing": "xs",
+              "margin": "sm"
+            }
+          ],
+          "paddingAll": "22px",
+          "paddingTop": "5px",
+          "position": "relative"
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "button",
+              "action": {
+                "type": "uri",
+                "label": "了解更多楊英風雕塑故事 >",
+                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "margin": "none",
+              "gravity": "top",
+              "size": "full",
+              "aspectRatio": "18:1",
+              "aspectMode": "cover",
+              "align": "start",
+              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
+            }
+          ]
+        },
+        "hero": {
+          "type": "image",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "margin": "none",
+          "align": "center",
+          "gravity": "top",
+          "aspectMode": "cover",
+          "url": "https://ir.nctu.edu.tw/bitstream/11536/86060/1/bd9100102g001-0001-i.jpg"
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "NO.13 祥龍獻瑞",
+              "size": "xl",
+              "weight": "bold",
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "楊英風雕塑",
+                  "color": "#8C8C8C",
+                  "align": "center",
+                  "gravity": "center",
+                  "wrap": true,
+                  "flex": 1,
+                  "size": "xxs",
+                  "offsetBottom": "-1px"
+                }
+              ],
+              "position": "relative",
+              "flex": 0,
+              "width": "75px",
+              "height": "25px",
+              "cornerRadius": "100px",
+              "alignItems": "center",
+              "justifyContent": "space-evenly",
+              "offsetEnd": "-90px",
+              "spacing": "md",
+              "margin": "md",
+              "borderWidth": "1px",
+              "borderColor": "#444444"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "「祥龍獻瑞」又名「遊龍戲珠」，龍，是宇宙生命奧秘的表徵，也是中國文化精神中哲理的象徵、與力量的表現。此作品將代表現代資訊精華的磁帶，以龍的姿態呈現，呈現蛟龍遨遊太虛之活潑意趣。",
+                  "size": "sm",
+                  "color": "#3A3838",
+                  "margin": "md",
+                  "wrap": true
+                }
+              ],
+              "flex": 1,
+              "spacing": "xs",
+              "margin": "sm"
+            }
+          ],
+          "paddingAll": "22px",
+          "paddingTop": "5px",
+          "position": "relative"
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "button",
+              "action": {
+                "type": "uri",
+                "label": "了解更多楊英風雕塑故事 >",
+                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png",
+              "margin": "none",
+              "gravity": "top",
+              "size": "full",
+              "aspectRatio": "18:1",
+              "aspectMode": "cover",
+              "align": "start"
+            }
+          ]
+        },
+        "hero": {
+          "type": "image",
+          "url": "https://3.bp.blogspot.com/-yiAB8pZurPo/UtpSeB-P9qI/AAAAAAAABpE/svoATNpIz1U/s1600/DSC03955.JPG",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "margin": "none",
+          "align": "center",
+          "gravity": "top",
+          "aspectMode": "cover"
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "NO.1 鳳凰來儀",
+              "size": "xl",
+              "weight": "bold",
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "楊英風雕塑",
+                  "color": "#8C8C8C",
+                  "align": "center",
+                  "gravity": "center",
+                  "wrap": true,
+                  "flex": 1,
+                  "size": "xxs",
+                  "offsetBottom": "-1px"
+                }
+              ],
+              "position": "relative",
+              "flex": 0,
+              "width": "75px",
+              "height": "25px",
+              "cornerRadius": "100px",
+              "alignItems": "center",
+              "justifyContent": "space-evenly",
+              "offsetEnd": "-90px",
+              "spacing": "md",
+              "margin": "md",
+              "borderWidth": "1px",
+              "borderColor": "#444444"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "「鳳凰來儀」是楊英風為1970年大阪萬博會，中華民國館前的景觀所創作。通體塗成吉祥喜氣的紅色，完全表現出歡樂、迎賓、開展的環境主題，可說是中國傳統圖騰與現代工業材質完美結合的典範。",
+                  "size": "sm",
+                  "color": "#3A3838",
+                  "margin": "md",
+                  "wrap": true
+                }
+              ],
+              "flex": 1,
+              "spacing": "xs",
+              "margin": "sm"
+            }
+          ],
+          "paddingAll": "22px",
+          "paddingTop": "5px",
+          "position": "relative"
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "button",
+              "action": {
+                "type": "uri",
+                "label": "了解更多楊英風雕塑故事 >",
+                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
