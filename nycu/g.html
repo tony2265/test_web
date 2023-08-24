@@ -88,7 +88,12 @@
     
             function liffShare() {
                 if (liff.isApiAvailable('shareTargetPicker')) {
-                    liff.shareTargetPicker([flexMessage]).then(
+                    liff.shareTargetPicker([
+                    {
+                        type: "text",
+                        text: "綠色福袋路徑",
+                    }
+                    ]).then(
                         function (res) {
                             console.log(res)
                             liff.closeWindow()
