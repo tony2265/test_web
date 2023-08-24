@@ -24,48 +24,138 @@
         "contents": [
           {
             "type": "text",
-            "text": "紅色福袋路線：12➡️5➡️7➡️2➡️1",
-            "size": "md",
+            "text": "Brown Cafe",
             "weight": "bold",
-            "margin": "md"
+            "size": "xl"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "margin": "md",
+            "contents": [
+              {
+                "type": "icon",
+                "size": "sm",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "sm",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "sm",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "sm",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+              },
+              {
+                "type": "icon",
+                "size": "sm",
+                "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png"
+              },
+              {
+                "type": "text",
+                "text": "4.0",
+                "size": "sm",
+                "color": "#999999",
+                "margin": "md",
+                "flex": 0
+              }
+            ]
           },
           {
             "type": "box",
             "layout": "vertical",
+            "margin": "lg",
+            "spacing": "sm",
             "contents": [
               {
-                "type": "button",
-                "action": {
-                  "type": "uri",
-                  "label": "將點位分享給隊友 👉",
-                  "uri": "https://liff.line.me/1661407197-KDDrjyV6"
-                },
-                "style": "primary"
-              }
-            ],
-            "margin": "xxl"
-          },
-          {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "sm",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Place",
+                    "color": "#aaaaaa",
+                    "size": "sm",
+                    "flex": 1
+                  },
+                  {
+                    "type": "text",
+                    "text": "Miraina Tower, 4-1-6 Shinjuku, Tokyo",
+                    "wrap": true,
+                    "color": "#666666",
+                    "size": "sm",
+                    "flex": 5
+                  }
+                ]
+              },
               {
-                "type": "button",
-                "action": {
-                  "type": "message",
-                  "label": "已完成校園巡禮，下一步",
-                  "text": "集合隊友，找服務台答題拿禮物！"
-                },
-                "style": "primary"
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "sm",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Time",
+                    "color": "#aaaaaa",
+                    "size": "sm",
+                    "flex": 1
+                  },
+                  {
+                    "type": "text",
+                    "text": "10:00 - 23:00",
+                    "wrap": true,
+                    "color": "#666666",
+                    "size": "sm",
+                    "flex": 5
+                  }
+                ]
               }
-            ],
-            "margin": "md"
+            ]
           }
         ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "button",
+            "style": "link",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "CALL",
+              "uri": "https://linecorp.com"
+            }
+          },
+          {
+            "type": "button",
+            "style": "link",
+            "height": "sm",
+            "action": {
+              "type": "uri",
+              "label": "WEBSITE",
+              "uri": "https://linecorp.com"
+            }
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [],
+            "margin": "sm"
+          }
+        ],
+        "flex": 0
       }
     }
-    
-
-
   ]
 }
