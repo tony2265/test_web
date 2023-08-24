@@ -1,4 +1,7 @@
 {
+  "type": "carousel",
+  "contents": [
+{
   "type": "bubble",
   "hero": {
     "type": "image",
@@ -149,4 +152,6 @@
     ],
     "flex": 0
   }
+}
+]
 }
