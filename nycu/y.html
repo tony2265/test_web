@@ -53,7 +53,7 @@
 
 <script type="text/javascript">
     window.onload = function () {
-        fetch('a_y.json') //這裡要改
+        fetch('a_y.json')
         .then(response => response.json())
         .then(data => {
             var flexMessage = {
@@ -66,7 +66,7 @@
     
             liff
                 .init({
-                    liffId: "1661407197-AjBNVGdW" //這裡要改
+                    liffId: "1661407197-AjBNVGdW"
                 })
                 .then(() => {
                     if (liff.isInClient()) {

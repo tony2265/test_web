@@ -1,0 +1,191 @@
+{
+    "type": "carousel",
+    "contents": [
+      {
+        "type": "bubble",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "margin": "none",
+              "gravity": "top",
+              "size": "full",
+              "aspectRatio": "18:1",
+              "aspectMode": "cover",
+              "align": "start",
+              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
+            }
+          ]
+        },
+        "hero": {
+          "type": "image",
+          "size": "full",
+          "aspectRatio": "1:1",
+          "margin": "none",
+          "align": "center",
+          "gravity": "top",
+          "aspectMode": "cover",
+          "url": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E9%97%9C%E5%8D%A13-1024x1024.jpg",
+          "action": {
+            "type": "uri",
+            "label": "action",
+            "uri": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E9%97%9C%E5%8D%A13-1024x1024.jpg"
+          }
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "藍色福袋路線：12➡️9➡️7➡️13➡️1",
+              "size": "md",
+              "weight": "bold",
+              "margin": "md",
+              "wrap": true
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "button",
+                  "action": {
+                    "type": "uri",
+                    "label": "將點位分享給隊友 👉",
+                    "uri": "https://liff.line.me/1661407197-Lkbak5X8"
+                  },
+                  "style": "primary"
+                }
+              ],
+              "margin": "xxl"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "button",
+                  "action": {
+                    "type": "message",
+                    "label": "已完成校園巡禮，下一步",
+                    "text": "集合隊友，找服務台答題拿禮物！"
+                  },
+                  "style": "primary",
+                  "margin": "none"
+                }
+              ],
+              "margin": "md"
+            }
+          ]
+        }
+      },
+      {
+        "type": "bubble",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "image",
+              "margin": "none",
+              "gravity": "top",
+              "size": "full",
+              "aspectRatio": "18:1",
+              "aspectMode": "cover",
+              "align": "start",
+              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
+            }
+          ]
+        },
+        "hero": {
+          "type": "image",
+          "size": "full",
+          "aspectRatio": "20:13",
+          "margin": "none",
+          "align": "center",
+          "gravity": "top",
+          "aspectMode": "cover",
+          "url": "https://ir.nctu.edu.tw/bitstream/11536/86039/1/bd8900102g001-0001-i.jpg"
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "NO.12 龍賦",
+              "size": "xl",
+              "weight": "bold",
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "楊英風雕塑",
+                  "color": "#8C8C8C",
+                  "align": "center",
+                  "gravity": "center",
+                  "wrap": true,
+                  "flex": 1,
+                  "size": "xxs",
+                  "offsetBottom": "-1px"
+                }
+              ],
+              "position": "relative",
+              "flex": 0,
+              "width": "75px",
+              "height": "25px",
+              "cornerRadius": "100px",
+              "alignItems": "center",
+              "justifyContent": "space-evenly",
+              "offsetEnd": "-90px",
+              "spacing": "md",
+              "margin": "md",
+              "borderWidth": "1px",
+              "borderColor": "#444444"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "「龍賦」又名「龍騰」，與「祥龍獻瑞」、「龍嘯太虛」同屬不銹鋼「飛龍系列」。本系列將象徵躍進與力量的龍脫去麟角獸形，以代表資訊科技的磁帶線條象意龍騰之姿，成功融合了傳統與現代、人文與科技。",
+                  "size": "sm",
+                  "color": "#3A3838",
+                  "margin": "md",
+                  "wrap": true
+                }
+              ],
+              "flex": 1,
+              "spacing": "xs",
+              "margin": "sm"
+            }
+          ],
+          "paddingAll": "22px",
+          "paddingTop": "5px",
+          "position": "relative"
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "button",
+              "action": {
+                "type": "uri",
+                "label": "了解更多楊英風雕塑故事 >",
+                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
