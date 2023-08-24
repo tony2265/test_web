@@ -69,21 +69,22 @@
                     liffId: "1661407197-Lkbak5X8"
                 })
                 .then(() => {
-                    if (liff.isInClient()) {
-                        liffShare();
-                    } else {
-                        if (liff.isLoggedIn()) {
+                    try {
+                        if (liff.isInClient()) {
                             liffShare();
                         } else {
-                            liff.login({
-                                redirectUri: url_string
-                            })
+                            if (liff.isLoggedIn()) {
+                                liffShare();
+                            } else {
+                                liff.login({
+                                    redirectUri: url_string
+                                })
+                            }
                         }
+                    } catch (err) {
+                        console.error("在初始化 LINE LIFF 或分享過程中發生錯誤：", err);
+                        alert("發生錯誤，請查看主控台獲取更多資訊。");
                     }
-                })
-                .catch((err) => {
-                    console.log(err);
-                    liff.closeWindow();
                 })
 
             function liffShare() {
