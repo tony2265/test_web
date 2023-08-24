@@ -1,191 +1,389 @@
 {
-    "type": "carousel",
-    "contents": [
-      {
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "image",
-              "margin": "none",
-              "gravity": "top",
-              "size": "full",
-              "aspectRatio": "18:1",
-              "aspectMode": "cover",
-              "align": "start",
-              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
-            }
-          ]
-        },
-        "hero": {
-          "type": "image",
-          "size": "full",
-          "aspectRatio": "1:1",
-          "margin": "none",
-          "align": "center",
-          "gravity": "top",
-          "aspectMode": "cover",
-          "url": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E9%97%9C%E5%8D%A13-1024x1024.jpg",
-          "action": {
-            "type": "uri",
-            "label": "action",
-            "uri": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/08/%E9%97%9C%E5%8D%A13-1024x1024.jpg"
-          }
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "藍色福袋路線：12➡️9➡️7➡️13➡️1",
-              "size": "md",
-              "weight": "bold",
-              "margin": "md",
-              "wrap": true
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "button",
-                  "action": {
-                    "type": "uri",
-                    "label": "將點位分享給隊友 👉",
-                    "uri": "https://liff.line.me/1661407197-Lkbak5X8"
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://cdn.discordapp.com/attachments/962841223578660925/1117840345632350268/Vtuber_for_digital-1.jpg",
+            "size": "full",
+            "aspectMode": "cover",
+            "aspectRatio": "1:1.01",
+            "gravity": "top"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "🔔虛擬偶像招募中🔔",
+                    "size": "xl",
+                    "color": "#ffffff",
+                    "weight": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "⭐招募時間：6/8 - 7/9",
+                    "color": "#FFFFFF",
+                    "size": "sm",
+                    "flex": 0
+                  }
+                ],
+                "spacing": "lg"
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "希望和你一起透過虛擬偶像Vtuber的能量與創意，激發更多願意追夢、創造的人們",
+                    "color": "#FFFFFF",
+                    "size": "sm",
+                    "flex": 0,
+                    "wrap": true,
+                    "offsetTop": "sm"
+                  }
+                ],
+                "spacing": "lg",
+                "offsetEnd": "none",
+                "offsetBottom": "none",
+                "offsetStart": "none"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "filler"
                   },
-                  "style": "primary"
-                }
-              ],
-              "margin": "xxl"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "button",
-                  "action": {
-                    "type": "message",
-                    "label": "已完成校園巡禮，下一步",
-                    "text": "集合隊友，找服務台答題拿禮物！"
+                  {
+                    "type": "box",
+                    "layout": "baseline",
+                    "contents": [
+                      {
+                        "type": "filler"
+                      },
+                      {
+                        "type": "icon",
+                        "url": "https://media.discordapp.net/attachments/962841223578660925/1117843746025902140/click.png?width=480&height=480"
+                      },
+                      {
+                        "type": "text",
+                        "text": "馬上參加",
+                        "color": "#ffffff",
+                        "flex": 0,
+                        "offsetTop": "-2px"
+                      },
+                      {
+                        "type": "filler"
+                      }
+                    ],
+                    "spacing": "sm"
                   },
-                  "style": "primary",
-                  "margin": "none"
+                  {
+                    "type": "filler"
+                  }
+                ],
+                "borderWidth": "1px",
+                "cornerRadius": "4px",
+                "spacing": "sm",
+                "borderColor": "#ffffff",
+                "margin": "xxl",
+                "height": "40px",
+                "offsetTop": "none",
+                "action": {
+                  "type": "uri",
+                  "label": "action",
+                  "uri": "https://forms.gle/pYSkZ81hntfHqGUa6"
+                },
+                "offsetBottom": "none"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "filler"
+                  },
+                  {
+                    "type": "box",
+                    "layout": "baseline",
+                    "contents": [
+                      {
+                        "type": "filler"
+                      },
+                      {
+                        "type": "text",
+                        "text": "💌分享好友",
+                        "color": "#ffffff",
+                        "flex": 0,
+                        "offsetTop": "-2px"
+                      },
+                      {
+                        "type": "filler"
+                      }
+                    ],
+                    "spacing": "sm"
+                  },
+                  {
+                    "type": "filler"
+                  }
+                ],
+                "borderWidth": "1px",
+                "cornerRadius": "4px",
+                "spacing": "sm",
+                "borderColor": "#ffffff",
+                "margin": "xxl",
+                "height": "40px",
+                "offsetTop": "none",
+                "action": {
+                  "type": "uri",
+                  "label": "action",
+                  "uri": "https://liff.line.me/1661407197-Lkbak5X8"
                 }
-              ],
-              "margin": "md"
-            }
-          ]
-        }
-      },
-      {
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "image",
-              "margin": "none",
-              "gravity": "top",
-              "size": "full",
-              "aspectRatio": "18:1",
-              "aspectMode": "cover",
-              "align": "start",
-              "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
-            }
-          ]
-        },
-        "hero": {
-          "type": "image",
-          "size": "full",
-          "aspectRatio": "20:13",
-          "margin": "none",
-          "align": "center",
-          "gravity": "top",
-          "aspectMode": "cover",
-          "url": "https://ir.nctu.edu.tw/bitstream/11536/86039/1/bd8900102g001-0001-i.jpg"
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "NO.12 龍賦",
-              "size": "xl",
-              "weight": "bold",
-              "margin": "md"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "楊英風雕塑",
-                  "color": "#8C8C8C",
-                  "align": "center",
-                  "gravity": "center",
-                  "wrap": true,
-                  "flex": 1,
-                  "size": "xxs",
-                  "offsetBottom": "-1px"
-                }
-              ],
-              "position": "relative",
-              "flex": 0,
-              "width": "75px",
-              "height": "25px",
-              "cornerRadius": "100px",
-              "alignItems": "center",
-              "justifyContent": "space-evenly",
-              "offsetEnd": "-90px",
-              "spacing": "md",
-              "margin": "md",
-              "borderWidth": "1px",
-              "borderColor": "#444444"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "「龍賦」又名「龍騰」，與「祥龍獻瑞」、「龍嘯太虛」同屬不銹鋼「飛龍系列」。本系列將象徵躍進與力量的龍脫去麟角獸形，以代表資訊科技的磁帶線條象意龍騰之姿，成功融合了傳統與現代、人文與科技。",
-                  "size": "sm",
-                  "color": "#3A3838",
-                  "margin": "md",
-                  "wrap": true
-                }
-              ],
-              "flex": 1,
-              "spacing": "xs",
-              "margin": "sm"
-            }
-          ],
-          "paddingAll": "22px",
-          "paddingTop": "5px",
-          "position": "relative"
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "label": "了解更多楊英風雕塑故事 >",
-                "uri": "https://news.lib.nycu.edu.tw/university-history/%E4%BA%A4%E5%A4%A7%E6%A0%A1%E5%9C%92%E6%A5%8A%E8%8B%B1%E9%A2%A8%E6%99%AF%E8%A7%80%E9%9B%95%E5%A1%91%E5%B0%8E%E8%A6%BD/"
               }
-            }
-          ]
-        }
+            ],
+            "position": "absolute",
+            "offsetBottom": "0px",
+            "offsetStart": "0px",
+            "offsetEnd": "0px",
+            "backgroundColor": "#CD853F",
+            "paddingAll": "20px",
+            "paddingTop": "18px"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "NEW",
+                "color": "#ffffff",
+                "align": "center",
+                "size": "xs",
+                "offsetTop": "3px"
+              }
+            ],
+            "position": "absolute",
+            "cornerRadius": "20px",
+            "offsetTop": "18px",
+            "backgroundColor": "#ff334b",
+            "offsetStart": "18px",
+            "height": "25px",
+            "width": "53px"
+          }
+        ],
+        "paddingAll": "0px"
       }
-    ]
-  }
+    },
+    {
+      "type": "bubble",
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://cdn.discordapp.com/attachments/962841223578660925/1117848082839781436/11200x-100.jpg",
+            "size": "full",
+            "aspectMode": "cover",
+            "aspectRatio": "1:1.01",
+            "gravity": "top"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "🔹 陽明交大VTuber妮酷 🔹",
+                    "size": "xl",
+                    "color": "#ffffff",
+                    "weight": "bold"
+                  }
+                ]
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "⭐招募時間：6/8 - 7/9",
+                    "color": "#FFFFFF",
+                    "size": "sm",
+                    "flex": 0
+                  }
+                ],
+                "spacing": "lg"
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "我們正在尋找能和一同創作與成長的夥伴，我們正在尋找完善角色的夥伴",
+                    "color": "#FFFFFF",
+                    "size": "sm",
+                    "flex": 0,
+                    "wrap": true,
+                    "offsetTop": "sm"
+                  }
+                ],
+                "spacing": "lg",
+                "offsetEnd": "none",
+                "offsetBottom": "none",
+                "offsetStart": "none"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "filler"
+                  },
+                  {
+                    "type": "box",
+                    "layout": "baseline",
+                    "contents": [
+                      {
+                        "type": "filler"
+                      },
+                      {
+                        "type": "icon",
+                        "url": "https://media.discordapp.net/attachments/962841223578660925/1117843746025902140/click.png?width=480&height=480"
+                      },
+                      {
+                        "type": "text",
+                        "text": "馬上參加",
+                        "color": "#ffffff",
+                        "flex": 0,
+                        "offsetTop": "-2px"
+                      },
+                      {
+                        "type": "filler"
+                      }
+                    ],
+                    "spacing": "sm"
+                  },
+                  {
+                    "type": "filler"
+                  }
+                ],
+                "borderWidth": "1px",
+                "cornerRadius": "4px",
+                "spacing": "sm",
+                "borderColor": "#ffffff",
+                "margin": "xxl",
+                "height": "40px",
+                "offsetTop": "none",
+                "action": {
+                  "type": "uri",
+                  "label": "action",
+                  "uri": "https://forms.gle/fKYazKwd4TBy5Q13A"
+                }
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "filler"
+                  },
+                  {
+                    "type": "box",
+                    "layout": "baseline",
+                    "contents": [
+                      {
+                        "type": "filler"
+                      },
+                      {
+                        "type": "text",
+                        "text": "💌分享好友",
+                        "color": "#ffffff",
+                        "flex": 0,
+                        "offsetTop": "-2px"
+                      },
+                      {
+                        "type": "filler"
+                      }
+                    ],
+                    "spacing": "sm"
+                  },
+                  {
+                    "type": "filler"
+                  }
+                ],
+                "borderWidth": "1px",
+                "cornerRadius": "4px",
+                "spacing": "sm",
+                "borderColor": "#ffffff",
+                "margin": "xxl",
+                "height": "40px",
+                "offsetTop": "none",
+                "action": {
+                  "type": "uri",
+                  "label": "action",
+                  "uri": "https://liff.line.me/1661407197-Lkbak5X8"
+                }
+              }
+            ],
+            "position": "absolute",
+            "offsetBottom": "0px",
+            "offsetStart": "0px",
+            "offsetEnd": "0px",
+            "backgroundColor": "#5F9EA0",
+            "paddingAll": "20px",
+            "paddingTop": "18px"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "NEW",
+                "color": "#ffffff",
+                "align": "center",
+                "size": "xs",
+                "offsetTop": "3px"
+              }
+            ],
+            "position": "absolute",
+            "cornerRadius": "20px",
+            "offsetTop": "18px",
+            "backgroundColor": "#ff334b",
+            "offsetStart": "18px",
+            "height": "25px",
+            "width": "53px"
+          }
+        ],
+        "paddingAll": "0px",
+        "offsetBottom": "none",
+        "offsetTop": "none",
+        "height": "550px"
+      }
+    }
+  ]
+}
