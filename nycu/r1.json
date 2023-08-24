@@ -3,6 +3,22 @@
   "contents": [
     {
       "type": "bubble",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "image",
+            "margin": "none",
+            "gravity": "top",
+            "size": "full",
+            "aspectRatio": "18:1",
+            "aspectMode": "cover",
+            "align": "start",
+            "url": "https://sec.nycu.edu.tw/wp-content/uploads/%E8%97%8DLOGO%E9%BB%91%E4%B8%AD%E6%96%87%E6%A0%A1%E5%90%8Dnew.png"
+          }
+        ]
+      },
       "hero": {
         "type": "image",
         "size": "full",
