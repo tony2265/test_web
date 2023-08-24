@@ -20,7 +20,6 @@
         ]
       },
 
-
       "hero": {
         "type": "image",
         "size": "full",
