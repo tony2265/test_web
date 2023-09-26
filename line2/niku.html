@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-react-helmet="lang">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no user-scalable=0">
+    <title>LINE 訊息分享</title>
+    <meta name="description" content="Powered by OpenAI">
+    <meta property="og:title" content="LINE 訊息分享">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png">
+    <meta property="og:url" content="https://urli.ai">
+    <meta property="og:description" content="Powered by OpenAI">
+    <meta name="twitter:card" content>
+    <meta name="twitter:image" content="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png">
+    <meta name="twitter:title" content="LINE 訊息分享">
+    <meta name="twitter:description" content="Powered by OpenAI">
+    <link rel="icon" type="image/x-icon" href="https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png" />
+</head>
+<style>
+    #main {
+        position: fixed;
+        width: 100%;
+        height: 40px;
+        bottom: 60px;
+        font-family: 'Noto Sans TC', 'PingFang TC', '微軟正黑體';
+    }
+
+    #back {
+        width: 250px;
+        height: 40px;
+        font-size: 1.2rem;
+        color: #ffffff;
+        line-height: 40px;
+        text-align: center;
+        background-color: #00C100;
+        border-radius: 5px;
+        margin: auto;
+        cursor: pointer;
+        display: none;
+    }
+</style>
+
+<body>
+    <div id="main">
+        <div id="data-block"></div>
+        <div id="back">關閉視窗</div>
+    </div>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+</body>
+
+</html>
+
+<script type="text/javascript">
+    window.onload = function () {
+        fetch('data3.json') //這裡要改
+        .then(response => response.json())
+        .then(data => {
+            var flexMessage = {
+                "type": "flex",
+                "altText": "妮酷首支 Cover 正式公開 🎶",
+                "contents": data
+            }
+    
+            var url_string = window.location.href
+    
+            liff
+                .init({
+                    liffId: "1661407197-n2v2EjQX" //這裡要改
+                })
+                .then(() => {
+                    if (liff.isInClient()) {
+                        liffShare();
+                    } else {
+                        if (liff.isLoggedIn()) {
+                            liffShare();
+                        } else {
+                            liff.login({
+                                redirectUri: url_string
+                            })
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    liff.closeWindow();
+                })
+    
+            function liffShare() {
+                if (liff.isApiAvailable('shareTargetPicker')) {
+                    liff.shareTargetPicker([flexMessage]).then(
+                        function (res) {
+                            console.log(res)
+                            liff.closeWindow()
+                        }
+                    ).catch(function (res) {
+                        console.log(res)
+                        alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。")
+                    })
+                } else {
+                    alert("你目前的裝置或 LINE APP 版本尚未支援訊息分享。QQ")
+                    document.getElementById('back').style.display = "block"
+                    liff.closeWindow()
+                }
+            }
+    
+            document.getElementById('back').addEventListener('click', function () {
+                liff.closeWindow();
+            });
+    
+        });
+    };
+</script>
+    

@@ -1,15 +1,49 @@
 {
   "type": "bubble",
+  "header": {
+    "type": "box",
+    "layout": "horizontal",
+    "contents": [
+      {
+        "type": "text",
+        "text": "妮酷首支 Cover 正式公開 🎶",
+        "wrap": true,
+        "gravity": "center",
+        "align": "center",
+        "size": "md",
+        "weight": "bold",
+        "color": "#604C3F",
+        "style": "normal",
+        "decoration": "none",
+        "position": "relative",
+        "margin": "xs",
+        "scaling": true
+      }
+    ],
+    "spacing": "xs",
+    "margin": "xs",
+    "backgroundColor": "#ECEAE3",
+    "position": "relative"
+  },
   "hero": {
-    "type": "image",
-    "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
-    "size": "full",
-    "aspectRatio": "20:13",
-    "aspectMode": "cover",
+    "type": "video",
+    "url": "https://youtu.be/AnAdz_12N2A?si=Z0ZVIzNlb_PFUw9M",
+    "altContent": {
+      "type": "image",
+      "url": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/09/2023.09.25_Cover_PV_CS6-1024x577.jpg",
+      "size": "full",
+      "align": "center",
+      "gravity": "top",
+      "margin": "xs",
+      "aspectMode": "fit",
+      "aspectRatio": "12:9"
+    },
     "action": {
       "type": "uri",
-      "uri": "http://linecorp.com/"
-    }
+      "label": "聽妮酷唱歌",
+      "uri": "https://youtu.be/AnAdz_12N2A?si=Z0ZVIzNlb_PFUw9M"
+    },
+    "previewUrl": "https://foxtail.lab.nycu.edu.tw/wp-content/uploads/2023/09/2023.09.25_Cover_PV_CS6-1024x577.jpg"
   },
   "body": {
     "type": "box",
@@ -17,136 +51,64 @@
     "contents": [
       {
         "type": "text",
-        "text": "Brown Cafe",
+        "text": "🦊 10/7 妮酷初配信 記得要來哦！",
         "weight": "bold",
-        "size": "xl"
-      },
-      {
-        "type": "box",
-        "layout": "baseline",
-        "margin": "md",
-        "contents": [
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gray_star_28.png"
-          },
-          {
-            "type": "text",
-            "text": "4.0",
-            "size": "sm",
-            "color": "#999999",
-            "margin": "md",
-            "flex": 0
-          }
-        ]
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "margin": "lg",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "baseline",
-            "spacing": "sm",
-            "contents": [
-              {
-                "type": "text",
-                "text": "Place",
-                "color": "#aaaaaa",
-                "size": "sm",
-                "flex": 1
-              },
-              {
-                "type": "text",
-                "text": "Miraina Tower, 4-1-6 Shinjuku, Tokyo",
-                "wrap": true,
-                "color": "#666666",
-                "size": "sm",
-                "flex": 5
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "baseline",
-            "spacing": "sm",
-            "contents": [
-              {
-                "type": "text",
-                "text": "Time",
-                "color": "#aaaaaa",
-                "size": "sm",
-                "flex": 1
-              },
-              {
-                "type": "text",
-                "text": "10:00 - 23:00",
-                "wrap": true,
-                "color": "#666666",
-                "size": "sm",
-                "flex": 5
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "footer": {
-    "type": "box",
-    "layout": "vertical",
-    "spacing": "sm",
-    "contents": [
-      {
-        "type": "button",
-        "style": "link",
-        "height": "sm",
-        "action": {
-          "type": "uri",
-          "label": "CALL",
-          "uri": "https://linecorp.com"
-        }
+        "gravity": "center",
+        "align": "center",
+        "size": "md",
+        "margin": "xs"
       },
       {
         "type": "button",
-        "style": "link",
-        "height": "sm",
         "action": {
           "type": "uri",
-          "label": "WEBSITE",
-          "uri": "https://linecorp.com"
-        }
+          "label": " 👉 點我聽歌去 💿",
+          "uri": "https://youtu.be/AnAdz_12N2A?si=Z0ZVIzNlb_PFUw9M"
+        },
+        "height": "sm",
+        "style": "primary",
+        "color": "#A48B78",
+        "margin": "xxl"
       },
       {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [],
-        "margin": "sm"
+        "type": "button",
+        "action": {
+          "type": "uri",
+          "label": " 👉 訂閱妮酷 ➤",
+          "uri": "https://www.youtube.com/@Niku_NYCU?sub_confirmation=1"
+        },
+        "height": "sm",
+        "style": "primary",
+        "color": "#A48B78",
+        "margin": "md"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "uri",
+          "label": " 👉 關注妮酷 ➤",
+          "uri": "https://portaly.cc/nycu_niku"
+        },
+        "height": "sm",
+        "style": "primary",
+        "color": "#A48B78",
+        "margin": "md"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "uri",
+          "label": " 👉 分享給好友 ➤",
+          "uri": "https://liff.line.me/1661407197-n2v2EjQX"
+        },
+        "height": "sm",
+        "style": "primary",
+        "color": "#604C3F",
+        "margin": "md"
       }
     ],
-    "flex": 0
+    "spacing": "xs",
+    "margin": "xs",
+    "backgroundColor": "#ECEAE3"
   }
 }
