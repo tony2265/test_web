@@ -4,27 +4,20 @@
   <title>Redirecting...</title>
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
-      // 获取当前完整的 URL 路径
       var fullPath = window.location.pathname;
 
-      // 检查路径并进行相应的重定向
       if (fullPath.startsWith("/activity/")) {
-        // 如果是 /activity/ 后面跟有具体路径，则重定向到 /news/ 相同的子路径
         var subPath = fullPath.substring("/activity/".length);
         if (subPath) {
           window.location.href = "/news/" + subPath;
         } else {
-          // 如果直接是 /activity/ ，重定向到 /news/
           window.location.href = "/news/";
         }
       } else if (fullPath.startsWith("/activity")) {
-        // 处理没有尾随斜杠的情况
         window.location.href = "/news/";
       } else if (fullPath.startsWith("/news/")) {
-        // 如果是 /news/ 后面跟有具体路径，重定向到 /news/
         window.location.href = "/news/";
       } else if (fullPath.startsWith("/map/")) {
-        // 如果是 /map/ 后面跟有具体路径，重定向到 /map/
         var subPath = fullPath.substring("/map/".length);
         if (subPath) {
           window.location.href = "/map/";
@@ -32,7 +25,6 @@
           window.location.href = "/map/";
         }
       } else {
-        // 如果不是上述任一路径，重定向到网站的根目录
         window.location.href = "/";
       }
     });
