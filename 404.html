@@ -8,25 +8,35 @@
       var fullPath = window.location.pathname;
 
       // 定义基本路径
-      var oldBasePath = "/activity/";
-      var newBasePath = "/news/";
-      var mapBasePath = "/map/";
+      var basePathMap = {
+        "/activity/": "/news/",  // 将旧的 activity 路径重定向到 news
+        "/news/": "/news/",      // 确保 /news 重定向到 /news/
+        "/map/": "/map/"         // 确保 /map 重定向到 /map/
+      };
 
-      // 如果 URL 以旧的 activity 路径开始，重定向到新的 news 路径
-      if (fullPath.startsWith(oldBasePath)) {
-        window.location.href = newBasePath;
+      // 处理已定义的基本路径
+      var redirected = false;
+      Object.keys(basePathMap).forEach(function(basePath) {
+        if (fullPath.startsWith(basePath)) {
+          window.location.href = basePathMap[basePath];
+          redirected = true;
+        }
+      });
+
+      // 特别处理没有尾随斜杠的 /activity 和 /news
+      if (fullPath === "/activity" || fullPath === "/news") {
+        window.location.href = fullPath + "/";
+        redirected = true;
       }
-      // 如果 URL 以新的 news 路径或 map 路径开始，重定向到相应的基本路径
-      else if (fullPath.startsWith(newBasePath)) {
-        window.location.href = newBasePath;
-      }
-      else if (fullPath.startsWith(mapBasePath)) {
-        window.location.href = mapBasePath;
+
+      // 处理所有其他未知的 404，重定向到根目录
+      if (!redirected) {
+        window.location.href = "/";
       }
     });
   </script>
 </head>
 <body>
-  <p>If you are not redirected, <a href="/news/">click here to return to the news directory</a>.</p>
+  <p>If you are not redirected, <a href="/">click here to return to the homepage</a>.</p>
 </body>
 </html>
