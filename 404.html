@@ -7,37 +7,32 @@
       // 获取当前完整的 URL 路径
       var fullPath = window.location.pathname;
 
-      // 定义基本路径
-      var basePathMap = {
-        "/activity/": "/news/",  // 将旧的 activity 路径重定向到 news
-        "/news/": "/news/",      // 确保 /news 重定向到 /news/
-        "/map/": "/map/"         // 确保 /map 重定向到 /map/
-      };
-
-      // 处理已定义的基本路径
-      var redirected = false;
+      // 检查路径并进行相应的重定向
       if (fullPath.startsWith("/activity/")) {
-        var subPath = fullPath.split("/activity/")[1]; // 获取旧路径后的部分
-        window.location.href = "/news/" + subPath; // 重定向到新的 news 路径加上子路径
-        redirected = true;
-      }
-      // 处理 /news/ 和 /map/ 的直接重定向
-      else {
-        Object.keys(basePathMap).forEach(function(basePath) {
-          if (fullPath.startsWith(basePath)) {
-            window.location.href = basePathMap[basePath] + fullPath.split(basePath)[1];
-            redirected = true;
-          }
-        });
-      }
-      // 特别处理没有尾随斜杠的 /activity 和 /news
-      if (fullPath === "/activity" || fullPath === "/news") {
-        window.location.href = fullPath + "/";
-        redirected = true;
-      }
-
-      // 处理所有其他未知的 404，重定向到根目录
-      if (!redirected) {
+        // 如果是 /activity/ 后面跟有具体路径，则重定向到 /news/ 相同的子路径
+        var subPath = fullPath.substring("/activity/".length);
+        if (subPath) {
+          window.location.href = "/news/" + subPath;
+        } else {
+          // 如果直接是 /activity/ ，重定向到 /news/
+          window.location.href = "/news/";
+        }
+      } else if (fullPath.startsWith("/activity")) {
+        // 处理没有尾随斜杠的情况
+        window.location.href = "/news/";
+      } else if (fullPath.startsWith("/news/")) {
+        // 如果是 /news/ 后面跟有具体路径，重定向到 /news/
+        window.location.href = "/news/";
+      } else if (fullPath.startsWith("/map/")) {
+        // 如果是 /map/ 后面跟有具体路径，重定向到 /map/
+        var subPath = fullPath.substring("/map/".length);
+        if (subPath) {
+          window.location.href = "/map/";
+        } else {
+          window.location.href = "/map/";
+        }
+      } else {
+        // 如果不是上述任一路径，重定向到网站的根目录
         window.location.href = "/";
       }
     });
