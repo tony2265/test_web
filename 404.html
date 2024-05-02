@@ -16,13 +16,20 @@
 
       // 处理已定义的基本路径
       var redirected = false;
-      Object.keys(basePathMap).forEach(function(basePath) {
-        if (fullPath.startsWith(basePath)) {
-          window.location.href = basePathMap[basePath];
-          redirected = true;
-        }
-      });
-
+      if (fullPath.startsWith("/activity/")) {
+        var subPath = fullPath.split("/activity/")[1]; // 获取旧路径后的部分
+        window.location.href = "/news/" + subPath; // 重定向到新的 news 路径加上子路径
+        redirected = true;
+      }
+      // 处理 /news/ 和 /map/ 的直接重定向
+      else {
+        Object.keys(basePathMap).forEach(function(basePath) {
+          if (fullPath.startsWith(basePath)) {
+            window.location.href = basePathMap[basePath] + fullPath.split(basePath)[1];
+            redirected = true;
+          }
+        });
+      }
       // 特别处理没有尾随斜杠的 /activity 和 /news
       if (fullPath === "/activity" || fullPath === "/news") {
         window.location.href = fullPath + "/";
