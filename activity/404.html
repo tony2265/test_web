@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redirecting...</title>
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+      // 获取当前 URL 路径
+      var path = window.location.pathname;
+      // 定义允许的路径列表
+      var allowedPaths = ['2021_graduation', '2023_lantern_festival', 'bee', 'expo', 'taipei101'];
+      // 检查当前路径是否在允许的列表中
+      var found = allowedPaths.some(function(item) {
+        return path.includes('/activity/' + item + '/');
+      });
+
+      // 如果不在允许的列表中，重定向到主目录页面
+      if (!found) {
+        window.location.href = '/activity/';
+      }
+    });
+  </script>
+</head>
+<body>
+  <p>If you are not redirected, <a href="/activity/">click here</a>.</p>
+</body>
+</html>
