@@ -4,18 +4,22 @@
   <title>Redirecting...</title>
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
-      // 获取当前 URL 路径
-      var path = window.location.pathname;
-      // 定义允许的路径列表
+      // 获取当前完整的 URL 路径
+      var fullPath = window.location.pathname;
+
+      // 定义允许的基本路径
+      var basePath = "/activity/";
       var allowedPaths = ['2021_graduation', '2023_lantern_festival', 'bee', 'expo', 'taipei101'];
-      // 检查当前路径是否在允许的列表中
+
+      // 检查当前 URL 是否以允许的路径开始
       var found = allowedPaths.some(function(item) {
-        return path.includes('/activity/' + item + '/');
+        var regex = new RegExp("^" + basePath + item + "(/|$)");
+        return regex.test(fullPath);
       });
 
-      // 如果不在允许的列表中，重定向到主目录页面
-      if (!found) {
-        window.location.href = '/activity/';
+      // 如果不在允许的列表中，重定向到目录页面
+      if (!found && fullPath.startsWith(basePath)) {
+        window.location.href = basePath;
       }
     });
   </script>
