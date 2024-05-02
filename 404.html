@@ -4,39 +4,29 @@
   <title>Redirecting...</title>
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
-
+      // 获取当前完整的 URL 路径
       var fullPath = window.location.pathname;
 
+      // 定义基本路径
+      var oldBasePath = "/activity/";
+      var newBasePath = "/news/";
+      var mapBasePath = "/map/";
 
-      var basePaths = {
-        "/activity/": ['2021_graduation', '2023_lantern_festival', 'bee', 'expo', 'taipei101'],
-        "/map/": []
-      };
-
-      var found = false;
-
-      Object.keys(basePaths).forEach(function(basePath) {
-        if (fullPath.startsWith(basePath)) {
-          if (basePaths[basePath].length > 0) {
-            basePaths[basePath].some(function(item) {
-              var regex = new RegExp("^" + basePath + item + "(/|$)");
-              if (regex.test(fullPath)) {
-                found = true;
-                return true;
-              }
-            });
-          }
-
-          if (!found) {
-            window.location.href = basePath;
-          }
-        }
-      });
-
+      // 如果 URL 以旧的 activity 路径开始，重定向到新的 news 路径
+      if (fullPath.startsWith(oldBasePath)) {
+        window.location.href = newBasePath;
+      }
+      // 如果 URL 以新的 news 路径或 map 路径开始，重定向到相应的基本路径
+      else if (fullPath.startsWith(newBasePath)) {
+        window.location.href = newBasePath;
+      }
+      else if (fullPath.startsWith(mapBasePath)) {
+        window.location.href = mapBasePath;
+      }
     });
   </script>
 </head>
 <body>
-  <p>If you are not redirected, <a href="/">click here to return to the homepage.</a></p>
+  <p>If you are not redirected, <a href="/news/">click here to return to the news directory</a>.</p>
 </body>
 </html>
