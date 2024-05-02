@@ -4,41 +4,35 @@
   <title>Redirecting...</title>
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
-      // 获取当前完整的 URL 路径
+
       var fullPath = window.location.pathname;
 
-      // 定义要处理的基本路径和允许的具体路径
+
       var basePaths = {
         "/activity/": ['2021_graduation', '2023_lantern_festival', 'bee', 'expo', 'taipei101'],
-        "/map/": []  // 如果 "/map/" 路径下没有进一步的子路径需要检查，保留空数组
+        "/map/": []
       };
 
-      // 标记是否找到匹配的路径
       var found = false;
 
-      // 遍历每个基本路径
       Object.keys(basePaths).forEach(function(basePath) {
-        // 如果当前路径以基本路径开头
         if (fullPath.startsWith(basePath)) {
-          // 如果这个基本路径下有特定的允许的子路径
           if (basePaths[basePath].length > 0) {
             basePaths[basePath].some(function(item) {
               var regex = new RegExp("^" + basePath + item + "(/|$)");
               if (regex.test(fullPath)) {
                 found = true;
-                return true; // 找到一个匹配，跳出循环
+                return true;
               }
             });
           }
 
-          // 如果没有找到，并且路径以基本路径开头，则重定向到基本路径
           if (!found) {
             window.location.href = basePath;
           }
         }
       });
 
-      // 如果没有任何路径匹配，可以选择是否做其他处理，或者不操作
     });
   </script>
 </head>
