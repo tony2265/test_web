@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Generate Image from Google Sheets</title>
+    <title>週表生成器1</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
     <style>
         @font-face {
             font-family: 'GenSekiGothic';
@@ -32,15 +38,78 @@
         }
     </style>
 </head>
+
 <body>
-    <div id="controls">
-        <button onclick="generateImage()">Generate Image</button>
-        <a id="download" style="display:none;">Download Image</a>
+
+    <div id="controls" class="container mt-4">
+        <h2><b>週表生成器</b></h2>
+        <h6>嘟比、咩醬、助教、妮酷</h6>
+        <div class="row mb-3">
+            <div class="col">
+                <a class="btn btn-success mt-3" role="button" href="https://test.dreamcity.studio/Weekly-Schedule/2.html">
+                    切換生成器
+                </a>
+            </div>
+        </div>
+        <hr>
+        <form>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <h4><b>重要節目</b></h4>
+                    <p>填寫1~7。使用「,」做分離（例：1,2,7）</p>
+                </div>
+                <div class="col">
+                    <h4><b>不開播預設句</b></h4>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="highlight-doubi" value="" placeholder="嘟比">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="default-doubi" value="阿比用力擠突發" placeholder="嘟比的預設節目">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="highlight-miejiang" value="" placeholder="咩醬">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="default-miejiang" value="咩醬海巡" placeholder="咩醬的預設節目">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="highlight-xuyuan" value="" placeholder="旭元">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="default-xuyuan" value="助教休息" placeholder="旭元的預設節目">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="highlight-nico" value="" placeholder="妮酷">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="default-nico" value="妮在努力戴牙套" placeholder="妮酷的預設節目">
+                </div>
+            </div>
+            <hr>
+            <button type="button" class="btn btn-primary" onclick="generateImage()">生成週表 (需等待幾秒)</button>
+            <a id="download" class="btn btn-success mt-3" role="button" style="display:none;">下載圖片</a>
+        </form>
     </div>
     <div id="canvas-container">
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas-preview"></canvas>
+        <canvas id="canvas" style="display:none;"></canvas>
     </div>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
     <script>
         async function loadFonts() {
             const genSekiGothic = new FontFace('GenSekiGothic', 'url(GenSekiGothic-H.ttf)');
@@ -54,7 +123,7 @@
         async function fetchSheetData() {
             const randomParam = Math.floor(Math.random() * 1000000);
             const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTki1Xo06YY9v8v8gVqnNF3PyKGmTYlYBwt_FJDzYaUTZID10WaOy53-NeznTznftvgQLzHLVeXKe1N/pub?gid=1734652110&single=true&output=csv&random=${randomParam}`;
-            
+
             const response = await fetch(url);
             const text = await response.text();
             const data = text.split('\n').map(row => row.split(','));
@@ -113,16 +182,16 @@
 
             const artists = ["嘟比", "咩醬", "旭元", "妮酷"];
             const artistsDefault = {
-                "嘟比": [["－", "阿比用力擠突發"]],
-                "咩醬": [["－", "咩醬海巡"]],
-                "旭元": [["－", "助教休息"]],
-                "妮酷": [["－", "妮在努力戴牙套"]],
+                "嘟比": [["－", document.getElementById('default-doubi').value || "阿比用力擠突發"]],
+                "咩醬": [["－", document.getElementById('default-miejiang').value || "咩醬海巡"]],
+                "旭元": [["－", document.getElementById('default-xuyuan').value || "助教休息"]],
+                "妮酷": [["－", document.getElementById('default-nico').value || "妮在努力戴牙套"]],
             };
             const highlightDay = {
-                "嘟比": [4, 6],
-                "咩醬": [],
-                "旭元": [5],
-                "妮酷": [],
+                "嘟比": document.getElementById('highlight-doubi').value.split(',').map(Number).filter(n => !isNaN(n)),
+                "咩醬": document.getElementById('highlight-miejiang').value.split(',').map(Number).filter(n => !isNaN(n)),
+                "旭元": document.getElementById('highlight-xuyuan').value.split(',').map(Number).filter(n => !isNaN(n)),
+                "妮酷": document.getElementById('highlight-nico').value.split(',').map(Number).filter(n => !isNaN(n)),
             };
 
             const schedule = {};
@@ -149,7 +218,7 @@
                         let event = row[i + 6];
                         if (!event) continue;
                         event = processEventName(event.slice(5));
-                        
+
                         if (!schedule[artist][datePart]) {
                             schedule[artist][datePart] = [];
                         }
@@ -163,10 +232,10 @@
             }
 
             const artistPositions = {
-                "嘟比": [504, 387+3],
-                "咩醬": [901, 387+3],
-                "旭元": [1299, 387+3],
-                "妮酷": [1697, 387+3]
+                "嘟比": [504, 387 + 3],
+                "咩醬": [901, 387 + 3],
+                "旭元": [1299, 387 + 3],
+                "妮酷": [1697, 387 + 3]
             };
 
             for (const artist of artists) {
@@ -193,6 +262,16 @@
                 }
             }
 
+
+            // 縮小預覽圖
+            const previewCanvas = document.getElementById('canvas-preview');
+            const previewCtx = previewCanvas.getContext('2d');
+            const previewScale = 0.6;  // 縮小比例
+
+            previewCanvas.width = canvas.width * previewScale;
+            previewCanvas.height = canvas.height * previewScale;
+            previewCtx.drawImage(canvas, 0, 0, previewCanvas.width, previewCanvas.height);
+
             const downloadLink = document.getElementById('download');
             downloadLink.href = canvas.toDataURL('image/png');
             downloadLink.download = 'output.png';
@@ -200,4 +279,5 @@
         }
     </script>
 </body>
+
 </html>
