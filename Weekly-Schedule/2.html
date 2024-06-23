@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Image from Google Sheets</title>
+    <style>
+        @font-face {
+            font-family: 'GenSekiGothic';
+            src: url('GenSekiGothic-H.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'GenSenRounded';
+            src: url('GenSenRounded-M.ttf') format('truetype');
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #canvas-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        #controls {
+            text-align: center;
+        }
+
+        #download {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <button onclick="generateImage()">Generate Image</button>
+        <a id="download" style="display:none;">Download Image</a>
+    </div>
+    <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        async function loadFonts() {
+            const genSekiGothic = new FontFace('GenSekiGothic', 'url(GenSekiGothic-H.ttf)');
+            const genSenRounded = new FontFace('GenSenRounded', 'url(GenSenRounded-M.ttf)');
+            await genSekiGothic.load();
+            await genSenRounded.load();
+            document.fonts.add(genSekiGothic);
+            document.fonts.add(genSenRounded);
+        }
+
+        async function fetchSheetData() {
+            const randomParam = Math.floor(Math.random() * 1000000);
+            const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTki1Xo06YY9v8v8gVqnNF3PyKGmTYlYBwt_FJDzYaUTZID10WaOy53-NeznTznftvgQLzHLVeXKe1N/pub?gid=1734652110&single=true&output=csv&random=${randomParam}`;
+            
+            const response = await fetch(url);
+            const text = await response.text();
+            const data = text.split('\n').map(row => row.split(','));
+            return data;
+        }
+
+        function processEventName(eventName) {
+            if (eventName.includes("不開台")) {
+                eventName += "(不開台)";
+            }
+            eventName = eventName.split('】').slice(1).join('】');
+            eventName = eventName.replace("客座：", "").replace("活動：", "");
+            return eventName;
+        }
+
+        function drawTextCentered(ctx, text, font, fontSize, centerX, centerY, fillColor) {
+            ctx.font = `${fontSize}px ${font}`;
+            ctx.fillStyle = fillColor;
+            const textWidth = ctx.measureText(text).width;
+            const textHeight = fontSize;
+            ctx.fillText(text, centerX - textWidth / 2, centerY + textHeight / 4);
+        }
+
+        function getWeekDates() {
+            const now = new Date();
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            startOfWeek.setHours(0, 0, 0, 0);
+            endOfWeek.setHours(23, 59, 59, 999);
+            return { startOfWeek, endOfWeek };
+        }
+
+        async function generateImage() {
+            await loadFonts();
+
+            const data = await fetchSheetData();
+
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            const background = new Image();
+            background.src = 'bg2.png';
+            await new Promise(resolve => background.onload = resolve);
+
+            canvas.width = background.width;
+            canvas.height = background.height;
+
+            ctx.drawImage(background, 0, 0);
+
+            const { startOfWeek, endOfWeek } = getWeekDates();
+
+            const weekRange = `${(startOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${startOfWeek.getDate().toString().padStart(2, '0')}~${(endOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${endOfWeek.getDate().toString().padStart(2, '0')}`;
+            drawTextCentered(ctx, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
+
+            const artists = ["CB", "花燐", "煦"];
+            const artistsDefault = {
+                "CB": [["－", "BB在工作"]],
+                "花燐": [["－", "花園休息鴨"]],
+                "煦": [["－", "研習羊族秘術"]],
+            };
+            const highlightDay = {
+                "CB": [7],
+                "花燐": [1],
+                "煦": [],
+            };
+
+            const schedule = {};
+            for (const artist of artists) {
+                schedule[artist] = {};
+                for (let i = 0; i < 7; i++) {
+                    const date = new Date(startOfWeek);
+                    date.setDate(date.getDate() + i);
+                    const dateStr = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+                    schedule[artist][dateStr] = artistsDefault[artist];
+                }
+            }
+
+            for (const row of data) {
+                if (row.length < 10) continue;
+                const dateStr = row[4];
+                if (!dateStr) continue;
+                const datePart = dateStr.split(' ')[0];
+                const date = new Date(`${new Date().getFullYear()}/${datePart}`);
+                if (startOfWeek <= date && date <= endOfWeek) {
+                    const time = row[5];
+                    for (let i = 0; i < artists.length; i++) {
+                        const artist = artists[i];
+                        let event = row[i + 10];
+                        if (!event) continue;
+                        event = processEventName(event.slice(5));
+                        
+                        if (!schedule[artist][datePart]) {
+                            schedule[artist][datePart] = [];
+                        }
+                        if (schedule[artist][datePart][0][0] === "－") {
+                            schedule[artist][datePart] = [[time, event]];
+                        } else {
+                            schedule[artist][datePart].push([time, event]);
+                        }
+                    }
+                }
+            }
+
+            const artistPositions = {
+                "CB": [504, 387+3],
+                "花燐": [901, 387+3],
+                "煦": [1299, 387+3],
+            };
+
+            for (const artist of artists) {
+                const position = artistPositions[artist];
+                const startX = position[0];
+                const startY = position[1];
+                let index = 0;
+
+                for (const [date, events] of Object.entries(schedule[artist])) {
+                    const y = startY + index * 95;
+
+                    events.forEach((event, j) => {
+                        const [time, eventName] = event;
+                        const fontSize = eventName.length > 20 ? 16 : eventName.length > 15 ? 18 : 20;
+                        const fillColor = highlightDay[artist].includes(new Date(date).getDay() + 1) ? '#E5202F' : '#000000';
+
+                        const xOffset = events.length === 1 ? 0 : 70 * (j * 2 - 1);
+
+                        drawTextCentered(ctx, time, 'GenSenRounded', 23, startX + xOffset, y, time === '－' ? '#808080' : fillColor);
+                        drawTextCentered(ctx, eventName, 'GenSenRounded', fontSize, startX + xOffset, y + 34, time === '－' ? '#808080' : fillColor);
+                    });
+
+                    index++;
+                }
+            }
+
+            const downloadLink = document.getElementById('download');
+            downloadLink.href = canvas.toDataURL('image/png');
+            downloadLink.download = 'output2.png';
+            downloadLink.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
