@@ -1,1 +1,0 @@
-import{_ as o,v as t,t as s,x as e}from"./BBg_uEKH.js";const c={},l=e("h1",null,"Bullyhood Remake",-1),n=e("p",null,"This is the Bullyhood Remake page.",-1),_=[l,n];function a(r,d){return s(),t("div",null,_)}const i=o(c,[["render",a]]);export{i as default};
