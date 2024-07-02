@@ -2,12 +2,11 @@
 <html>
 
 <head>
-    <title>週表生成器1</title>
+    <title>週表生成器</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
     <style>
         @font-face {
             font-family: 'GenSekiGothic';
@@ -23,37 +22,18 @@
             font-family: Arial, sans-serif;
         }
 
-        #canvas-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
         #controls {
             text-align: center;
-        }
-
-        #download {
-            margin-top: 20px;
         }
     </style>
 </head>
 
 <body>
-
     <div id="controls" class="container mt-4">
         <h2><b>週表生成器</b></h2>
-        <h6>嘟比、咩醬、助教、妮酷</h6>
-        <div class="row mb-3">
-            <div class="col">
-                <a class="btn btn-success mt-3" role="button" href="https://test.dreamcity.studio/Weekly-Schedule/2.html">
-                    切換生成器
-                </a>
-            </div>
-        </div>
+        <h6>嘟比、咩醬、旭元、妮酷、CB、花燐、煦</h6>
         <hr>
         <form>
-
             <div class="row mb-3">
                 <div class="col">
                     <h4><b>重要節目</b></h4>
@@ -63,10 +43,9 @@
                     <h4><b>不開播預設句</b></h4>
                 </div>
             </div>
-
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" id="highlight-doubi" value="" placeholder="嘟比">
+                    <input type="text" class="form-control" id="highlight-doubi" placeholder="嘟比">
                 </div>
                 <div class="col">
                     <input type="text" class="form-control" id="default-doubi" value="阿比用力擠突發" placeholder="嘟比的預設節目">
@@ -74,7 +53,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" id="highlight-miejiang" value="" placeholder="咩醬">
+                    <input type="text" class="form-control" id="highlight-miejiang" placeholder="咩醬">
                 </div>
                 <div class="col">
                     <input type="text" class="form-control" id="default-miejiang" value="咩醬海巡" placeholder="咩醬的預設節目">
@@ -82,7 +61,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" id="highlight-xuyuan" value="" placeholder="旭元">
+                    <input type="text" class="form-control" id="highlight-xuyuan" placeholder="旭元">
                 </div>
                 <div class="col">
                     <input type="text" class="form-control" id="default-xuyuan" value="助教休息" placeholder="旭元的預設節目">
@@ -90,23 +69,55 @@
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" id="highlight-nico" value="" placeholder="妮酷">
+                    <input type="text" class="form-control" id="highlight-nico" placeholder="妮酷">
                 </div>
                 <div class="col">
                     <input type="text" class="form-control" id="default-nico" value="妮在努力戴牙套" placeholder="妮酷的預設節目">
                 </div>
             </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="highlight-cb" placeholder="CB">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="default-cb" value="BB在工作" placeholder="CB的預設節目">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="highlight-hualin" placeholder="花燐">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="default-hualin" value="花園休息鴨" placeholder="花燐的預設節目">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="highlight-xu" placeholder="煦">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="default-xu" value="研習羊族秘術" placeholder="煦的預設節目">
+                </div>
+            </div>
             <hr>
-            <button type="button" class="btn btn-primary" onclick="generateImage()">生成週表 (需等待幾秒)</button>
-            <a id="download" class="btn btn-success mt-3" role="button" style="display:none;">下載圖片</a>
+            <button type="button" class="btn btn-primary" onclick="generateImages()">生成週表 (需等待幾秒)</button>
+            <hr>
+            <div class="mb-3">
+                <h4><b>重要節目文字</b></h4>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
+            </div>
+
         </form>
-    </div>
-    <div id="canvas-container">
-        <canvas id="canvas-preview"></canvas>
-        <canvas id="canvas" style="display:none;"></canvas>
-    </div>
 
-
+    </div>
+    <div class="container-lg text-center">
+        <a id="download1" class="btn btn-info mt-3" role="button" style="display:none;">下載圖片1</a>
+        <canvas id="canvas-preview1" class="img-fluid"></canvas>
+        <a id="download2" class="btn btn-info mt-3" role="button" style="display:none;">下載圖片2</a>
+        <canvas id="canvas-preview2" class="img-fluid"></canvas>
+        <canvas id="canvas1" style="display:none;"></canvas>
+        <canvas id="canvas2" style="display:none;"></canvas>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
@@ -123,7 +134,6 @@
         async function fetchSheetData() {
             const randomParam = Math.floor(Math.random() * 1000000);
             const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTki1Xo06YY9v8v8gVqnNF3PyKGmTYlYBwt_FJDzYaUTZID10WaOy53-NeznTznftvgQLzHLVeXKe1N/pub?gid=1734652110&single=true&output=csv&random=${randomParam}`;
-
             const response = await fetch(url);
             const text = await response.text();
             const data = text.split('\n').map(row => row.split(','));
@@ -158,43 +168,61 @@
             return { startOfWeek, endOfWeek };
         }
 
-        async function generateImage() {
+        async function generateImages() {
             await loadFonts();
-
             const data = await fetchSheetData();
+            const canvas1 = document.getElementById('canvas1');
+            const ctx1 = canvas1.getContext('2d');
+            const canvas2 = document.getElementById('canvas2');
+            const ctx2 = canvas2.getContext('2d');
+            const background1 = new Image();
+            const background2 = new Image();
 
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
+            background1.src = 'bg1.png';
+            background2.src = 'bg2.png';
 
-            const background = new Image();
-            background.src = 'bg1.png';
-            await new Promise(resolve => background.onload = resolve);
+            await Promise.all([
+                new Promise(resolve => background1.onload = resolve),
+                new Promise(resolve => background2.onload = resolve)
+            ]);
 
-            canvas.width = background.width;
-            canvas.height = background.height;
+            canvas1.width = background1.width;
+            canvas1.height = background1.height;
+            canvas2.width = background2.width;
+            canvas2.height = background2.height;
 
-            ctx.drawImage(background, 0, 0);
+            ctx1.drawImage(background1, 0, 0);
+            ctx2.drawImage(background2, 0, 0);
 
             const { startOfWeek, endOfWeek } = getWeekDates();
 
             const weekRange = `${(startOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${startOfWeek.getDate().toString().padStart(2, '0')}~${(endOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${endOfWeek.getDate().toString().padStart(2, '0')}`;
-            drawTextCentered(ctx, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
+            drawTextCentered(ctx1, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
+            drawTextCentered(ctx2, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
 
-            const artists = ["嘟比", "咩醬", "旭元", "妮酷"];
+            const artists = ["嘟比", "咩醬", "旭元", "妮酷", "CB", "花燐", "煦"];
             const artistsDefault = {
                 "嘟比": [["－", document.getElementById('default-doubi').value || "阿比用力擠突發"]],
                 "咩醬": [["－", document.getElementById('default-miejiang').value || "咩醬海巡"]],
                 "旭元": [["－", document.getElementById('default-xuyuan').value || "助教休息"]],
                 "妮酷": [["－", document.getElementById('default-nico').value || "妮在努力戴牙套"]],
+                "CB": [["－", document.getElementById('default-cb').value || "BB在工作"]],
+                "花燐": [["－", document.getElementById('default-hualin').value || "花園休息鴨"]],
+                "煦": [["－", document.getElementById('default-xu').value || "研習羊族秘術"]],
             };
             const highlightDay = {
-                "嘟比": document.getElementById('highlight-doubi').value.split(',').map(Number).filter(n => !isNaN(n)),
-                "咩醬": document.getElementById('highlight-miejiang').value.split(',').map(Number).filter(n => !isNaN(n)),
-                "旭元": document.getElementById('highlight-xuyuan').value.split(',').map(Number).filter(n => !isNaN(n)),
-                "妮酷": document.getElementById('highlight-nico').value.split(',').map(Number).filter(n => !isNaN(n)),
+                "嘟比": document.getElementById('highlight-doubi').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                "咩醬": document.getElementById('highlight-miejiang').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                "旭元": document.getElementById('highlight-xuyuan').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                "妮酷": document.getElementById('highlight-nico').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                "CB": document.getElementById('highlight-cb').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                "花燐": document.getElementById('highlight-hualin').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                "煦": document.getElementById('highlight-xu').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
             };
 
             const schedule = {};
+            const importantEvents = [];
+
             for (const artist of artists) {
                 schedule[artist] = {};
                 for (let i = 0; i < 7; i++) {
@@ -227,6 +255,12 @@
                         } else {
                             schedule[artist][datePart].push([time, event]);
                         }
+                        const eventDay = date.getDay() === 0 ? 7 : date.getDay();
+                        if (highlightDay[artist].length > 0  && highlightDay[artist].includes(eventDay)) {
+                            console.log(` ${artist} ｜ ${highlightDay[artist].length}`);
+                            importantEvents.push(`${datePart} ${artist}｜${event}`);
+                        }
+
                     }
                 }
             }
@@ -235,7 +269,10 @@
                 "嘟比": [504, 387 + 3],
                 "咩醬": [901, 387 + 3],
                 "旭元": [1299, 387 + 3],
-                "妮酷": [1697, 387 + 3]
+                "妮酷": [1697, 387 + 3],
+                "CB": [504, 387 + 3],
+                "花燐": [901, 387 + 3],
+                "煦": [1299, 387 + 3]
             };
 
             for (const artist of artists) {
@@ -254,30 +291,63 @@
 
                         const xOffset = events.length === 1 ? 0 : 70 * (j * 2 - 1);
 
-                        drawTextCentered(ctx, time, 'GenSenRounded', 23, startX + xOffset, y, time === '－' ? '#808080' : fillColor);
-                        drawTextCentered(ctx, eventName, 'GenSenRounded', fontSize, startX + xOffset, y + 34, time === '－' ? '#808080' : fillColor);
+                        if (artists.slice(0, 4).includes(artist)) {
+                            drawTextCentered(ctx1, time, 'GenSenRounded', 23, startX + xOffset, y, time === '－' ? '#808080' : fillColor);
+                            drawTextCentered(ctx1, eventName, 'GenSenRounded', fontSize, startX + xOffset, y + 34, time === '－' ? '#808080' : fillColor);
+                        } else {
+                            drawTextCentered(ctx2, time, 'GenSenRounded', 23, startX + xOffset, y, time === '－' ? '#808080' : fillColor);
+                            drawTextCentered(ctx2, eventName, 'GenSenRounded', fontSize, startX + xOffset, y + 34, time === '－' ? '#808080' : fillColor);
+                        }
                     });
 
                     index++;
                 }
             }
 
-
             // 縮小預覽圖
-            const previewCanvas = document.getElementById('canvas-preview');
-            const previewCtx = previewCanvas.getContext('2d');
-            const previewScale = 0.6;  // 縮小比例
+            const previewCanvas1 = document.getElementById('canvas-preview1');
+            const previewCtx1 = previewCanvas1.getContext('2d');
+            const previewCanvas2 = document.getElementById('canvas-preview2');
+            const previewCtx2 = previewCanvas2.getContext('2d');
+            const previewScale = 1;  // 縮小比例
 
-            previewCanvas.width = canvas.width * previewScale;
-            previewCanvas.height = canvas.height * previewScale;
-            previewCtx.drawImage(canvas, 0, 0, previewCanvas.width, previewCanvas.height);
+            previewCanvas1.width = canvas1.width * previewScale;
+            previewCanvas1.height = canvas1.height * previewScale;
+            previewCtx1.drawImage(canvas1, 0, 0, previewCanvas1.width, previewCanvas1.height);
 
-            const downloadLink = document.getElementById('download');
-            downloadLink.href = canvas.toDataURL('image/png');
-            downloadLink.download = 'output.png';
-            downloadLink.style.display = 'block';
+            previewCanvas2.width = canvas2.width * previewScale;
+            previewCanvas2.height = canvas2.height * previewScale;
+            previewCtx2.drawImage(canvas2, 0, 0, previewCanvas2.width, previewCanvas2.height);
+
+
+            const downloadLink1 = document.getElementById('download1');
+            const downloadLink2 = document.getElementById('download2');
+
+            downloadLink1.href = canvas1.toDataURL('image/png');
+            downloadLink1.download = 'output1.png';
+            downloadLink1.style.display = 'block';
+
+            downloadLink2.href = canvas2.toDataURL('image/png');
+            downloadLink2.download = 'output2.png';
+            downloadLink2.style.display = 'block';
+
+            // 生成重要節目文字
+            const importantEventsText = `⭐【夢箱｜週行程】 ${weekRange}\n\n本週精彩看點👇\n${importantEvents.join('\n')}\n\n#夢想之都工作室 #箱週表 #Vtuber`;
+            document.getElementById('exampleFormControlTextarea1').value = importantEventsText;
+
+            // 使用Blob對象將兩張圖片打包為一個壓縮文件
+            // const zip = new JSZip();
+            // zip.file('output1.png', canvas1.toDataURL('image/png').split(',')[1], { base64: true });
+            // zip.file('output2.png', canvas2.toDataURL('image/png').split(',')[1], { base64: true });
+            // zip.generateAsync({ type: 'blob' }).then(function (content) {
+            //     const zipLink = document.createElement('a');
+            //     zipLink.href = URL.createObjectURL(content);
+            //     zipLink.download = 'weekly_schedules.zip';
+            //     zipLink.click();
+            // });
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
 </body>
 
 </html>
