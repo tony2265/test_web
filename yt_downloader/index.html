@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT Video Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .message {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>YT Video Downloader</h1>
+    <div class="form-group">
+        <label for="url">YouTube URL:</label>
+        <input type="text" id="url">
+    </div>
+    <div class="form-group">
+        <label for="start_time">Start Time (mm:ss or hh:mm:ss):</label>
+        <input type="text" id="start_time">
+    </div>
+    <div class="form-group">
+        <label for="duration">Duration (seconds):</label>
+        <input type="number" id="duration">
+    </div>
+    <button id="downloadBtn">Download</button>
+    <div class="message" id="message"></div>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const url = document.getElementById('url').value;
+            const start_time = document.getElementById('start_time').value;
+            const duration = document.getElementById('duration').value;
+
+            fetch('https://1248-106-104-104-196.ngrok-free.app/download', {  // 使用 ngrok 提供的 URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url, start_time, duration })
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'video.mp4';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.getElementById('message').textContent = 'Download started';
+            })
+            .catch(error => {
+                document.getElementById('message').textContent = `Error: ${error}`;
+            });
+        });
+    </script>
+</body>
+</html>
