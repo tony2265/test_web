@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT 直播封面圖取得</title>
+</head>
+<body>
+    <h1>YT 直播封面圖取得</h1>
+    <input type="text" id="yt-url" placeholder="輸入 YouTube 直播網址">
+    <button onclick="getThumbnail()">取得封面圖</button>
+    <div id="thumbnail-container"></div>
+
+    <script>
+        function getYouTubeID(url) {
+            const regex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        function getThumbnail() {
+            const url = document.getElementById('yt-url').value;
+            const videoID = getYouTubeID(url);
+            if (videoID) {
+                const thumbnailUrl = `https://img.youtube.com/vi/${videoID}/maxresdefault.jpg`;
+                document.getElementById('thumbnail-container').innerHTML = `
+                    <img src="${thumbnailUrl}" alt="封面圖" style="max-width:100%; height:auto;">
+                `;
+            } else {
+                document.getElementById('thumbnail-container').innerHTML = `
+                    <p>無法解析網址或無效的 YouTube 影片網址。</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
