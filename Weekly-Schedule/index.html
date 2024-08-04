@@ -137,7 +137,12 @@
             const response = await fetch(url);
             const text = await response.text();
             const data = text.split('\n').map(row => row.split(','));
-            return data;
+            const firstRow = data[0];
+            const last50Rows = data.slice(-50);
+            const filteredData = [firstRow, ...last50Rows];
+
+            console.log(filteredData);
+            return filteredData;
         }
 
         function processEventName(eventName) {
