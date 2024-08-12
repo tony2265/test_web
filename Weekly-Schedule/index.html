@@ -146,12 +146,19 @@
         }
 
         function processEventName(eventName) {
+            let isImportant = false;
+
             if (eventName.includes("不開台")) {
                 eventName += "(不開台)";
             }
+            if (eventName.includes("紅直播") || eventName.includes("紅連動")) {
+                isImportant = true;
+            }
+
             eventName = eventName.split('】').slice(1).join('】');
             eventName = eventName.replace("客座：", "").replace("活動：", "");
-            return eventName;
+            // return eventName;
+            return { eventName, isImportant };
         }
 
         function drawTextCentered(ctx, text, font, fontSize, centerX, centerY, fillColor) {
@@ -237,6 +244,7 @@
                     schedule[artist][dateStr] = artistsDefault[artist];
                 }
             }
+            console.log('schedule is ', schedule);
 
             for (const row of data) {
                 if (row.length < 10) continue;
@@ -250,25 +258,34 @@
                         const artist = artists[i];
                         let event = row[i + 6];
                         if (!event) continue;
-                        event = processEventName(event.slice(5));
+
+                        // event = processEventName(event.slice(5));
+                        // 使用 processEventName 並解構
+                        const { eventName, isImportant } = processEventName(event.slice(5));
+
 
                         if (!schedule[artist][datePart]) {
                             schedule[artist][datePart] = [];
                         }
                         if (schedule[artist][datePart][0][0] === "－") {
-                            schedule[artist][datePart] = [[time, event]];
+                            // schedule[artist][datePart] = [[time, event]];
+                            schedule[artist][datePart] = [[time, { eventName, isImportant }]];
+
                         } else {
-                            schedule[artist][datePart].push([time, event]);
+                            // schedule[artist][datePart].push([time, event]);
+                            schedule[artist][datePart].push([time, { eventName, isImportant }]);
+
                         }
                         const eventDay = date.getDay() === 0 ? 7 : date.getDay();
-                        if (highlightDay[artist].length > 0  && highlightDay[artist].includes(eventDay)) {
+                        if (highlightDay[artist].length > 0  && highlightDay[artist].includes(eventDay) || isImportant) {
                             console.log(` ${artist} ｜ ${highlightDay[artist].length}`);
-                            importantEvents.push(`${datePart} ${artist}｜${event}`);
+                            importantEvents.push(`${datePart} ${artist}｜${eventName}`);
                         }
 
                     }
                 }
             }
+            console.log('schedule is ', schedule);
 
             const artistPositions = {
                 "嘟比": [504, 387 + 3],
@@ -290,9 +307,22 @@
                     const y = startY + index * 95;
 
                     events.forEach((event, j) => {
-                        const [time, eventName] = event;
-                        const fontSize = eventName.length > 20 ? 16 : eventName.length > 15 ? 18 : 20;
-                        const fillColor = highlightDay[artist].includes(new Date(date).getDay() + 1) ? '#E5202F' : '#000000';
+                        const [ time, eventData ] = event;
+                        // console.log('event is ', event);
+                        // console.log('time is ', time);
+                        // console.log('eventData is ', eventData);
+
+                        let { eventName, isImportant } = eventData;
+                        if (typeof eventData === 'string') {
+                            eventName = eventData;
+                        }
+                        // console.log('eventName is ', eventName);
+
+                        let fontSize;
+                        if (eventName) {
+                            fontSize = eventName.length > 20 ? 16 : eventName.length > 15 ? 18 : 20;
+                        }
+                        const fillColor = isImportant || highlightDay[artist].includes(new Date(date).getDay() + 1) ? '#E5202F' : '#000000';
 
                         const xOffset = events.length === 1 ? 0 : 70 * (j * 2 - 1);
 
@@ -303,6 +333,10 @@
                             drawTextCentered(ctx2, time, 'GenSenRounded', 23, startX + xOffset, y, time === '－' ? '#808080' : fillColor);
                             drawTextCentered(ctx2, eventName, 'GenSenRounded', fontSize, startX + xOffset, y + 34, time === '－' ? '#808080' : fillColor);
                         }
+                        console.log('eventName is ', eventData);
+
+                       
+
                     });
 
                     index++;
