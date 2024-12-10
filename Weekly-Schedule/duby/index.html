@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>週表生成器</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        @font-face {
+            font-family: 'GenSekiGothic';
+            src: url('GenSekiGothic-H.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'GenSenRounded';
+            src: url('GenSenRounded-M.ttf') format('truetype');
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #controls {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="controls" class="container mt-4">
+        <h2><b>週表生成器</b></h2>
+        <h6>嘟比</h6>
+        <hr>
+        <form>
+
+            <button type="button" class="btn btn-primary" onclick="generateImages()">生成週表 (需等待幾秒)</button>
+            <button type="button" class="btn btn-success" onclick="window.location.href='https://docs.google.com/spreadsheets/d/1rCeUZQb-fj47oFeih8wR8X_kYbLbPnXVwSN-FBUx37I/edit?gid=835991479#gid=835991479'">
+                寫週表
+            </button>
+            
+        </form>
+
+    </div>
+    <div class="container-lg text-center">
+        <a id="download1" class="btn btn-info mt-3" role="button" style="display:none;">下載圖片1</a>
+        <canvas id="canvas-preview1" class="img-fluid"></canvas>
+
+        <canvas id="canvas1" style="display:none;"></canvas>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script>
+        async function loadFonts() {
+            const genSekiGothic = new FontFace('GenSekiGothic', 'url(GenSekiGothic-H.ttf)');
+            const genSenRounded = new FontFace('GenSenRounded', 'url(GenSenRounded-M.ttf)');
+            await genSekiGothic.load();
+            await genSenRounded.load();
+            document.fonts.add(genSekiGothic);
+            document.fonts.add(genSenRounded);
+        }
+
+        async function fetchSheetData() {
+            const randomParam = Math.floor(Math.random() * 1000000);
+            const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTki1Xo06YY9v8v8gVqnNF3PyKGmTYlYBwt_FJDzYaUTZID10WaOy53-NeznTznftvgQLzHLVeXKe1N/pub?gid=1734652110&single=true&output=csv&random=${randomParam}`;
+            const response = await fetch(url);
+            const text = await response.text();
+            const data = text.split('\n').map(row => row.split(','));
+            const firstRow = data[0];
+            const last50Rows = data.slice(-50);
+            const filteredData = [firstRow, ...last50Rows];
+
+            console.log(filteredData);
+            return filteredData;
+        }
+
+        function processEventName(eventName) {
+            let isImportant = false;
+
+            if (eventName.includes("不開台)】")) {
+                eventName += "(不開台)";
+            }
+            if (eventName.includes("紅直播") || eventName.includes("紅連動")) {
+                isImportant = true;
+            }
+
+            eventName = eventName.split('】').slice(1).join('】');
+            eventName = eventName.replace("客座：", "").replace("活動：", "");
+            // return eventName;
+            return { eventName, isImportant };
+        }
+
+        function drawTextCentered(ctx, text, font, fontSize, centerX, centerY, fillColor) {
+            ctx.font = `${fontSize}px ${font}`;
+            ctx.fillStyle = fillColor;
+            const textWidth = ctx.measureText(text).width;
+            const textHeight = fontSize;
+            ctx.fillText(text, centerX - textWidth / 2, centerY + textHeight / 4);
+        }
+
+        function drawTextLefted(ctx, text, font, fontSize, centerX, centerY, fillColor) {
+            ctx.save(); // 保存當前繪圖狀態
+            ctx.translate(centerX, centerY); // 將畫布的原點移到文字的起始點
+            ctx.rotate(-0.030); // 旋轉畫布
+            ctx.font = `${fontSize}px ${font}`;
+            ctx.fillStyle = fillColor;
+            ctx.textAlign = 'left'; // 設置文字左對齊
+            ctx.fillText(text, 0, 0); // 在旋轉後的位置繪製文字
+            ctx.restore(); // 恢復繪圖狀態
+        }
+        function drawRoundedRect(ctx, x, y, width, height, radius, fillColor) {
+            ctx.save();
+            ctx.rotate(-0.030); // 旋轉畫布
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.arcTo(x + width, y, x + width, y + radius, radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+            ctx.lineTo(x + radius, y + height);
+            ctx.arcTo(x, y + height, x, y + height - radius, radius);
+            ctx.lineTo(x, y + radius);
+            ctx.arcTo(x, y, x + radius, y, radius);
+            ctx.closePath();
+            ctx.fillStyle = fillColor;
+            ctx.fill();
+            ctx.restore();
+
+        }
+
+        function getWeekDates() {
+            const now = new Date();
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            startOfWeek.setHours(0, 0, 0, 0);
+            endOfWeek.setHours(23, 59, 59, 999);
+            return { startOfWeek, endOfWeek };
+        }
+
+        function formatDate(date) {
+            const options = { month: '2-digit', day: '2-digit', weekday: 'short' };
+            const formatter = new Intl.DateTimeFormat('zh-TW', options);
+            const parts = formatter.formatToParts(date);
+
+            const month = parts.find(part => part.type === 'month').value;
+            const day = parts.find(part => part.type === 'day').value;
+            const weekday = parts.find(part => part.type === 'weekday').value;
+
+            return `${month}/${day} (${weekday[1]})`;
+        }
+
+        async function generateImages() {
+            await loadFonts();
+            const data = await fetchSheetData();
+            const canvas1 = document.getElementById('canvas1');
+            const ctx1 = canvas1.getContext('2d');
+
+            const background1 = new Image();
+            background1.src = 'bg.jpg';
+
+            await new Promise(resolve => background1.onload = resolve);
+
+            canvas1.width = background1.width;
+            canvas1.height = background1.height;
+            ctx1.drawImage(background1, 0, 0);
+
+            const { startOfWeek, endOfWeek } = getWeekDates();
+            const weekRange = `${(startOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${startOfWeek.getDate().toString().padStart(2, '0')}~${(endOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${endOfWeek.getDate().toString().padStart(2, '0')}`;
+            drawTextCentered(ctx1, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
+
+            const artist = "嘟比";
+            const schedule = {};
+            const importantEvents = [];
+
+
+            console.log(schedule);
+
+            for (const row of data) {
+                if (row.length < 10) continue;
+                const dateStr = row[4];
+                if (!dateStr) continue;
+
+                const datePart = dateStr.split(' ')[0];
+                const date = new Date(`${new Date().getFullYear()}/${datePart}`);
+                if (startOfWeek <= date && date <= endOfWeek) {
+                    const time = row[5];
+                    const event = row[6];
+                    if (!event) continue;
+
+                    var { eventName, isImportant } = processEventName(event.slice(5));
+                    const dateFormatted = date.toISOString().split('T')[0];
+
+                    if (!schedule[dateFormatted]) {
+                        schedule[dateFormatted] = [];
+                    }
+
+                    eventName = `${time} ${eventName}`;
+                    schedule[dateFormatted].push([date, { eventName, isImportant }]);
+
+                    const eventDay = date.getDay() === 0 ? 7 : date.getDay();
+                }
+            }
+
+            const artistPosition = { x: 80, y: 481 };
+            let rowIndex = 0;
+
+            for (const [date, events] of Object.entries(schedule)) {
+                const yPosition = artistPosition.y + rowIndex * 102;
+
+                events.forEach((event, index) => {
+                    const [time, eventData] = event;
+                    const { eventName, isImportant } = eventData;
+
+                    const fontSize = eventName.length > 20 ? 20 : 24;
+                    const fillColor = isImportant ? '#061373' : '#000000';
+
+                    // 繪製背景矩形
+                    const rectX = artistPosition.x-45; // 矩形的 X 起始位置
+                    const rectY = yPosition - 26;  // 矩形的 Y 起始位置（稍微向上偏移）
+
+                    drawRoundedRect(ctx1, rectX, rectY, 180, 38, 19, '#64c2f8');
+
+                    drawTextLefted(ctx1, formatDate(time), 'GenSenRounded', 26, artistPosition.x , yPosition, '#f1f1f1');
+                    drawTextLefted(ctx1, eventName, 'GenSenRounded', fontSize, artistPosition.x , yPosition+50, fillColor);
+
+                    // drawTextCentered(ctx1, time, 'GenSenRounded', 23, artistPosition.x + xOffset, yPosition, fillColor);
+                    // drawTextCentered(ctx1, eventName, 'GenSenRounded', fontSize, artistPosition.x + xOffset, yPosition + 34, fillColor);
+                });
+
+                rowIndex++;
+            }
+
+            const previewCanvas = document.getElementById('canvas-preview1');
+            const previewCtx = previewCanvas.getContext('2d');
+            const previewScale = 1;
+
+            previewCanvas.width = canvas1.width * previewScale;
+            previewCanvas.height = canvas1.height * previewScale;
+            previewCtx.drawImage(canvas1, 0, 0, previewCanvas.width, previewCanvas.height);
+
+            const downloadLink = document.getElementById('download1');
+            downloadLink.href = canvas1.toDataURL('image/png');
+            downloadLink.download = 'duby-schedule.png';
+            downloadLink.style.display = 'block';
+        }
+
+
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
+</body>
+
+</html>
