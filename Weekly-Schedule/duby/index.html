@@ -41,7 +41,13 @@
             </button>
                         
         </form>
-
+        <div class="container mt-3">
+            <div class="progress" id="progress-container" style="display:none;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                    style="width: 0%;" id="progress-bar">0%</div>
+            </div>
+        </div>
+        
     </div>
     <div class="container-lg text-center">
         <a id="download1" class="btn btn-info mt-3" role="button" style="display:none;">下載圖片1</a>
@@ -155,98 +161,132 @@
         }
 
         async function generateImages() {
-            await loadFonts();
-            const data = await fetchSheetData();
-            const canvas1 = document.getElementById('canvas1');
-            const ctx1 = canvas1.getContext('2d');
-
-            const background1 = new Image();
-            background1.src = 'bg.jpg';
-
-            await new Promise(resolve => background1.onload = resolve);
-
-            canvas1.width = background1.width;
-            canvas1.height = background1.height;
-            ctx1.drawImage(background1, 0, 0);
-
-            const { startOfWeek, endOfWeek } = getWeekDates();
-            const weekRange = `${(startOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${startOfWeek.getDate().toString().padStart(2, '0')}~${(endOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${endOfWeek.getDate().toString().padStart(2, '0')}`;
-            drawTextCentered(ctx1, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
-
-            const artist = "嘟比";
-            const schedule = {};
-            const importantEvents = [];
-
-
-            console.log(schedule);
-
-            for (const row of data) {
-                if (row.length < 10) continue;
-                const dateStr = row[4];
-                if (!dateStr) continue;
-
-                const datePart = dateStr.split(' ')[0];
-                const date = new Date(`${new Date().getFullYear()}/${datePart}`);
-                if (startOfWeek <= date && date <= endOfWeek) {
-                    const time = row[5];
-                    const event = row[6];
-                    if (!event) continue;
-
-                    var { eventName, isImportant } = processEventName(event.slice(5));
-                    const dateFormatted = date.toISOString().split('T')[0];
-
-                    if (!schedule[dateFormatted]) {
-                        schedule[dateFormatted] = [];
-                    }
-
-                    eventName = `${time} ${eventName}`;
-                    schedule[dateFormatted].push([date, { eventName, isImportant }]);
-
-                    const eventDay = date.getDay() === 0 ? 7 : date.getDay();
-                }
-            }
-
-            const artistPosition = { x: 80, y: 481 };
-            let rowIndex = 0;
-
-            for (const [date, events] of Object.entries(schedule)) {
-                const yPosition = artistPosition.y + rowIndex * 102;
-
-                events.forEach((event, index) => {
-                    const [time, eventData] = event;
-                    const { eventName, isImportant } = eventData;
-
-                    const fontSize = eventName.length > 20 ? 20 : 24;
-                    const fillColor = isImportant ? '#061373' : '#000000';
-
-                    // 繪製背景矩形
-                    const rectX = artistPosition.x-45; // 矩形的 X 起始位置
-                    const rectY = yPosition - 26;  // 矩形的 Y 起始位置（稍微向上偏移）
-
-                    drawRoundedRect(ctx1, rectX, rectY, 180, 38, 19, '#64c2f8');
-
-                    drawTextLefted(ctx1, formatDate(time), 'GenSenRounded', 26, artistPosition.x , yPosition, '#f1f1f1');
-                    drawTextLefted(ctx1, eventName, 'GenSenRounded', fontSize, artistPosition.x , yPosition+50, fillColor);
-
-                    // drawTextCentered(ctx1, time, 'GenSenRounded', 23, artistPosition.x + xOffset, yPosition, fillColor);
-                    // drawTextCentered(ctx1, eventName, 'GenSenRounded', fontSize, artistPosition.x + xOffset, yPosition + 34, fillColor);
-                });
-
-                rowIndex++;
-            }
-
             const previewCanvas = document.getElementById('canvas-preview1');
             const previewCtx = previewCanvas.getContext('2d');
-            const previewScale = 1;
+            previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
 
-            previewCanvas.width = canvas1.width * previewScale;
-            previewCanvas.height = canvas1.height * previewScale;
-            previewCtx.drawImage(canvas1, 0, 0, previewCanvas.width, previewCanvas.height);
+            document.getElementById('download1').style.display = 'none';
 
-            const downloadLink = document.getElementById('download1');
-            downloadLink.href = canvas1.toDataURL('image/png');
-            downloadLink.download = 'duby-schedule.png';
-            downloadLink.style.display = 'block';
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            progressContainer.style.display = 'block';
+
+            function updateProgress(percentage, stage) {
+                progressBar.style.width = `${percentage}%`;
+                progressBar.textContent = `${percentage}% - ${stage}`;
+            }
+
+
+            try {
+
+                updateProgress(10, '正在加載字體...');
+
+                await loadFonts();
+
+                updateProgress(30, '正在獲取數據...');
+                const data = await fetchSheetData();
+
+                updateProgress(50, '正在加載背景...');
+                const canvas1 = document.getElementById('canvas1');
+                const ctx1 = canvas1.getContext('2d');
+                const background1 = new Image();
+                const timestamp = new Date().getTime(); // 取得當前時間戳記
+                background1.src = `bg.jpg?cache=${timestamp}`; // 加上時間戳記
+                await new Promise(resolve => background1.onload = resolve);
+
+                updateProgress(70, '正在繪製圖片...');
+                canvas1.width = background1.width;
+                canvas1.height = background1.height;
+                ctx1.drawImage(background1, 0, 0);
+
+                const { startOfWeek, endOfWeek } = getWeekDates();
+                const weekRange = `${(startOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${startOfWeek.getDate().toString().padStart(2, '0')}~${(endOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${endOfWeek.getDate().toString().padStart(2, '0')}`;
+                drawTextCentered(ctx1, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
+
+                const artist = "嘟比";
+                const schedule = {};
+                const importantEvents = [];
+
+
+                console.log(schedule);
+
+                for (const row of data) {
+                    if (row.length < 10) continue;
+                    const dateStr = row[4];
+                    if (!dateStr) continue;
+
+                    const datePart = dateStr.split(' ')[0];
+                    const date = new Date(`${new Date().getFullYear()}/${datePart}`);
+                    if (startOfWeek <= date && date <= endOfWeek) {
+                        const time = row[5];
+                        const event = row[6];
+                        if (!event) continue;
+
+                        var { eventName, isImportant } = processEventName(event.slice(5));
+                        const dateFormatted = date.toISOString().split('T')[0];
+
+                        if (!schedule[dateFormatted]) {
+                            schedule[dateFormatted] = [];
+                        }
+
+                        eventName = `${time} ${eventName}`;
+                        schedule[dateFormatted].push([date, { eventName, isImportant }]);
+
+                        const eventDay = date.getDay() === 0 ? 7 : date.getDay();
+                    }
+                }
+
+                const artistPosition = { x: 80, y: 481 };
+                let rowIndex = 0;
+
+                for (const [date, events] of Object.entries(schedule)) {
+                    const yPosition = artistPosition.y + rowIndex * 102;
+
+                    events.forEach((event, index) => {
+                        const [time, eventData] = event;
+                        const { eventName, isImportant } = eventData;
+
+                        const fontSize = eventName.length > 20 ? 20 : 24;
+                        const fillColor = isImportant ? '#061373' : '#000000';
+
+                        // 繪製背景矩形
+                        const rectX = artistPosition.x-45; // 矩形的 X 起始位置
+                        const rectY = yPosition - 26;  // 矩形的 Y 起始位置（稍微向上偏移）
+
+                        drawRoundedRect(ctx1, rectX, rectY, 180, 38, 19, '#64c2f8');
+
+                        drawTextLefted(ctx1, formatDate(time), 'GenSenRounded', 26, artistPosition.x , yPosition, '#f1f1f1');
+                        drawTextLefted(ctx1, eventName, 'GenSenRounded', fontSize, artistPosition.x , yPosition+50, fillColor);
+
+                        // drawTextCentered(ctx1, time, 'GenSenRounded', 23, artistPosition.x + xOffset, yPosition, fillColor);
+                        // drawTextCentered(ctx1, eventName, 'GenSenRounded', fontSize, artistPosition.x + xOffset, yPosition + 34, fillColor);
+                    });
+
+                    rowIndex++;
+                }
+
+
+                updateProgress(90, '生成預覽...');
+                const previewScale = 1;
+
+                previewCanvas.width = canvas1.width * previewScale;
+                previewCanvas.height = canvas1.height * previewScale;
+                previewCtx.drawImage(canvas1, 0, 0, previewCanvas.width, previewCanvas.height);
+
+                const downloadLink = document.getElementById('download1');
+                downloadLink.href = canvas1.toDataURL('image/png');
+                downloadLink.download = 'duby-schedule.png';
+                downloadLink.style.display = 'block';
+                updateProgress(100, '完成！');
+            } catch (error) {
+            alert('生成失敗，請重試！');
+        } finally {
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+            }, 1000);
+        }
+
+
         }
 
 

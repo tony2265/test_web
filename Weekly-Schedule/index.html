@@ -101,9 +101,16 @@
             </div>
             <hr>
             <button type="button" class="btn btn-primary" onclick="generateImages()">生成週表 (需等待幾秒)</button>
-            <button type="button" class="btn btn-success" onclick="window.open('https://docs.google.com/spreadsheets/d/1rCeUZQb-fj47oFeih8wR8X_kYbLbPnXVwSN-FBUx37I/edit?gid=1734652110#gid=1734652110', '_blank')">
+            <button type="button" class="btn btn-success"
+                onclick="window.open('https://docs.google.com/spreadsheets/d/1rCeUZQb-fj47oFeih8wR8X_kYbLbPnXVwSN-FBUx37I/edit?gid=1734652110#gid=1734652110', '_blank')">
                 寫週表
             </button>
+            <div class="container mt-3">
+                <div class="progress" id="progress-container" style="display: none;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        style="width: 0%;" id="progress-bar">0%</div>
+                </div>
+            </div>
 
             <hr>
             <div class="mb-3">
@@ -136,8 +143,9 @@
         }
 
         async function fetchSheetData() {
-            const randomParam = Math.floor(Math.random() * 1000000);
-            const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTki1Xo06YY9v8v8gVqnNF3PyKGmTYlYBwt_FJDzYaUTZID10WaOy53-NeznTznftvgQLzHLVeXKe1N/pub?gid=1734652110&single=true&output=csv&random=${randomParam}`;
+            const timestamp = Date.now();
+            const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTki1Xo06YY9v8v8gVqnNF3PyKGmTYlYBwt_FJDzYaUTZID10WaOy53-NeznTznftvgQLzHLVeXKe1N/pub?gid=1734652110&single=true&output=csv&cache=${timestamp}`;
+
             const response = await fetch(url);
             const text = await response.text();
             const data = text.split('\n').map(row => row.split(','));
@@ -185,209 +193,244 @@
         }
 
         async function generateImages() {
-            await loadFonts();
-            const data = await fetchSheetData();
-            const canvas1 = document.getElementById('canvas1');
-            const ctx1 = canvas1.getContext('2d');
-            const canvas2 = document.getElementById('canvas2');
-            const ctx2 = canvas2.getContext('2d');
-            const background1 = new Image();
-            const background2 = new Image();
-
-            background1.src = 'bg1.png';
-            background2.src = 'bg2.png';
-
-            await Promise.all([
-                new Promise(resolve => background1.onload = resolve),
-                new Promise(resolve => background2.onload = resolve)
-            ]);
-
-            canvas1.width = background1.width;
-            canvas1.height = background1.height;
-            canvas2.width = background2.width;
-            canvas2.height = background2.height;
-
-            ctx1.drawImage(background1, 0, 0);
-            ctx2.drawImage(background2, 0, 0);
-
-            const { startOfWeek, endOfWeek } = getWeekDates();
-
-            const weekRange = `${(startOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${startOfWeek.getDate().toString().padStart(2, '0')}~${(endOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${endOfWeek.getDate().toString().padStart(2, '0')}`;
-            drawTextCentered(ctx1, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
-            drawTextCentered(ctx2, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
-
-            const artists = ["嘟比", "咩醬", "旭元", "妮酷", "CB", "花燐", "煦"];
-            const artistsDefault = {
-                "嘟比": [["－", document.getElementById('default-doubi').value || "阿比用力擠突發"]],
-                "咩醬": [["－", document.getElementById('default-miejiang').value || "咩醬休息"]],
-                "旭元": [["－", document.getElementById('default-xuyuan').value || "助教休息"]],
-                "妮酷": [["－", document.getElementById('default-nico').value || "妮在努力戴牙套"]],
-                "CB": [["－", document.getElementById('default-cb').value || "BB可能突發"]],
-                "花燐": [["－", document.getElementById('default-hualin').value || "花園休息鴨"]],
-                "煦": [["－", document.getElementById('default-xu').value || "研習羊族秘術"]],
-            };
-            const highlightDay = {
-                "嘟比": document.getElementById('highlight-doubi').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
-                "咩醬": document.getElementById('highlight-miejiang').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
-                "旭元": document.getElementById('highlight-xuyuan').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
-                "妮酷": document.getElementById('highlight-nico').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
-                "CB": document.getElementById('highlight-cb').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
-                "花燐": document.getElementById('highlight-hualin').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
-                "煦": document.getElementById('highlight-xu').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
-            };
-
-            const schedule = {};
-            const importantEvents = [];
-
-            for (const artist of artists) {
-                schedule[artist] = {};
-                for (let i = 0; i < 7; i++) {
-                    const date = new Date(startOfWeek);
-                    date.setDate(date.getDate() + i);
-                    const dateStr = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
-                    schedule[artist][dateStr] = artistsDefault[artist];
-                }
-            }
-            console.log('schedule is ', schedule);
-
-            for (const row of data) {
-                if (row.length < 10) continue;
-                const dateStr = row[4];
-                if (!dateStr) continue;
-                const datePart = dateStr.split(' ')[0];
-                const date = new Date(`${new Date().getFullYear()}/${datePart}`);
-                if (startOfWeek <= date && date <= endOfWeek) {
-                    const time = row[5];
-                    for (let i = 0; i < artists.length; i++) {
-                        const artist = artists[i];
-                        let event = row[i + 6];
-                        if (!event) continue;
-
-                        // event = processEventName(event.slice(5));
-                        // 使用 processEventName 並解構
-                        const { eventName, isImportant } = processEventName(event.slice(5));
-
-
-                        if (!schedule[artist][datePart]) {
-                            schedule[artist][datePart] = [];
-                        }
-                        if (schedule[artist][datePart][0][0] === "－") {
-                            // schedule[artist][datePart] = [[time, event]];
-                            schedule[artist][datePart] = [[time, { eventName, isImportant }]];
-
-                        } else {
-                            // schedule[artist][datePart].push([time, event]);
-                            schedule[artist][datePart].push([time, { eventName, isImportant }]);
-
-                        }
-                        const eventDay = date.getDay() === 0 ? 7 : date.getDay();
-                        if (highlightDay[artist].length > 0  && highlightDay[artist].includes(eventDay) || isImportant) {
-                            console.log(` ${artist} ｜ ${highlightDay[artist].length}`);
-                            importantEvents.push(`${datePart} ${artist}｜${eventName}`);
-                        }
-
-                    }
-                }
-            }
-            console.log('schedule is ', schedule);
-
-            const artistPositions = {
-                "嘟比": [504, 387 + 3],
-                "咩醬": [901, 387 + 3],
-                "旭元": [1299, 387 + 3],
-                "妮酷": [1697, 387 + 3],
-                "CB": [504, 387 + 3],
-                "花燐": [901, 387 + 3],
-                "煦": [1299, 387 + 3]
-            };
-
-            for (const artist of artists) {
-                const position = artistPositions[artist];
-                const startX = position[0];
-                const startY = position[1];
-                let index = 0;
-
-                for (const [date, events] of Object.entries(schedule[artist])) {
-                    const y = startY + index * 95;
-
-                    events.forEach((event, j) => {
-                        const [ time, eventData ] = event;
-                        // console.log('event is ', event);
-                        // console.log('time is ', time);
-                        // console.log('eventData is ', eventData);
-
-                        let { eventName, isImportant } = eventData;
-                        if (typeof eventData === 'string') {
-                            eventName = eventData;
-                        }
-                        // console.log('eventName is ', eventName);
-
-                        let fontSize;
-                        if (eventName) {
-                            fontSize = eventName.length > 20 ? 16 : eventName.length > 15 ? 18 : 20;
-                        }
-                        const fillColor = isImportant || highlightDay[artist].includes(new Date(date).getDay() + 1) ? '#E5202F' : '#000000';
-
-                        const xOffset = events.length === 1 ? 0 : 70 * (j * 2 - 1);
-
-                        if (artists.slice(0, 4).includes(artist)) {
-                            drawTextCentered(ctx1, time, 'GenSenRounded', 23, startX + xOffset, y, time === '－' ? '#808080' : fillColor);
-                            drawTextCentered(ctx1, eventName, 'GenSenRounded', fontSize, startX + xOffset, y + 34, time === '－' ? '#808080' : fillColor);
-                        } else {
-                            drawTextCentered(ctx2, time, 'GenSenRounded', 23, startX + xOffset, y, time === '－' ? '#808080' : fillColor);
-                            drawTextCentered(ctx2, eventName, 'GenSenRounded', fontSize, startX + xOffset, y + 34, time === '－' ? '#808080' : fillColor);
-                        }
-                        console.log('eventName is ', eventData);
-
-                       
-
-                    });
-
-                    index++;
-                }
-            }
-
-            // 縮小預覽圖
             const previewCanvas1 = document.getElementById('canvas-preview1');
             const previewCtx1 = previewCanvas1.getContext('2d');
             const previewCanvas2 = document.getElementById('canvas-preview2');
             const previewCtx2 = previewCanvas2.getContext('2d');
-            const previewScale = 1;  // 縮小比例
 
-            previewCanvas1.width = canvas1.width * previewScale;
-            previewCanvas1.height = canvas1.height * previewScale;
-            previewCtx1.drawImage(canvas1, 0, 0, previewCanvas1.width, previewCanvas1.height);
+            previewCtx1.clearRect(0, 0, previewCanvas1.width, previewCanvas1.height);
+            previewCtx2.clearRect(0, 0, previewCanvas2.width, previewCanvas2.height);
 
-            previewCanvas2.width = canvas2.width * previewScale;
-            previewCanvas2.height = canvas2.height * previewScale;
-            previewCtx2.drawImage(canvas2, 0, 0, previewCanvas2.width, previewCanvas2.height);
+            document.getElementById('exampleFormControlTextarea1').value = ''; // 清空重要節目文字
+            document.getElementById('download1').style.display = 'none'; // 隱藏下載按鈕
+            document.getElementById('download2').style.display = 'none';
+
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+
+            function updateProgress(percentage, stage) {
+                progressBar.style.width = `${percentage}%`;
+                progressBar.textContent = `${percentage}% - ${stage}`;
+            }
+
+            progressContainer.style.display = 'block'; // 顯示進度條
+            updateProgress(5, '初始化中...');
+
+            const importantEvents = [];
+            let weekRange = '';
 
 
-            const downloadLink1 = document.getElementById('download1');
-            const downloadLink2 = document.getElementById('download2');
+            try {
 
-            downloadLink1.href = canvas1.toDataURL('image/png');
-            downloadLink1.download = 'output1.png';
-            downloadLink1.style.display = 'block';
+                updateProgress(10, '正在載入字體...');
+                await loadFonts();
 
-            downloadLink2.href = canvas2.toDataURL('image/png');
-            downloadLink2.download = 'output2.png';
-            downloadLink2.style.display = 'block';
+                updateProgress(30, '正在獲取試算表資料...');
+                const data = await fetchSheetData();
+
+                updateProgress(50, '正在載入背景圖片...');
+                const canvas1 = document.getElementById('canvas1');
+                const ctx1 = canvas1.getContext('2d');
+                const canvas2 = document.getElementById('canvas2');
+                const ctx2 = canvas2.getContext('2d');
+
+
+
+                const timestamp = new Date().getTime(); // 生成時間戳記
+
+                // 加入時間戳記到背景圖片 URL
+                const background1 = new Image();
+                const background2 = new Image();
+                background1.src = `bg1.png?cache=${timestamp}`;
+                background2.src = `bg2.png?cache=${timestamp}`;
+
+                await Promise.all([
+                    new Promise(resolve => background1.onload = resolve),
+                    new Promise(resolve => background2.onload = resolve)
+                ]);
+
+                updateProgress(70, '正在生成圖片...');
+                canvas1.width = background1.width;
+                canvas1.height = background1.height;
+                canvas2.width = background2.width;
+                canvas2.height = background2.height;
+
+                ctx1.drawImage(background1, 0, 0);
+                ctx2.drawImage(background2, 0, 0);
+
+                const { startOfWeek, endOfWeek } = getWeekDates();
+
+                weekRange = `${(startOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${startOfWeek.getDate().toString().padStart(2, '0')}~${(endOfWeek.getMonth() + 1).toString().padStart(2, '0')}/${endOfWeek.getDate().toString().padStart(2, '0')}`;
+                drawTextCentered(ctx1, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
+                drawTextCentered(ctx2, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
+
+                const artists = ["嘟比", "咩醬", "旭元", "妮酷", "CB", "花燐", "煦"];
+                const artistsDefault = {
+                    "嘟比": [["－", document.getElementById('default-doubi').value || "阿比用力擠突發"]],
+                    "咩醬": [["－", document.getElementById('default-miejiang').value || "咩醬休息"]],
+                    "旭元": [["－", document.getElementById('default-xuyuan').value || "助教休息"]],
+                    "妮酷": [["－", document.getElementById('default-nico').value || "妮在努力戴牙套"]],
+                    "CB": [["－", document.getElementById('default-cb').value || "BB可能突發"]],
+                    "花燐": [["－", document.getElementById('default-hualin').value || "花園休息鴨"]],
+                    "煦": [["－", document.getElementById('default-xu').value || "研習羊族秘術"]],
+                };
+                const highlightDay = {
+                    "嘟比": document.getElementById('highlight-doubi').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                    "咩醬": document.getElementById('highlight-miejiang').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                    "旭元": document.getElementById('highlight-xuyuan').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                    "妮酷": document.getElementById('highlight-nico').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                    "CB": document.getElementById('highlight-cb').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                    "花燐": document.getElementById('highlight-hualin').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                    "煦": document.getElementById('highlight-xu').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                };
+
+                const schedule = {};
+
+                for (const artist of artists) {
+                    schedule[artist] = {};
+                    for (let i = 0; i < 7; i++) {
+                        const date = new Date(startOfWeek);
+                        date.setDate(date.getDate() + i);
+                        const dateStr = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+                        schedule[artist][dateStr] = artistsDefault[artist];
+                    }
+                }
+                console.log('schedule is ', schedule);
+
+                for (const row of data) {
+                    if (row.length < 10) continue;
+                    const dateStr = row[4];
+                    if (!dateStr) continue;
+                    const datePart = dateStr.split(' ')[0];
+                    const date = new Date(`${new Date().getFullYear()}/${datePart}`);
+                    if (startOfWeek <= date && date <= endOfWeek) {
+                        const time = row[5];
+                        for (let i = 0; i < artists.length; i++) {
+                            const artist = artists[i];
+                            let event = row[i + 6];
+                            if (!event) continue;
+
+                            // event = processEventName(event.slice(5));
+                            // 使用 processEventName 並解構
+                            const { eventName, isImportant } = processEventName(event.slice(5));
+
+
+                            if (!schedule[artist][datePart]) {
+                                schedule[artist][datePart] = [];
+                            }
+                            if (schedule[artist][datePart][0][0] === "－") {
+                                // schedule[artist][datePart] = [[time, event]];
+                                schedule[artist][datePart] = [[time, { eventName, isImportant }]];
+
+                            } else {
+                                // schedule[artist][datePart].push([time, event]);
+                                schedule[artist][datePart].push([time, { eventName, isImportant }]);
+
+                            }
+                            const eventDay = date.getDay() === 0 ? 7 : date.getDay();
+                            if (highlightDay[artist].length > 0 && highlightDay[artist].includes(eventDay) || isImportant) {
+                                console.log(` ${artist} ｜ ${highlightDay[artist].length}`);
+                                importantEvents.push(`${datePart} ${artist}｜${eventName}`);
+                            }
+
+                        }
+                    }
+                }
+                console.log('schedule is ', schedule);
+
+                const artistPositions = {
+                    "嘟比": [504, 387 + 3],
+                    "咩醬": [901, 387 + 3],
+                    "旭元": [1299, 387 + 3],
+                    "妮酷": [1697, 387 + 3],
+                    "CB": [504, 387 + 3],
+                    "花燐": [901, 387 + 3],
+                    "煦": [1299, 387 + 3]
+                };
+
+                for (const artist of artists) {
+                    const position = artistPositions[artist];
+                    const startX = position[0];
+                    const startY = position[1];
+                    let index = 0;
+
+                    for (const [date, events] of Object.entries(schedule[artist])) {
+                        const y = startY + index * 95;
+
+                        events.forEach((event, j) => {
+                            const [time, eventData] = event;
+                            // console.log('event is ', event);
+                            // console.log('time is ', time);
+                            // console.log('eventData is ', eventData);
+
+                            let { eventName, isImportant } = eventData;
+                            if (typeof eventData === 'string') {
+                                eventName = eventData;
+                            }
+                            // console.log('eventName is ', eventName);
+
+                            let fontSize;
+                            if (eventName) {
+                                fontSize = eventName.length > 20 ? 16 : eventName.length > 15 ? 18 : 20;
+                            }
+                            const fillColor = isImportant || highlightDay[artist].includes(new Date(date).getDay() + 1) ? '#E5202F' : '#000000';
+
+                            const xOffset = events.length === 1 ? 0 : 70 * (j * 2 - 1);
+
+                            if (artists.slice(0, 4).includes(artist)) {
+                                drawTextCentered(ctx1, time, 'GenSenRounded', 23, startX + xOffset, y, time === '－' ? '#808080' : fillColor);
+                                drawTextCentered(ctx1, eventName, 'GenSenRounded', fontSize, startX + xOffset, y + 34, time === '－' ? '#808080' : fillColor);
+                            } else {
+                                drawTextCentered(ctx2, time, 'GenSenRounded', 23, startX + xOffset, y, time === '－' ? '#808080' : fillColor);
+                                drawTextCentered(ctx2, eventName, 'GenSenRounded', fontSize, startX + xOffset, y + 34, time === '－' ? '#808080' : fillColor);
+                            }
+                            console.log('eventName is ', eventData);
+
+
+
+                        });
+
+                        index++;
+                    }
+                }
+
+                // 縮小預覽圖
+                updateProgress(85, '正在完成預覽...');
+                const previewScale = 1;  // 縮小比例
+
+                previewCanvas1.width = canvas1.width * previewScale;
+                previewCanvas1.height = canvas1.height * previewScale;
+                previewCtx1.drawImage(canvas1, 0, 0, previewCanvas1.width, previewCanvas1.height);
+
+                previewCanvas2.width = canvas2.width * previewScale;
+                previewCanvas2.height = canvas2.height * previewScale;
+                previewCtx2.drawImage(canvas2, 0, 0, previewCanvas2.width, previewCanvas2.height);
+
+
+                const downloadLink1 = document.getElementById('download1');
+                const downloadLink2 = document.getElementById('download2');
+
+                downloadLink1.href = canvas1.toDataURL('image/png');
+                downloadLink1.download = 'output1.png';
+                downloadLink1.style.display = 'block';
+
+                downloadLink2.href = canvas2.toDataURL('image/png');
+                downloadLink2.download = 'output2.png';
+                downloadLink2.style.display = 'block';
+                updateProgress(100, '完成！');
+            } catch (error) {
+                console.error('生成失敗:', error);
+                alert('生成失敗，請重試！');
+            } finally {
+                setTimeout(() => {
+                    progressContainer.style.display = 'none'; // 隱藏進度條
+                }, 1000);
+            }
 
             // 生成重要節目文字
             const importantEventsText = `⭐【夢箱｜週行程】 ${weekRange}\n\n本週精彩看點👇\n${importantEvents.join('\n')}\n\n#夢想之都工作室 #箱週表 #Vtuber`;
             document.getElementById('exampleFormControlTextarea1').value = importantEventsText;
 
-            // 使用Blob對象將兩張圖片打包為一個壓縮文件
-            // const zip = new JSZip();
-            // zip.file('output1.png', canvas1.toDataURL('image/png').split(',')[1], { base64: true });
-            // zip.file('output2.png', canvas2.toDataURL('image/png').split(',')[1], { base64: true });
-            // zip.generateAsync({ type: 'blob' }).then(function (content) {
-            //     const zipLink = document.createElement('a');
-            //     zipLink.href = URL.createObjectURL(content);
-            //     zipLink.download = 'weekly_schedules.zip';
-            //     zipLink.click();
-            // });
         }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
