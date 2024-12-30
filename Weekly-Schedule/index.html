@@ -183,12 +183,15 @@
 
         function getWeekDates() {
             const now = new Date();
+            const dayOfWeek = now.getDay(); // 星期幾
             const startOfWeek = new Date(now);
-            startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+            startOfWeek.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)); // 星期日視為上週的最後一天
             const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6);
-            startOfWeek.setHours(0, 0, 0, 0);
-            endOfWeek.setHours(23, 59, 59, 999);
+            endOfWeek.setDate(startOfWeek.getDate() + 6); // 增加 6 天到週末
+
+            startOfWeek.setHours(0, 0, 0, 0); // 設為當天 00:00
+            endOfWeek.setHours(23, 59, 59, 999); // 設為當天 23:59
+
             return { startOfWeek, endOfWeek };
         }
 
@@ -302,7 +305,22 @@
                     const dateStr = row[4];
                     if (!dateStr) continue;
                     const datePart = dateStr.split(' ')[0];
-                    const date = new Date(`${new Date().getFullYear()}/${datePart}`);
+
+
+
+                    // 確定正確年份
+                    let dateYear = new Date().getFullYear();
+                    const currentMonth = new Date().getMonth() + 1; // 當前月份
+                    const eventMonth = parseInt(datePart.split('/')[0], 10); // 事件月份
+
+                    if (eventMonth < currentMonth && currentMonth === 12) {
+                        // 跨年，事件日期是明年的
+                        dateYear += 1;
+                    }
+
+                    const date = new Date(`${dateYear}/${datePart}`);
+
+                    // const date = new Date(`${new Date().getFullYear()}/${datePart}`);
                     if (startOfWeek <= date && date <= endOfWeek) {
                         const time = row[5];
                         for (let i = 0; i < artists.length; i++) {
