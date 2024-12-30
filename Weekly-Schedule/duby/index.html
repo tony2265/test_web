@@ -216,7 +216,18 @@
                     if (!dateStr) continue;
 
                     const datePart = dateStr.split(' ')[0];
-                    const date = new Date(`${new Date().getFullYear()}/${datePart}`);
+                    const currentYear = new Date().getFullYear();
+                    const currentMonth = new Date().getMonth() + 1;
+                    const eventMonth = parseInt(datePart.split('/')[0], 10);
+
+                    let eventYear = currentYear;
+                    if (eventMonth < currentMonth && currentMonth === 12) {
+                        eventYear += 1; // 如果跨年，事件日期屬於下一年
+                    }
+
+                    const date = new Date(`${eventYear}/${datePart}`);
+                    
+                    // const date = new Date(`${new Date().getFullYear()}/${datePart}`);
                     if (startOfWeek <= date && date <= endOfWeek) {
                         const time = row[5];
                         const event = row[6];
