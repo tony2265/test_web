@@ -13,7 +13,7 @@
 
     <script>
         function getYouTubeID(url) {
-            const videoRegex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/;
+            const videoRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/;
             const shortsRegex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/;
             let match = url.match(videoRegex);
             if (match) {
@@ -31,9 +31,13 @@
             const videoInfo = getYouTubeID(url);
             if (videoInfo) {
                 const { id, type } = videoInfo;
-                const thumbnailUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+                const thumbnailUrl = `https://img.youtube.com/vi/${id}/sddefault.jpg`;
                 document.getElementById('thumbnail-container').innerHTML = `
-                    <img src="${thumbnailUrl}" alt="封面圖" style="max-width:100%; height:auto;">
+                    sd:<img src="${thumbnailUrl}" alt="封面圖" style="max-width:100%; height:auto;"><br>
+                `;
+                const tt = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+                document.getElementById('thumbnail-container').innerHTML += `
+                    max:<img src="${tt}" alt="封面圖" style="max-width:100%; height:auto;">
                 `;
             } else {
                 document.getElementById('thumbnail-container').innerHTML = `
