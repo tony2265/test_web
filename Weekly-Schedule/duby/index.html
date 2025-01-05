@@ -285,8 +285,8 @@
                 previewCtx.drawImage(canvas1, 0, 0, previewCanvas.width, previewCanvas.height);
 
                 const downloadLink = document.getElementById('download1');
-                downloadLink.href = canvas1.toDataURL('image/png');
-                downloadLink.download = 'duby-schedule.png';
+                downloadLink.href = canvas1.toDataURL('image/jpeg', 0.9);
+                downloadLink.download = 'duby-schedule.jpg';
                 downloadLink.style.display = 'block';
                 updateProgress(100, '完成！');
             } catch (error) {
