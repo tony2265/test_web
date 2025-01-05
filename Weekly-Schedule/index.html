@@ -428,12 +428,12 @@
                 const downloadLink1 = document.getElementById('download1');
                 const downloadLink2 = document.getElementById('download2');
 
-                downloadLink1.href = canvas1.toDataURL('image/png');
-                downloadLink1.download = 'output1.png';
+                downloadLink1.href = canvas1.toDataURL('image/jpeg', 0.9);
+                downloadLink1.download = 'output1.jpg';
                 downloadLink1.style.display = 'block';
 
-                downloadLink2.href = canvas2.toDataURL('image/png');
-                downloadLink2.download = 'output2.png';
+                downloadLink2.href = canvas2.toDataURL('image/jpeg', 0.9);
+                downloadLink2.download = 'output2.jpg';
                 downloadLink2.style.display = 'block';
                 updateProgress(100, '完成！');
             } catch (error) {
