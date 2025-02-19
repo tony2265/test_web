@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>週表生成器</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+
+        @font-face {
+            font-family: 'cubic11';
+            src: url('Cubic_11.ttf') format('truetype');
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #controls {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="controls" class="container mt-4">
+        <h2><b>週表生成器</b></h2>
+        <h6>陳旭元</h6>
+        <hr>
+        <form>
+
+            <button type="button" class="btn btn-primary" onclick="generateImages()">生成週表 (需等待幾秒)</button>
+            <button type="button" class="btn btn-success" onclick="window.open('https://docs.google.com/spreadsheets/d/1rCeUZQb-fj47oFeih8wR8X_kYbLbPnXVwSN-FBUx37I/edit?gid=437236018#gid=437236018', '_blank')">
+                寫週表
+            </button>
+                        
+        </form>
+        <div class="container mt-3">
+            <div class="progress" id="progress-container" style="display:none;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                    style="width: 0%;" id="progress-bar">0%</div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="container-lg text-center">
+        <a id="download1" class="btn btn-info mt-3" role="button" style="display:none;">下載圖片1</a>
+        <canvas id="canvas-preview1" class="img-fluid"></canvas>
+
+        <canvas id="canvas1" style="display:none;"></canvas>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script>
+        async function loadFonts() {
+            const cubic11 = new FontFace('Cubic11', 'url(Cubic_11.ttf)');
+            await cubic11.load();
+            document.fonts.add(cubic11);
+        }
+
+        async function fetchSheetData() {
+            const randomParam = Math.floor(Math.random() * 1000000);
+            const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTki1Xo06YY9v8v8gVqnNF3PyKGmTYlYBwt_FJDzYaUTZID10WaOy53-NeznTznftvgQLzHLVeXKe1N/pub?gid=1734652110&single=true&output=csv&random=${randomParam}`;
+            const response = await fetch(url);
+            const text = await response.text();
+            const data = text.split('\n').map(row => row.split(','));
+            const firstRow = data[0];
+            const last50Rows = data.slice(-50);
+            const filteredData = [firstRow, ...last50Rows];
+
+            console.log(filteredData);
+            return filteredData;
+        }
+
+        function processEventName(eventName) {
+            let isImportant = false;
+
+            if (eventName.includes("不開台)】")) {
+                eventName += "(不開台)";
+            }
+            if (eventName.includes("紅直播") || eventName.includes("紅連動")) {
+                isImportant = true;
+            }
+
+            eventName = eventName.split('】').slice(1).join('】');
+            eventName = eventName.replace("客座：", "").replace("活動：", "");
+            // return eventName;
+            return eventName;
+        }
+
+        function drawTextCentered(ctx, text, font, fontSize, centerX, centerY, fillColor) {
+            ctx.font = `${fontSize}px ${font}`;
+            ctx.fillStyle = fillColor;
+            const textWidth = ctx.measureText(text).width;
+            const textHeight = fontSize;
+            ctx.fillText(text, centerX - textWidth / 2, centerY + textHeight / 4);
+        }
+
+        function drawTextLefted(ctx, text, font, fontSize, centerX, centerY, fillColor) {
+            ctx.save(); // 保存當前繪圖狀態
+            ctx.translate(centerX, centerY); // 將畫布的原點移到文字的起始點
+            // ctx.rotate(-0.030); // 旋轉畫布
+            ctx.font = `${fontSize}px ${font}`;
+            ctx.fillStyle = fillColor;
+            ctx.textAlign = 'left'; // 設置文字左對齊
+            ctx.fillText(text, 0, 0); // 在旋轉後的位置繪製文字
+            ctx.restore(); // 恢復繪圖狀態
+        }
+        function drawRoundedRect(ctx, x, y, width, height, radius, fillColor) {
+            ctx.save();
+            ctx.rotate(-0.030); // 旋轉畫布
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.arcTo(x + width, y, x + width, y + radius, radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+            ctx.lineTo(x + radius, y + height);
+            ctx.arcTo(x, y + height, x, y + height - radius, radius);
+            ctx.lineTo(x, y + radius);
+            ctx.arcTo(x, y, x + radius, y, radius);
+            ctx.closePath();
+            ctx.fillStyle = fillColor;
+            ctx.fill();
+            ctx.restore();
+
+        }
+
+        function getWeekDates() {
+            const now = new Date();
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - now.getDay() + 2);
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            startOfWeek.setHours(0, 0, 0, 0);
+            endOfWeek.setHours(23, 59, 59, 999);
+            return { startOfWeek, endOfWeek };
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr); 
+            const options = { month: '2-digit', day: '2-digit', weekday: 'short' };
+            const formatter = new Intl.DateTimeFormat('zh-TW', options);
+            const parts = formatter.formatToParts(date);
+
+            const month = parts.find(part => part.type === 'month').value;
+            const day = parts.find(part => part.type === 'day').value;
+            const weekday = parts.find(part => part.type === 'weekday').value;
+
+            return `${month}/${day} (${weekday[1]})`; 
+        }
+
+        async function generateImages() {
+            const previewCanvas = document.getElementById('canvas-preview1');
+            const previewCtx = previewCanvas.getContext('2d');
+            previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+
+            document.getElementById('download1').style.display = 'none';
+
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            progressContainer.style.display = 'block';
+
+            function updateProgress(percentage, stage) {
+                progressBar.style.width = `${percentage}%`;
+                progressBar.textContent = `${percentage}% - ${stage}`;
+            }
+
+
+            try {
+
+                updateProgress(10, '正在加載字體...');
+
+                await loadFonts();
+
+                updateProgress(30, '正在獲取數據...');
+                const data = await fetchSheetData();
+
+                updateProgress(50, '正在加載背景...');
+                const canvas1 = document.getElementById('canvas1');
+                const ctx1 = canvas1.getContext('2d');
+                const background1 = new Image();
+                const timestamp = new Date().getTime(); // 取得當前時間戳記
+                background1.src = `bg.jpg?cache=${timestamp}`; // 加上時間戳記
+                await new Promise(resolve => background1.onload = resolve);
+
+                updateProgress(70, '正在繪製圖片...');
+                canvas1.width = background1.width;
+                canvas1.height = background1.height;
+                ctx1.drawImage(background1, 0, 0);
+
+                const schedule = {};
+                const { startOfWeek, endOfWeek } = getWeekDates();
+                const currentDate = new Date(startOfWeek);
+
+                while (currentDate <= endOfWeek) {
+                    const dateFormatted = currentDate.toISOString().split('T')[0];
+                    schedule[dateFormatted] = null; // 先填入 null，後續決定是否填入節目
+                    currentDate.setDate(currentDate.getDate() + 1); // 移動到下一天
+                }
+
+                const importantEvents = [];
+                console.log(schedule);
+
+
+                for (const row of data.slice(1)) {
+
+                    const dateStr = row[4];
+                    const timeStr = row[5];
+                    const event = row[8];
+                    const datePart = dateStr.split(' ')[0];
+                    const currentYear = new Date().getFullYear();
+                    const currentMonth = new Date().getMonth() + 1;
+                    const eventMonth = parseInt(datePart.split('/')[0], 10);
+
+                    let eventYear = currentYear;
+                    if (eventMonth < currentMonth && currentMonth === 12) {
+                        eventYear += 1; // 如果跨年，事件日期屬於下一年
+                    }
+
+                    date = new Date(`${eventYear}/${datePart}`);
+                    dateFormatted = date.toISOString().split('T')[0];
+
+                    if (startOfWeek <= date && date <= endOfWeek) {
+                        let eventName = event;
+
+                        if (!schedule[dateFormatted]) {
+                            schedule[dateFormatted] = eventName;
+
+                        }
+                    }
+
+                }
+
+                for (const date in schedule) {
+                    if (!schedule[date]) {
+                        const dayOfWeek = new Date(date).getDay();
+                        const eventName = (dayOfWeek === 0 || dayOfWeek === 6) ? "周末陪女友" : "休息";
+                        schedule[date] = eventName;
+                    }
+                }
+
+
+                const artistPosition = { x: 140, y: 170 };
+                let rowIndex = 0;
+
+                for (const [date, eventName] of Object.entries(schedule)) {
+
+                    const yPosition = artistPosition.y + rowIndex * 145;
+                    const fontSize = eventName.length > 20 ? 30 : 30;
+                    let color = "3c678c";
+                    let match, timestr, mainTitle, subTitle;
+                    let sleep = false;
+
+                    if (eventName.includes("休息") || eventName.includes("周末陪女友")) {
+                        color = "#3c678c";
+                        timestr = "";
+                        mainTitle = eventName;
+                        subTitle = "";
+                        sleep = true;
+                    }
+                    else
+                    {
+                        color = "#f1f1f1";
+                        let cleanStr = eventName.replace(/【.*?】/g, "").replace(/、/g, "");
+                        match = cleanStr.match(/^(\d{1,2}:\d{2})\s*(.+?)(?:[:：](.+))?$/);
+                        console.log(match);
+                        [, timestr, mainTitle, subTitle = ""] = match;
+                    }
+
+                    // 印文字
+                    drawTextLefted(ctx1, formatDate(date), 'cubic11', 30, artistPosition.x , yPosition, color);
+                    drawTextLefted(ctx1, timestr, 'cubic11', fontSize, artistPosition.x+180 , yPosition, color);
+                    if (!sleep) drawTextLefted(ctx1, "｜ ", 'cubic11', fontSize, artistPosition.x+260 , yPosition, color);
+                    if (!sleep && mainTitle == "客座") drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#fe6b6e");
+                    else if (!sleep) drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#82ff94");
+                    else drawTextLefted(ctx1, "｜ "+mainTitle, 'cubic11', fontSize, artistPosition.x+260 , yPosition, color);
+                    if (!sleep) drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x+510 , yPosition, color);
+                    drawTextLefted(ctx1, subTitle, 'cubic11', fontSize, artistPosition.x+540 , yPosition, "#f6bb90");
+
+                    rowIndex++;
+                }
+
+
+                updateProgress(90, '生成預覽...');
+                const previewScale = 1;
+
+                previewCanvas.width = canvas1.width * previewScale;
+                previewCanvas.height = canvas1.height * previewScale;
+                previewCtx.drawImage(canvas1, 0, 0, previewCanvas.width, previewCanvas.height);
+
+                const downloadLink = document.getElementById('download1');
+                downloadLink.href = canvas1.toDataURL('image/jpeg', 0.9);
+                downloadLink.download = 'duby-schedule.jpg';
+                downloadLink.style.display = 'block';
+                updateProgress(100, '完成！');
+            } catch (error) {
+                console.error(error);
+            alert('生成失敗，請重試！');
+        } finally {
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+            }, 1000);
+        }
+
+
+        }
+
+
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
+</body>
+
+</html>
