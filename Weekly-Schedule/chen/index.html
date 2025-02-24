@@ -223,9 +223,15 @@
                     }
 
                     date = new Date(`${eventYear}/${datePart}`);
-                    dateFormatted = date.toISOString().split('T')[0];
-
+                    dateFormatted = date.toLocaleDateString('zh-TW', { 
+                        year: 'numeric', 
+                        month: '2-digit', 
+                        day: '2-digit' 
+                    }).replace(/\//g, '-');
                     if (startOfWeek <= date && date <= endOfWeek) {
+                        console.log(date);
+                        console.log(dateFormatted);
+
                         let eventName = event;
 
                         if (!schedule[dateFormatted]) {
@@ -235,6 +241,7 @@
                     }
 
                 }
+                console.log(schedule);
 
                 for (const date in schedule) {
                     if (!schedule[date]) {
@@ -249,7 +256,6 @@
                 let rowIndex = 0;
 
                 for (const [date, eventName] of Object.entries(schedule)) {
-
                     const yPosition = artistPosition.y + rowIndex * 145;
                     const fontSize = eventName.length > 20 ? 30 : 30;
                     let color = "#3c678c";
@@ -269,7 +275,7 @@
                         color = "#f1f1f1";
                         let cleanStr = eventName.replace(/【.*?】/g, "").replace(/、/g, "");
                         match = cleanStr.match(/^(\d{1,2}:\d{2})\s*(.+?)(?:[:：](.+))?$/);
-                        console.log(match);
+                        
                         [raw, timestr, mainTitle, subTitle = ""] = match;
                     }
 
