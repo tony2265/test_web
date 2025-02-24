@@ -253,7 +253,7 @@
                     const yPosition = artistPosition.y + rowIndex * 145;
                     const fontSize = eventName.length > 20 ? 30 : 30;
                     let color = "3c678c";
-                    let match, timestr, mainTitle, subTitle;
+                    let match, timestr, mainTitle, subTitle, raw;
                     let sleep = false;
 
                     if (eventName.includes("休息") || eventName.includes("周末陪女友")) {
@@ -269,17 +269,18 @@
                         let cleanStr = eventName.replace(/【.*?】/g, "").replace(/、/g, "");
                         match = cleanStr.match(/^(\d{1,2}:\d{2})\s*(.+?)(?:[:：](.+))?$/);
                         console.log(match);
-                        [, timestr, mainTitle, subTitle = ""] = match;
+                        [raw, timestr, mainTitle, subTitle = ""] = match;
                     }
 
                     // 印文字
                     drawTextLefted(ctx1, formatDate(date), 'cubic11', 30, artistPosition.x , yPosition, color);
                     drawTextLefted(ctx1, timestr, 'cubic11', fontSize, artistPosition.x+180 , yPosition, color);
-                    if (!sleep) drawTextLefted(ctx1, "｜ ", 'cubic11', fontSize, artistPosition.x+260 , yPosition, color);
+
+                    if (!sleep) drawTextLefted(ctx1, "｜ ", 'cubic11', fontSize, artistPosition.x+260 , yPosition, color); //不休息就白線分隔
                     if (!sleep && mainTitle == "客座") drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#fe6b6e");
                     else if (!sleep) drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#82ff94");
                     else drawTextLefted(ctx1, "｜ "+mainTitle, 'cubic11', fontSize, artistPosition.x+260 , yPosition, color);
-                    if (!sleep) drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x+510 , yPosition, color);
+                    if (!sleep && raw.includes("：")) drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x+510 , yPosition, color);
                     drawTextLefted(ctx1, subTitle, 'cubic11', fontSize, artistPosition.x+540 , yPosition, "#f6bb90");
 
                     rowIndex++;
