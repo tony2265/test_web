@@ -252,7 +252,8 @@
 
                     const yPosition = artistPosition.y + rowIndex * 145;
                     const fontSize = eventName.length > 20 ? 30 : 30;
-                    let color = "3c678c";
+                    let color = "#3c678c";
+                    let subcolor = "#f6bb90";
                     let match, timestr, mainTitle, subTitle, raw;
                     let sleep = false;
 
@@ -277,12 +278,25 @@
                     drawTextLefted(ctx1, timestr, 'cubic11', fontSize, artistPosition.x+180 , yPosition, color);
 
                     if (!sleep) drawTextLefted(ctx1, "｜ ", 'cubic11', fontSize, artistPosition.x+260 , yPosition, color); //不休息就白線分隔
-                    if (!sleep && mainTitle == "客座") drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#fe6b6e");
-                    else if (!sleep) drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#82ff94");
-                    else drawTextLefted(ctx1, "｜ "+mainTitle, 'cubic11', fontSize, artistPosition.x+260 , yPosition, color);
-                    if (!sleep && raw.includes("：")) drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x+510 , yPosition, color);
-                    drawTextLefted(ctx1, subTitle, 'cubic11', fontSize, artistPosition.x+540 , yPosition, "#f6bb90");
 
+                    if (!sleep && mainTitle == "客座") drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#fe6b6e"); //客座
+                    else if (!sleep) { 
+                        //其他主標
+                        if (mainTitle.includes("feat.")){
+                            const parts = mainTitle.split(" feat.");
+                            mainTitle = parts[0]; 
+                            subTitle = "feat." + parts[1];
+                            subcolor = "#f4ff78";
+                        }
+                        drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#82ff94"); 
+
+                    }
+                    else drawTextLefted(ctx1, "｜ "+mainTitle, 'cubic11', fontSize, artistPosition.x+260 , yPosition, color); //休息文字
+
+                    if (!sleep && raw.includes("：")) {
+                        drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x+510 , yPosition, color);
+                    }
+                    drawTextLefted(ctx1, subTitle, 'cubic11', fontSize, artistPosition.x+540 , yPosition, subcolor); //冒號後的文字
                     rowIndex++;
                 }
 
