@@ -132,12 +132,17 @@
 
         function getWeekDates() {
             const now = new Date();
+            const day = now.getDay(); // 0 是週日，1 是週一 ...
+            const diffToMonday = (day === 0 ? -6 : 1 - day); // 如果今天是週日，調整到上週一
+
             const startOfWeek = new Date(now);
-            startOfWeek.setDate(now.getDate() - now.getDay() + 2);
+            startOfWeek.setDate(now.getDate() + diffToMonday);
+            startOfWeek.setHours(0, 0, 0, 0);
+
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
-            startOfWeek.setHours(0, 0, 0, 0);
             endOfWeek.setHours(23, 59, 59, 999);
+
             return { startOfWeek, endOfWeek };
         }
 
@@ -196,6 +201,7 @@
                 const schedule = {};
                 const { startOfWeek, endOfWeek } = getWeekDates();
                 const currentDate = new Date(startOfWeek);
+                currentDate.setDate(currentDate.getDate() + 1);
 
                 while (currentDate <= endOfWeek) {
                     const dateFormatted = currentDate.toISOString().split('T')[0];
