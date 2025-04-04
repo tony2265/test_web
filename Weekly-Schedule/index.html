@@ -31,7 +31,7 @@
 <body>
     <div id="controls" class="container mt-4">
         <h2><b>週表生成器</b></h2>
-        <h6>嘟比、咩醬、旭元、妮酷、CB、花燐、煦</h6>
+        <h6>嘟比、灯理、旭元、妮酷、CB、花燐、煦</h6>
         <hr>
         <form>
             <div class="row mb-3">
@@ -53,10 +53,10 @@
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" id="highlight-miejiang" placeholder="咩醬">
+                    <input type="text" class="form-control" id="highlight-miejiang" placeholder="灯理">
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control" id="default-miejiang" value="無限期休止" placeholder="咩醬的預設節目">
+                    <input type="text" class="form-control" id="default-miejiang" value="熄灯" placeholder="灯理的預設節目">
                 </div>
             </div>
             <div class="row mb-3">
@@ -267,10 +267,10 @@
                 drawTextCentered(ctx1, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
                 drawTextCentered(ctx2, weekRange, 'GenSekiGothic', 25, 167, 324, '#f4f4f4');
 
-                const artists = ["嘟比", "咩醬", "旭元", "妮酷", "CB", "花燐", "煦"];
+                const artists = ["嘟比", "灯理", "旭元", "妮酷", "CB", "花燐", "煦"];
                 const artistsDefault = {
                     "嘟比": [["－", document.getElementById('default-doubi').value || "阿比用力擠突發"]],
-                    "咩醬": [["－", document.getElementById('default-miejiang').value || "咩醬休息"]],
+                    "灯理": [["－", document.getElementById('default-miejiang').value || "熄灯"]],
                     "旭元": [["－", document.getElementById('default-xuyuan').value || "助教休息"]],
                     "妮酷": [["－", document.getElementById('default-nico').value || "妮在努力戴牙套"]],
                     "CB": [["－", document.getElementById('default-cb').value || "BB可能突發"]],
@@ -279,7 +279,7 @@
                 };
                 const highlightDay = {
                     "嘟比": document.getElementById('highlight-doubi').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
-                    "咩醬": document.getElementById('highlight-miejiang').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
+                    "灯理": document.getElementById('highlight-miejiang').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
                     "旭元": document.getElementById('highlight-xuyuan').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
                     "妮酷": document.getElementById('highlight-nico').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
                     "CB": document.getElementById('highlight-cb').value.split(',').map(Number).filter(n => !isNaN(n) && n !== 0),
@@ -358,7 +358,7 @@
 
                 const artistPositions = {
                     "嘟比": [504, 387 + 3],
-                    "咩醬": [901, 387 + 3],
+                    "灯理": [901, 387 + 3],
                     "旭元": [1299, 387 + 3],
                     "妮酷": [1697, 387 + 3],
                     "CB": [504, 387 + 3],
