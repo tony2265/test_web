@@ -34,13 +34,23 @@
         <h6>嘟比</h6>
         <hr>
         <form>
-
             <button type="button" class="btn btn-primary" onclick="generateImages()">生成週表 (需等待幾秒)</button>
             <button type="button" class="btn btn-success" onclick="window.open('https://docs.google.com/spreadsheets/d/1rCeUZQb-fj47oFeih8wR8X_kYbLbPnXVwSN-FBUx37I/edit?gid=835991479', '_blank')">
                 寫週表
             </button>
-                        
         </form>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="artist-x" class="form-label">文字X軸偏移
+                </label>
+                <input type="number" class="form-control" id="artist-x" value="80">
+            </div>
+            <div class="col">
+                <label for="artist-y" class="form-label">文字高度偏移</label>
+                <input type="number" class="form-control" id="artist-y" value="410">
+            </div>
+        </div>
+        
         <div class="container mt-3">
             <div class="progress" id="progress-container" style="display:none;">
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
@@ -247,7 +257,14 @@
                     }
                 }
 
-                const artistPosition = { x: 80, y: 481 };
+                // const artistPosition = { x: 80, y: 410 };
+                const xInput = document.getElementById('artist-x');
+                const yInput = document.getElementById('artist-y');
+                const artistPosition = {
+                    x: parseInt(xInput.value) || 80,
+                    y: parseInt(yInput.value) || 410
+                };
+
                 let rowIndex = 0;
 
                 for (const [date, events] of Object.entries(schedule)) {
