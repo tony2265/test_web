@@ -1,213 +1,225 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>圖片字幕產生器</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    @font-face {
-      font-family: 'GenSenRounded';
-      src: url('GenSenRounded-M.ttf') format('truetype');
-    }
-    body {
-      font-family: 'GenSenRounded', sans-serif;
-      background-color: #f8f9fa;
-      padding: 40px;
-    }
-    h2 {
-      margin-bottom: 30px;
-    }
-    .canvas-wrapper {
-      max-width: 100%;
-      overflow: auto;
-    }
-    canvas {
-      width: 100%;
-      height: auto;
-      max-width: 100%;
-      border: 1px solid #ced4da;
-      background-color: #000;
-    }
-    .text-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-    .text-row input {
-      flex: 1;
-      font-size: 1.1rem;
-      padding: 6px 10px;
-    }
-    #downloadLink {
-      display: none;
-    }
-    #imageControls {
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片字幕產生器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'GenSenRounded';
+            src: url('GenSenRounded-M.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'GenSenRounded', sans-serif;
+            background-color: #f8f9fa;
+            padding: 40px;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+        }
+
+        .canvas-wrapper {
+            max-width: 100%;
+            overflow: auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border: 1px solid #ced4da;
+            background-color: #000;
+        }
+
+        .text-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .text-row input {
+            flex: 1;
+            font-size: 1.1rem;
+            padding: 6px 10px;
+        }
+
+        #downloadLink {
+            display: none;
+        }
+
+
+        </style>
 </head>
+
 <body class="container">
-  <h2 class="text-center">圖片字幕產生器</h2>
-  <div class="mb-3 row g-2 align-items-center">
-    <div class="col-md-6">
-      <input type="file" class="form-control" id="imageInput" accept="image/png, image/jpeg">
+    <h2 class="text-center">圖片字幕產生器</h2>
+    <div class="mb-3 row g-2 align-items-center">
+        <div class="col-md-6">
+            <input type="file" class="form-control" id="imageInput" accept="image/png, image/jpeg">
+        </div>
+        <div class="col-md-6">
+            <button class="btn btn-outline-primary w-100" onclick="pasteFromClipboard()">貼上剪貼簿圖片</button>
+        </div>
     </div>
-    <div class="col-md-6">
-      <button class="btn btn-outline-primary w-100" onclick="pasteFromClipboard()">貼上剪貼簿圖片</button>
+    <div class="mb-2" id="uploadStatus"></div>
+
+    <button class="btn btn-sm btn-secondary mb-3" onclick="toggleImageControls()">圖片微調選項</button>
+    <div id="imageControls" class="d-none mb-4 border rounded p-3">
+        <label class="form-label">縮放（%）：<input type="range" class="form-range" id="scaleInput" min="50" max="150"
+                value="100"></label>
+        <label class="form-label">X 軸偏移（px）：<input type="range" class="form-range" id="offsetXInput" min="-300"
+                max="300" value="0"></label>
+        <label class="form-label">Y 軸偏移（px）：<input type="range" class="form-range" id="offsetYInput" min="-300"
+                max="300" value="0"></label>
     </div>
-  </div>
-  <div class="mb-2" id="uploadStatus"></div>
 
-  <button class="btn btn-sm btn-secondary mb-3" onclick="toggleImageControls()">圖片微調選項</button>
-  <div id="imageControls" class="mb-4 border rounded p-3">
-    <label class="form-label">縮放（%）：<input type="range" class="form-range" id="scaleInput" min="50" max="150" value="100"></label>
-    <label class="form-label">X 軸偏移（px）：<input type="range" class="form-range" id="offsetXInput" min="-300" max="300" value="0"></label>
-    <label class="form-label">Y 軸偏移（px）：<input type="range" class="form-range" id="offsetYInput" min="-300" max="300" value="0"></label>
-  </div>
+    <div id="textInputs" class="mb-4"></div>
+    <div class="text-center mb-3">
+        <button class="btn btn-outline-success" onclick="addTextInput()">增加文字欄位</button>
+    </div>
 
-  <div id="textInputs" class="mb-4"></div>
-  <div class="text-center mb-3">
-    <button class="btn btn-outline-success" onclick="addTextInput()">增加文字欄位</button>
-  </div>
+    <div class="text-center mb-3">
+        <button class="btn btn-primary me-2" onclick="generateImage()">產生圖片</button>
+        <a id="downloadLink" class="btn btn-success" download="result.jpg">下載圖片</a>
+    </div>
+    <div class="canvas-wrapper text-center">
+        <canvas id="resultCanvas" width="1200" height="1200"></canvas>
+    </div>
 
-  <div class="text-center mb-3">
-    <button class="btn btn-primary me-2" onclick="generateImage()">產生圖片</button>
-    <a id="downloadLink" class="btn btn-success" download="result.jpg">下載圖片</a>
-  </div>
-  <div class="canvas-wrapper text-center">
-    <canvas id="resultCanvas" width="1200" height="1200"></canvas>
-  </div>
+    <script>
+        let uploadedImage = null;
+        const uploadStatus = document.getElementById("uploadStatus");
 
-  <script>
-    let uploadedImage = null;
-    const uploadStatus = document.getElementById("uploadStatus");
+        function toggleImageControls() {
+            const controls = document.getElementById("imageControls");
+            controls.classList.toggle("d-none");
+        }
 
-    function toggleImageControls() {
-      const controls = document.getElementById("imageControls");
-      controls.style.display = controls.style.display === "none" ? "block" : "none";
-    }
-
-    function addTextInput(defaultText = '') {
-      const container = document.getElementById("textInputs");
-      const wrapper = document.createElement("div");
-      wrapper.className = "text-row";
-      wrapper.innerHTML = `
+        function addTextInput(defaultText = '') {
+            const container = document.getElementById("textInputs");
+            const wrapper = document.createElement("div");
+            wrapper.className = "text-row";
+            wrapper.innerHTML = `
         <input type="text" class="form-control" placeholder="輸入文字內容..." value="${defaultText}" oninput="generateImage()">
         <button class="btn btn-outline-danger btn-sm" onclick="this.parentNode.remove(); generateImage();">刪除</button>
       `;
-      container.appendChild(wrapper);
-    }
-
-    function drawRoundedRect(ctx, x, y, width, height, radius) {
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-    }
-
-    document.getElementById("imageInput").addEventListener("change", function(e) {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const img = new Image();
-        img.onload = function() {
-          uploadedImage = img;
-          uploadStatus.innerText = "✅ 圖片上傳完成！";
-          generateImage();
+            container.appendChild(wrapper);
         }
-        img.src = event.target.result;
-      }
-      reader.readAsDataURL(e.target.files[0]);
-    });
 
-    ["scaleInput", "offsetXInput", "offsetYInput"].forEach(id => {
-      document.getElementById(id).addEventListener("input", generateImage);
-    });
+        function drawRoundedRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
 
-    async function pasteFromClipboard() {
-      try {
-        const clipboardItems = await navigator.clipboard.read();
-        for (const item of clipboardItems) {
-          for (const type of item.types) {
-            if (type.startsWith("image/")) {
-              const blob = await item.getType(type);
-              const url = URL.createObjectURL(blob);
-              const img = new Image();
-              img.onload = () => {
-                uploadedImage = img;
-                uploadStatus.innerText = "✅ 圖片上傳完成（剪貼簿）！";
-                generateImage();
-              };
-              img.src = url;
+        document.getElementById("imageInput").addEventListener("change", function (e) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = new Image();
+                img.onload = function () {
+                    uploadedImage = img;
+                    uploadStatus.innerText = "✅ 圖片上傳完成！";
+                    generateImage();
+                }
+                img.src = event.target.result;
             }
-          }
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        ["scaleInput", "offsetXInput", "offsetYInput"].forEach(id => {
+            document.getElementById(id).addEventListener("input", generateImage);
+        });
+
+        async function pasteFromClipboard() {
+            try {
+                const clipboardItems = await navigator.clipboard.read();
+                for (const item of clipboardItems) {
+                    for (const type of item.types) {
+                        if (type.startsWith("image/")) {
+                            const blob = await item.getType(type);
+                            const url = URL.createObjectURL(blob);
+                            const img = new Image();
+                            img.onload = () => {
+                                uploadedImage = img;
+                                uploadStatus.innerText = "✅ 圖片上傳完成（剪貼簿）！";
+                                generateImage();
+                            };
+                            img.src = url;
+                        }
+                    }
+                }
+            } catch (err) {
+                alert("貼上失敗: " + err);
+            }
         }
-      } catch (err) {
-        alert("貼上失敗: " + err);
-      }
-    }
 
-    function generateImage() {
-      const canvas = document.getElementById("resultCanvas");
-      const ctx = canvas.getContext("2d");
+        function generateImage() {
+            const canvas = document.getElementById("resultCanvas");
+            const ctx = canvas.getContext("2d");
 
-      const scalePercent = parseFloat(document.getElementById("scaleInput").value) || 100;
-      const offsetXValue = parseFloat(document.getElementById("offsetXInput").value) || 0;
-      const offsetYValue = parseFloat(document.getElementById("offsetYInput").value) || 0;
+            const scalePercent = parseFloat(document.getElementById("scaleInput").value) || 100;
+            const offsetXValue = parseFloat(document.getElementById("offsetXInput").value) || 0;
+            const offsetYValue = parseFloat(document.getElementById("offsetYInput").value) || 0;
 
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      if (uploadedImage) {
-        const scale = Math.max(canvas.width / uploadedImage.width, canvas.height / uploadedImage.height) * (scalePercent / 100);
-        const imgWidth = uploadedImage.width * scale;
-        const imgHeight = uploadedImage.height * scale;
-        const offsetX = (canvas.width - imgWidth) / 2 + offsetXValue;
-        const offsetY = (canvas.height - imgHeight) / 2 + offsetYValue;
-        ctx.drawImage(uploadedImage, offsetX, offsetY, imgWidth, imgHeight);
-      }
+            if (uploadedImage) {
+                const scale = Math.max(canvas.width / uploadedImage.width, canvas.height / uploadedImage.height) * (scalePercent / 100);
+                const imgWidth = uploadedImage.width * scale;
+                const imgHeight = uploadedImage.height * scale;
+                const offsetX = (canvas.width - imgWidth) / 2 + offsetXValue;
+                const offsetY = (canvas.height - imgHeight) / 2 + offsetYValue;
+                ctx.drawImage(uploadedImage, offsetX, offsetY, imgWidth, imgHeight);
+            }
 
-      const inputs = document.querySelectorAll("#textInputs input");
-      const textLines = Array.from(inputs).map(input => input.value).filter(text => text);
+            const inputs = document.querySelectorAll("#textInputs input");
+            const textLines = Array.from(inputs).map(input => input.value).filter(text => text);
 
-      const fontSize = 48;
-      const lineSpacing = 30;
-      const totalTextHeight = textLines.length * fontSize + (textLines.length - 1) * lineSpacing;
-      const baseY = 1200 - 50 - totalTextHeight;
+            const fontSize = 48;
+            const lineSpacing = 30;
+            const totalTextHeight = textLines.length * fontSize + (textLines.length - 1) * lineSpacing;
+            const baseY = 1200 - 50 - totalTextHeight;
 
-      ctx.font = `${fontSize}px GenSenRounded, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
+            ctx.font = `${fontSize}px GenSenRounded, sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
 
-      textLines.forEach((text, index) => {
-        const y = baseY + index * (fontSize + lineSpacing) + fontSize / 2;
-        const textWidth = ctx.measureText(text).width;
-        const padding = 32;
+            textLines.forEach((text, index) => {
+                const y = baseY + index * (fontSize + lineSpacing) + fontSize / 2;
+                const textWidth = ctx.measureText(text).width;
+                const padding = 32;
 
-        ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
-        drawRoundedRect(ctx, (canvas.width - textWidth) / 2 - padding, y - fontSize / 2 - 10, textWidth + padding * 2, fontSize + 20, 12);
-        ctx.fill();
+                ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
+                drawRoundedRect(ctx, (canvas.width - textWidth) / 2 - padding, y - fontSize / 2 - 10, textWidth + padding * 2, fontSize + 20, 12);
+                ctx.fill();
 
-        ctx.fillStyle = "white";
-        ctx.fillText(text, canvas.width / 2, y);
-      });
+                ctx.fillStyle = "white";
+                ctx.fillText(text, canvas.width / 2, y);
+            });
 
-      const link = document.getElementById("downloadLink");
-      link.href = canvas.toDataURL("image/jpeg");
-      link.style.display = "inline-block";
-    }
+            const link = document.getElementById("downloadLink");
+            link.href = canvas.toDataURL("image/jpeg");
+            link.style.display = "inline-block";
+        }
 
-    window.onload = () => {
-      addTextInput();
-    };
-  </script>
+        window.onload = () => {
+            addTextInput();
+        };
+    </script>
 </body>
+
 </html>
