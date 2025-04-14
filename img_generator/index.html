@@ -51,9 +51,7 @@
         #downloadLink {
             display: none;
         }
-
-
-        </style>
+    </style>
 </head>
 
 <body class="container">
@@ -76,6 +74,14 @@
                 max="300" value="0"></label>
         <label class="form-label">Y 軸偏移（px）：<input type="range" class="form-range" id="offsetYInput" min="-300"
                 max="300" value="0"></label>
+        <label class="form-label">字體大小（px）：<input type="range" class="form-range" id="fontSizeInput" min="24" max="80"
+                value="48"></label>
+        <label class="form-label">行距（px）：<input type="range" class="form-range" id="lineSpacingInput" min="10" max="100"
+                value="30"></label>
+        <div class="text-end">
+            <button class="btn btn-sm btn-outline-dark" onclick="resetImageControls()">預設值</button>
+        </div>
+
     </div>
 
     <div id="textInputs" class="mb-4"></div>
@@ -94,6 +100,15 @@
     <script>
         let uploadedImage = null;
         const uploadStatus = document.getElementById("uploadStatus");
+
+        function resetImageControls() {
+            document.getElementById("scaleInput").value = 100;
+            document.getElementById("offsetXInput").value = 0;
+            document.getElementById("offsetYInput").value = 0;
+            document.getElementById("fontSizeInput").value = 48;
+            document.getElementById("lineSpacingInput").value = 30;
+            generateImage();
+        }
 
         function toggleImageControls() {
             const controls = document.getElementById("imageControls");
@@ -139,7 +154,7 @@
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        ["scaleInput", "offsetXInput", "offsetYInput"].forEach(id => {
+        ["scaleInput", "offsetXInput", "offsetYInput", "fontSizeInput", "lineSpacingInput"].forEach(id => {
             document.getElementById(id).addEventListener("input", generateImage);
         });
 
@@ -173,6 +188,9 @@
             const scalePercent = parseFloat(document.getElementById("scaleInput").value) || 100;
             const offsetXValue = parseFloat(document.getElementById("offsetXInput").value) || 0;
             const offsetYValue = parseFloat(document.getElementById("offsetYInput").value) || 0;
+            const fontSize = parseFloat(document.getElementById("fontSizeInput").value) || 48;
+            const lineSpacing = parseFloat(document.getElementById("lineSpacingInput").value) || 30;
+
 
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -189,8 +207,6 @@
             const inputs = document.querySelectorAll("#textInputs input");
             const textLines = Array.from(inputs).map(input => input.value).filter(text => text);
 
-            const fontSize = 48;
-            const lineSpacing = 30;
             const totalTextHeight = textLines.length * fontSize + (textLines.length - 1) * lineSpacing;
             const baseY = 1200 - 50 - totalTextHeight;
 
