@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube 留言分析</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+
+</head>
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+
+
+<body class="p-4">
+    <!-- 側邊目錄 -->
+    <div
+        style="position: fixed; top: 0; left: 0; height: 100vh; width: 180px; background-color: #f8f9fa; padding: 1rem; overflow-y: auto; border-right: 1px solid #ddd;">
+        <h5>📚 目錄</h5>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="#upload">📂 上傳檔案</a></li>
+            <li class="nav-item"><a class="nav-link" href="#chart">📈 折線圖</a></li>
+            <li class="nav-item"><a class="nav-link" href="#top">💬 熱門留言</a></li>
+            <li class="nav-item"><a class="nav-link" href="#stats">👤 觀眾統計</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h2 class="mb-4">📊 YouTube 留言分析工具</h2>
+
+        <!-- 上傳 CSV 檔案 -->
+        <div class="mb-3" id="upload">
+            <label for="csvFile" class="form-label">上傳留言 CSV 檔案：</label>
+            <input class="form-control" type="file" id="csvFile" accept=".csv">
+        </div>
+        <div class="mb-4">
+            <button class="btn btn-primary" onclick="analyzeData()">開始分析</button>
+        </div>
+
+        <!-- 關鍵字篩選 -->
+        <div class="mb-3">
+            <label for="keywords" class="form-label">輸入篩選關鍵字（以逗號分隔）：</label>
+            <input class="form-control" type="text" id="keywords" placeholder="例如：降落,醬肉">
+        </div>
+        <!-- 觀眾名稱篩選 -->
+        <div class="mb-3">
+            <label for="userFilter" class="form-label">輸入觀眾名稱（可留空）：</label>
+            <input class="form-control" type="text" id="userFilter" placeholder="例如：降落、阿布、小羽...">
+        </div>
+
+
+        <div class="mb-5" id="chart">
+            <h5>📈 留言數與時間折線圖</h5>
+            <canvas id="timeChart"></canvas>
+        </div>
+
+        <div class="mb-5" id="top">
+            <h5>💬 熱門留言</h5>
+            <ul id="topComments" class="list-group"></ul>
+        </div>
+
+        <div class="mb-5" id="stats">
+            <h5>👤 觀眾留言統計</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>使用者</th>
+                        <th>留言次數</th>
+                        <th>首次留言時間</th>
+                        <th>最後留言時間</th>
+                    </tr>
+                </thead>
+                <tbody id="userStats"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let allData = []
+        function parseTimeToSeconds(t) {
+            const isNegative = t.startsWith('-')
+            const parts = t.replace('-', '').split(':').map(Number)
+            let seconds = 0
+
+            if (parts.length === 2) {
+                seconds = parts[0] * 60 + parts[1]
+            } else if (parts.length === 3) {
+                seconds = parts[0] * 3600 + parts[1] * 60 + parts[2]
+            }
+
+            return isNegative ? -seconds : seconds
+        }
+
+        function formatSecondsToTime(sec) {
+            const isNegative = sec < 0
+            const abs = Math.abs(sec)
+            const h = Math.floor(abs / 3600)
+            const m = Math.floor((abs % 3600) / 60)
+            const s = abs % 60
+            const parts = h > 0 ? [h, m, s] : [m, s]
+            return (isNegative ? '-' : '') + parts.map(p => String(p).padStart(2, '0')).join(':')
+        }
+
+        function aggregateData(rawSeconds, binSize = 30) {
+            const bins = {}
+            rawSeconds.forEach(sec => {
+                const bin = Math.floor(sec / binSize) * binSize
+                bins[bin] = (bins[bin] || 0) + 1
+            })
+            const sortedBins = Object.keys(bins).map(Number).sort((a, b) => a - b)
+            const labels = sortedBins.map(s => formatSecondsToTime(s))
+            const values = sortedBins.map(s => bins[s])
+            return { labels, values }
+        }
+
+        function analyzeData() {
+            const keywordInput = document.getElementById("keywords").value.trim()
+            const keywords = keywordInput.split(',').map(k => k.trim()).filter(k => k)
+            const userFilter = document.getElementById("userFilter").value.trim().toLowerCase()
+
+            const filtered = allData.filter(row =>
+                (keywords.length === 0 || keywords.some(k => row.comment.includes(k))) &&
+                (userFilter === '' || row.user.toLowerCase().includes(userFilter))
+            )
+
+            // 留言數與時間圖表資料整理
+            const rawTimeData = []
+            filtered.forEach(row => {
+                const sec = parseTimeToSeconds(row.time)
+                rawTimeData.push(sec)
+            })
+
+            function parseTimeToSeconds(t) {
+                const isNegative = t.startsWith('-')
+                const parts = t.replace('-', '').split(':').map(Number)
+                let seconds = 0
+
+                if (parts.length === 2) {
+                    // mm:ss
+                    seconds = parts[0] * 60 + parts[1]
+                } else if (parts.length === 3) {
+                    // hh:mm:ss
+                    seconds = parts[0] * 3600 + parts[1] * 60 + parts[2]
+                }
+
+                return isNegative ? -seconds : seconds
+            }
+
+            // 將時間以秒為基準排序
+            const { labels, values } = aggregateData(rawTimeData, 30) // 初始 30 秒間距
+            renderLineChart(labels, values, rawTimeData)
+
+            // 留言內容排序（不含空白）
+            const commentMap = {}
+            filtered.forEach(row => {
+                const text = row.comment.trim()
+                if (text === '') return
+                commentMap[text] = (commentMap[text] || 0) + 1
+            })
+            const topComments = Object.entries(commentMap).sort((a, b) => b[1] - a[1])
+            renderTopComments(topComments)
+
+            // 使用者留言次數 + 首次/最後留言時間
+            const userMap = {}
+            filtered.forEach(row => {
+                if (!userMap[row.user]) {
+                    userMap[row.user] = { count: 1, first: row.time, last: row.time, avatar: row.avatar }
+                } else {
+                    userMap[row.user].count++
+                    const rowTimeSec = parseTimeToSeconds(row.time)
+                    const firstTimeSec = parseTimeToSeconds(userMap[row.user].first)
+                    const lastTimeSec = parseTimeToSeconds(userMap[row.user].last)
+
+                    userMap[row.user].first = rowTimeSec < firstTimeSec ? row.time : userMap[row.user].first
+                    userMap[row.user].last = rowTimeSec > lastTimeSec ? row.time : userMap[row.user].last
+                }
+            })
+            const sortedUsers = Object.entries(userMap).sort((a, b) => b[1].count - a[1].count)
+            renderUserStats(sortedUsers)
+        }
+
+        function renderLineChart(labels, values, rawTimeData) {
+            const ctx = document.getElementById("timeChart").getContext("2d")
+            if (window.lineChart) window.lineChart.destroy()
+
+            window.lineChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels,
+                    datasets: [{
+                        label: "留言數",
+                        data: values,
+                        fill: false,
+                        borderColor: '#32a1ce',
+                        tension: 0.1,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        zoom: {
+                            zoom: {
+                                wheel: { enabled: true },
+                                pinch: { enabled: true },
+                                mode: 'x',
+                                onZoomComplete({ chart }) {
+                                    const xScale = chart.scales.x
+                                    const minLabel = xScale.min
+                                    const maxLabel = xScale.max
+
+                                    const minSec = parseTimeToSeconds(minLabel)
+                                    const maxSec = parseTimeToSeconds(maxLabel)
+                                    const visibleRange = maxSec - minSec
+                                    const binSize = Math.max(1, Math.floor(visibleRange / 100)) // 控制約 100 個點內
+
+                                    const { labels, values } = aggregateData(rawTimeData, binSize)
+                                    renderLineChart(labels, values, rawTimeData)
+                                }
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'x'
+                            }
+                        },
+                        legend: {
+                            display: true
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function (tooltipItems) {
+                                    return tooltipItems[0].label
+                                },
+                                label: function (tooltipItem) {
+                                    return `留言數: ${tooltipItem.formattedValue}`
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: '時間' }
+                        },
+                        y: {
+                            title: { display: true, text: '留言數' },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            })
+        }
+
+        function renderTopComments(comments) {
+            const list = document.getElementById("topComments")
+            list.innerHTML = ''
+
+            comments.forEach(([text, count], index) => {
+                const li = document.createElement("li")
+                li.className = "list-group-item d-flex justify-content-between align-items-center"
+
+                // 左側：編號 + 內容
+                const leftDiv = document.createElement("div")
+                leftDiv.className = "d-flex align-items-center"
+
+                const indexSpan = document.createElement("span")
+                indexSpan.textContent = index + 1
+                indexSpan.style.width = '2rem'
+                indexSpan.style.fontWeight = 'bold'
+                indexSpan.style.flexShrink = '0'
+
+                const contentSpan = document.createElement("span")
+                contentSpan.textContent = `${text}（${count}）`
+                contentSpan.style.marginLeft = '0.5rem'
+
+                leftDiv.appendChild(indexSpan)
+                leftDiv.appendChild(contentSpan)
+
+                // 右側：頭像區
+                const avatarDiv = document.createElement("div")
+                avatarDiv.className = "d-flex align-items-center flex-wrap"
+                avatarDiv.style.gap = '4px'
+
+                const matchedUsers = allData.filter(row => row.comment.trim() === text)
+                const seenUsers = new Set()
+                const uniqueUsers = []
+
+                for (let row of matchedUsers) {
+                    if (!seenUsers.has(row.user)) {
+                        seenUsers.add(row.user)
+                        uniqueUsers.push(row)
+                    }
+                }
+
+                const maxDisplay = 8
+                const extraCount = uniqueUsers.length - maxDisplay
+
+                uniqueUsers.slice(0, maxDisplay).forEach(user => {
+                    const img = document.createElement("img")
+                    img.src = user.avatar
+                    img.alt = user.user
+                    img.title = user.user
+                    img.style.width = '36px'
+                    img.style.height = '36px'
+                    img.style.borderRadius = '50%'
+                    img.style.objectFit = 'cover'
+                    avatarDiv.appendChild(img)
+                })
+
+                // 顯示「+N」提示
+                if (extraCount > 0) {
+                    const moreSpan = document.createElement("span")
+                    moreSpan.textContent = `+${extraCount}`
+                    moreSpan.style.marginLeft = '6px'
+                    moreSpan.style.fontWeight = 'bold'
+                    moreSpan.style.fontSize = '14px'
+                    moreSpan.style.color = '#555'
+                    avatarDiv.appendChild(moreSpan)
+                }
+
+                li.appendChild(leftDiv)
+                li.appendChild(avatarDiv)
+                list.appendChild(li)
+            })
+        }
+
+        function renderUserStats(users) {
+            const tbody = document.getElementById("userStats")
+            tbody.innerHTML = ''
+            users.forEach(([user, stat]) => {
+                const tr = document.createElement("tr")
+                tr.innerHTML = `<td><img src="${stat.avatar}" alt="${user}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;margin-right:8px;">${user}</td><td>${stat.count}</td><td>${stat.first}</td><td>${stat.last}</td>`
+                tbody.appendChild(tr)
+            })
+        }
+
+        document.getElementById("csvFile").addEventListener("change", function (e) {
+            Papa.parse(e.target.files[0], {
+                header: true,
+                skipEmptyLines: true,
+                complete: function (results) {
+                    allData = results.data.map(r => ({
+                        time: r['影片內時間'],
+                        user: r['使用者'],
+                        comment: r['留言'],
+                        avatar: r['頭像連結']
+                    }))
+                    // alert("✅ 檔案上傳成功，可開始分析！")
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>
