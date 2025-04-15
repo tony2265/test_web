@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>抽獎查詢系統</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light py-5">
+
+  <div class="container">
+    <div class="card shadow p-4">
+      <h2 class="mb-4">📋 抽獎查詢系統</h2>
+
+      <p>目前總人數：<span class="fw-bold" id="total">載入中...</span></p>
+
+      <div class="mb-3">
+        <label for="phone" class="form-label">輸入手機號碼</label>
+        <input type="text" id="phone" class="form-control" placeholder="請輸入手機後按查詢">
+      </div>
+
+      <button class="btn btn-primary" onclick="search()">查詢抽獎資格</button>
+
+      <div class="result mt-4" id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    const SHEET_URL = "https://opensheet.elk.sh/1gAdM5UBecomcZCYtbb9cyQEJiSf2A0xLlRZi9dmOs6w/raw";
+    let sheetData = [];
+
+    fetch(SHEET_URL)
+      .then(res => res.json())
+      .then(data => {
+        if (!Array.isArray(data)) {
+          throw new Error("回傳格式錯誤，請確認工作表名稱");
+        }
+        sheetData = data;
+        document.getElementById("total").textContent = sheetData.length;
+      })
+      .catch(err => {
+        document.getElementById("total").textContent = "讀取失敗";
+        console.error("資料載入錯誤：", err);
+      });
+
+    function search() {
+      const input = document.getElementById("phone").value.trim();
+      const result = sheetData.find(row => row["手機"] === input);
+
+      const output = document.getElementById("result");
+      if (result) {
+        output.innerHTML = `
+          <div class="alert alert-success">
+            <p><strong>姓名：</strong>${result["姓名"]}</p>
+            <p><strong>手機：</strong>${result["手機"]}</p>
+            <p><strong>Email：</strong>${result["Email"]}</p>
+            <p><strong>發票號碼：</strong>${result["發票號碼"]}</p>
+          </div>
+        `;
+      } else {
+        output.innerHTML = `
+          <div class="alert alert-warning">
+            查無資料，請確認手機號碼是否正確。
+          </div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

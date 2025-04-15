@@ -6,11 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>圖片字幕產生器</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr"></script>
+
     <style>
         @font-face {
             font-family: 'GenSenRounded';
-            src: url('GenSenRounded-M.ttf') format('truetype');
+            src: url('GenSenRounded2TW-M.otf') format('opentype');
         }
+
+        @font-face {
+            font-family: 'NotoSansTC';
+            src: url('NotoSansTC-Medium.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'SourceHanSerifTC';
+            src: url('SourceHanSerifTC-Medium.otf') format('opentype');
+        }
+
 
         body {
             font-family: 'GenSenRounded', sans-serif;
@@ -20,6 +34,7 @@
 
         h2 {
             margin-bottom: 30px;
+            font-weight: 700;
         }
 
         .canvas-wrapper {
@@ -61,44 +76,186 @@
             <input type="file" class="form-control" id="imageInput" accept="image/png, image/jpeg">
         </div>
         <div class="col-md-6">
-            <button class="btn btn-outline-primary w-100" onclick="pasteFromClipboard()">貼上剪貼簿圖片</button>
+            <button class="btn btn-primary w-100" onclick="pasteFromClipboard()">📋貼上剪貼簿圖片</button>
         </div>
     </div>
     <div class="mb-2" id="uploadStatus"></div>
 
-    <button class="btn btn-sm btn-secondary mb-3" onclick="toggleImageControls()">圖片微調選項</button>
-    <div id="imageControls" class="d-none mb-4 border rounded p-3">
-        <label class="form-label">縮放（%）：<input type="range" class="form-range" id="scaleInput" min="50" max="150"
+
+
+    <!-- <button class="btn btn-sm btn-secondary mb-3" onclick="toggleImageControls()">微調選項</button> -->
+    <!-- <div id="imageControls" class="d-none mb-4 border rounded p-3">
+
+        <label class="form-label">圖片縮放（%）：<input type="range" class="form-range" id="scaleInput" min="50" max="150"
                 value="100"></label>
         <label class="form-label">X 軸偏移（px）：<input type="range" class="form-range" id="offsetXInput" min="-300"
                 max="300" value="0"></label>
         <label class="form-label">Y 軸偏移（px）：<input type="range" class="form-range" id="offsetYInput" min="-300"
                 max="300" value="0"></label>
+
         <label class="form-label">字體大小（px）：<input type="range" class="form-range" id="fontSizeInput" min="24" max="80"
                 value="48"></label>
         <label class="form-label">行距（px）：<input type="range" class="form-range" id="lineSpacingInput" min="10" max="100"
                 value="30"></label>
+        <label class="form-label">字體粗細（weight）：<input type="range" class="form-range" id="fontWeightInput" min="100"
+                max="900" step="100" value="400"></label>
+
+        <div class="d-flex flex-wrap gap-4 align-items-center mt-3">
+            <div class="d-flex align-items-center gap-2">
+                <label class="form-label mb-0" style="min-width: 90px;">字體選擇：</label>
+                <select id="fontFamilySelect" class="form-select" onchange="generateImage()" style="font-family: inherit;">
+                    <option value="GenSenRounded" style="font-family: 'GenSenRounded'; font-weight: 400;">GenSenRounded
+                    </option>
+                    <option value="NotoSansTC" style="font-family: 'NotoSansTC'; font-weight: 400;">NotoSansTC</option>
+                    <option value="SourceHanSerifTC" style="font-family: 'SourceHanSerifTC'; font-weight: 400;">
+                        SourceHanSerifTC</option>
+                </select>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <label for="textColorPicker" class="form-label mb-0">文字顏色：</label>
+                <div id="textColorPicker"></div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label for="bgColorPicker" class="form-label mb-0">背景顏色：</label>
+                <div id="bgColorPicker"></div>
+            </div>
+        </div>
+
         <div class="text-end">
             <button class="btn btn-sm btn-outline-dark" onclick="resetImageControls()">預設值</button>
         </div>
 
-    </div>
+    </div> -->
 
-    <div id="textInputs" class="mb-4"></div>
-    <div class="text-center mb-3">
-        <button class="btn btn-outline-success" onclick="addTextInput()">增加文字欄位</button>
-    </div>
 
-    <div class="text-center mb-3">
-        <!-- <button class="btn btn-primary me-2" onclick="generateImage()">產生圖片</button> -->
+    <hr>
+    <h4 class="text-center my-4">文字輸入區</h4>
+
+    <div id="textInputs" class=""></div>
+    <div class="text-center mb-4">
+        <button class="btn btn-success w-100" onclick="addTextInput()">+ 增加文字欄</button>
+    </div>
+    <hr>
+    <h4 class="text-center my-4">圖片生成區</h4>
+
+
+    <!-- <div class="text-center mb-3">
         <a id="downloadLink" class="btn btn-success" download="result.jpg">下載圖片</a>
     </div>
     <div class="canvas-wrapper text-center">
         <canvas id="resultCanvas" width="1200" height="1200"></canvas>
+    </div> -->
+
+    <div class="row">
+        <!-- 左側：微調選項 -->
+        <div class="col-md-4">
+            <!-- <button class="btn btn-sm btn-secondary mb-3 w-100" onclick="toggleImageControls()">微調選項</button> -->
+            <div id="imageControls" class="mb-4 border rounded p-3">
+                <!-- 原本微調選項內的內容（拉桿、選單、Pickr）原封不動放這裡 -->
+
+                <label class="form-label">圖片縮放（%）：<input type="range" class="form-range" id="scaleInput" min="50"
+                        max="150" value="100"></label>
+                <label class="form-label">X 軸偏移（px）：<input type="range" class="form-range" id="offsetXInput" min="-300"
+                        max="300" value="0"></label>
+                <label class="form-label">Y 軸偏移（px）：<input type="range" class="form-range" id="offsetYInput" min="-300"
+                        max="300" value="0"></label>
+
+                <label class="form-label">字體大小（px）：<input type="range" class="form-range" id="fontSizeInput" min="24"
+                        max="80" value="48"></label>
+                <label class="form-label">行距（px）：<input type="range" class="form-range" id="lineSpacingInput" min="10"
+                        max="100" value="30"></label>
+                <label class="form-label">字體粗細（weight）：<input type="range" class="form-range" id="fontWeightInput"
+                        min="100" max="900" step="100" value="400"></label>
+
+                <div class="d-flex flex-wrap gap-4 align-items-center mt-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="form-label mb-0" style="min-width: 90px;">字體選擇：</label>
+                        <select id="fontFamilySelect" class="form-select" onchange="generateImage()"
+                            style="font-family: inherit;">
+                            <option value="GenSenRounded" style="font-family: 'GenSenRounded'; font-weight: 400;">
+                                GenSenRounded
+                            </option>
+                            <option value="NotoSansTC" style="font-family: 'NotoSansTC'; font-weight: 400;">NotoSansTC
+                            </option>
+                            <option value="SourceHanSerifTC" style="font-family: 'SourceHanSerifTC'; font-weight: 400;">
+                                SourceHanSerifTC</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="textColorPicker" class="form-label mb-0">文字顏色：</label>
+                        <div id="textColorPicker"></div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="bgColorPicker" class="form-label mb-0">背景顏色：</label>
+                        <div id="bgColorPicker"></div>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <button class="btn btn-sm btn-outline-dark" onclick="resetImageControls()">預設值</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 右側：圖片與下載 -->
+        <div class="col-md-8">
+            <div class="text-center">
+                <a id="downloadLink" class="btn btn-success w-100" download="result.jpg">下載圖片</a>
+            </div>
+            <div class="canvas-wrapper text-center">
+                <canvas id="resultCanvas" width="1200" height="1200"></canvas>
+            </div>
+        </div>
     </div>
+
+
 
     <script>
         let uploadedImage = null;
+        let textColor = 'rgb(255,255,255)';
+        let bgColor = 'rgba(0,0,0,0.9)';
+
+        const pickrText = Pickr.create({
+            el: '#textColorPicker',
+            theme: 'classic',
+            default: textColor,
+            components: {
+                preview: true,
+                opacity: true,
+                hue: true,
+                interaction: {
+                    input: true,
+                    save: true
+                }
+            }
+        });
+        pickrText.on('save', (color) => {
+            textColor = color.toHEXA().toString();
+            generateImage();
+        });
+
+        const pickrBg = Pickr.create({
+            el: '#bgColorPicker',
+            theme: 'classic',
+            default: bgColor,
+            components: {
+                preview: true,
+                opacity: true,
+                hue: true,
+                interaction: {
+                    input: true,
+                    save: true
+                }
+            }
+        });
+        pickrBg.on('save', (color) => {
+            bgColor = color.toHEXA().toString();
+            generateImage();
+        });
+
         const uploadStatus = document.getElementById("uploadStatus");
 
         function resetImageControls() {
@@ -107,6 +264,14 @@
             document.getElementById("offsetYInput").value = 0;
             document.getElementById("fontSizeInput").value = 48;
             document.getElementById("lineSpacingInput").value = 30;
+            document.getElementById("fontWeightInput").value = 400;
+            document.getElementById("fontFamilySelect").value = "GenSenRounded";
+            textColor = 'rgb(255,255,255)';
+            bgColor = 'rgba(0,0,0,0.9)';
+            pickrText.setColor(textColor);
+            pickrBg.setColor(bgColor);
+
+
             generateImage();
         }
 
@@ -154,7 +319,7 @@
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        ["scaleInput", "offsetXInput", "offsetYInput", "fontSizeInput", "lineSpacingInput"].forEach(id => {
+        ["scaleInput", "offsetXInput", "offsetYInput", "fontSizeInput", "lineSpacingInput", "fontFamilySelect", "fontWeightInput"].forEach(id => {
             document.getElementById(id).addEventListener("input", generateImage);
         });
 
@@ -210,7 +375,9 @@
             const totalTextHeight = textLines.length * fontSize + (textLines.length - 1) * lineSpacing;
             const baseY = 1200 - 50 - totalTextHeight;
 
-            ctx.font = `${fontSize}px GenSenRounded, sans-serif`;
+            const selectedFont = document.getElementById("fontFamilySelect")?.value || "GenSenRounded";
+            const fontWeight = parseInt(document.getElementById("fontWeightInput")?.value) || 400;
+            ctx.font = `${fontWeight} ${fontSize}px '${selectedFont}', sans-serif`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
@@ -219,11 +386,11 @@
                 const textWidth = ctx.measureText(text).width;
                 const padding = 32;
 
-                ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
+                ctx.fillStyle = bgColor;
                 drawRoundedRect(ctx, (canvas.width - textWidth) / 2 - padding, y - fontSize / 2 - 10, textWidth + padding * 2, fontSize + 20, 12);
                 ctx.fill();
 
-                ctx.fillStyle = "white";
+                ctx.fillStyle = textColor;
                 ctx.fillText(text, canvas.width / 2, y);
             });
 
