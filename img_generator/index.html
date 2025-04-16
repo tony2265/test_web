@@ -81,54 +81,6 @@
     </div>
     <div class="mb-2" id="uploadStatus"></div>
 
-
-
-    <!-- <button class="btn btn-sm btn-secondary mb-3" onclick="toggleImageControls()">微調選項</button> -->
-    <!-- <div id="imageControls" class="d-none mb-4 border rounded p-3">
-
-        <label class="form-label">圖片縮放（%）：<input type="range" class="form-range" id="scaleInput" min="50" max="150"
-                value="100"></label>
-        <label class="form-label">X 軸偏移（px）：<input type="range" class="form-range" id="offsetXInput" min="-300"
-                max="300" value="0"></label>
-        <label class="form-label">Y 軸偏移（px）：<input type="range" class="form-range" id="offsetYInput" min="-300"
-                max="300" value="0"></label>
-
-        <label class="form-label">字體大小（px）：<input type="range" class="form-range" id="fontSizeInput" min="24" max="80"
-                value="48"></label>
-        <label class="form-label">行距（px）：<input type="range" class="form-range" id="lineSpacingInput" min="10" max="100"
-                value="30"></label>
-        <label class="form-label">字體粗細（weight）：<input type="range" class="form-range" id="fontWeightInput" min="100"
-                max="900" step="100" value="400"></label>
-
-        <div class="d-flex flex-wrap gap-4 align-items-center mt-3">
-            <div class="d-flex align-items-center gap-2">
-                <label class="form-label mb-0" style="min-width: 90px;">字體選擇：</label>
-                <select id="fontFamilySelect" class="form-select" onchange="generateImage()" style="font-family: inherit;">
-                    <option value="GenSenRounded" style="font-family: 'GenSenRounded'; font-weight: 400;">GenSenRounded
-                    </option>
-                    <option value="NotoSansTC" style="font-family: 'NotoSansTC'; font-weight: 400;">NotoSansTC</option>
-                    <option value="SourceHanSerifTC" style="font-family: 'SourceHanSerifTC'; font-weight: 400;">
-                        SourceHanSerifTC</option>
-                </select>
-            </div>
-
-            <div class="d-flex align-items-center gap-2">
-                <label for="textColorPicker" class="form-label mb-0">文字顏色：</label>
-                <div id="textColorPicker"></div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <label for="bgColorPicker" class="form-label mb-0">背景顏色：</label>
-                <div id="bgColorPicker"></div>
-            </div>
-        </div>
-
-        <div class="text-end">
-            <button class="btn btn-sm btn-outline-dark" onclick="resetImageControls()">預設值</button>
-        </div>
-
-    </div> -->
-
-
     <hr>
     <h4 class="text-center my-4">文字輸入區</h4>
 
@@ -140,13 +92,6 @@
     <h4 class="text-center my-4">圖片生成區</h4>
 
 
-    <!-- <div class="text-center mb-3">
-        <a id="downloadLink" class="btn btn-success" download="result.jpg">下載圖片</a>
-    </div>
-    <div class="canvas-wrapper text-center">
-        <canvas id="resultCanvas" width="1200" height="1200"></canvas>
-    </div> -->
-
     <div class="row">
         <!-- 左側：微調選項 -->
         <div class="col-md-4">
@@ -156,10 +101,14 @@
 
                 <label class="form-label">圖片縮放（%）：<input type="range" class="form-range" id="scaleInput" min="50"
                         max="150" value="100"></label>
-                <label class="form-label">X 軸偏移（px）：<input type="range" class="form-range" id="offsetXInput" min="-300"
+                <label class="form-label">圖片X軸偏移（px）：<input type="range" class="form-range" id="offsetXInput" min="-300"
                         max="300" value="0"></label>
-                <label class="form-label">Y 軸偏移（px）：<input type="range" class="form-range" id="offsetYInput" min="-300"
+                <label class="form-label">圖片Y軸偏移（px）：<input type="range" class="form-range" id="offsetYInput" min="-300"
                         max="300" value="0"></label>
+                <label class="form-label">文字X軸偏移（px）：<input type="range" class="form-range" id="textOffsetX"
+                        min="-300" max="300" value="0"></label>
+                <label class="form-label">文字Y軸偏移（px）：<input type="range" class="form-range" id="textOffsetY"
+                        min="-300" max="300" value="0"></label>
 
                 <label class="form-label">字體大小（px）：<input type="range" class="form-range" id="fontSizeInput" min="24"
                         max="80" value="48"></label>
@@ -262,6 +211,8 @@
             document.getElementById("scaleInput").value = 100;
             document.getElementById("offsetXInput").value = 0;
             document.getElementById("offsetYInput").value = 0;
+            document.getElementById("textOffsetX").value = 0;
+            document.getElementById("textOffsetY").value = 0;
             document.getElementById("fontSizeInput").value = 48;
             document.getElementById("lineSpacingInput").value = 30;
             document.getElementById("fontWeightInput").value = 400;
@@ -319,7 +270,7 @@
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        ["scaleInput", "offsetXInput", "offsetYInput", "fontSizeInput", "lineSpacingInput", "fontFamilySelect", "fontWeightInput"].forEach(id => {
+        ["scaleInput", "offsetXInput", "offsetYInput", "fontSizeInput", "lineSpacingInput", "fontFamilySelect", "fontWeightInput","textOffsetX","textOffsetY"].forEach(id => {
             document.getElementById(id).addEventListener("input", generateImage);
         });
 
@@ -346,6 +297,11 @@
             }
         }
 
+        const textOffsetXInput = document.createElement('input');
+        textOffsetXInput.id = 'textOffsetX';
+        const textOffsetYInput = document.createElement('input');
+        textOffsetYInput.id = 'textOffsetY';
+
         function generateImage() {
             const canvas = document.getElementById("resultCanvas");
             const ctx = canvas.getContext("2d");
@@ -353,6 +309,8 @@
             const scalePercent = parseFloat(document.getElementById("scaleInput").value) || 100;
             const offsetXValue = parseFloat(document.getElementById("offsetXInput").value) || 0;
             const offsetYValue = parseFloat(document.getElementById("offsetYInput").value) || 0;
+            const textOffsetX = parseFloat(document.getElementById("textOffsetX")?.value) || 0;
+            const textOffsetY = parseFloat(document.getElementById("textOffsetY")?.value) || 0;
             const fontSize = parseFloat(document.getElementById("fontSizeInput").value) || 48;
             const lineSpacing = parseFloat(document.getElementById("lineSpacingInput").value) || 30;
 
@@ -373,7 +331,7 @@
             const textLines = Array.from(inputs).map(input => input.value).filter(text => text);
 
             const totalTextHeight = textLines.length * fontSize + (textLines.length - 1) * lineSpacing;
-            const baseY = 1200 - 50 - totalTextHeight;
+            const baseY = 1200 - 50 - totalTextHeight + textOffsetY;
 
             const selectedFont = document.getElementById("fontFamilySelect")?.value || "GenSenRounded";
             const fontWeight = parseInt(document.getElementById("fontWeightInput")?.value) || 400;
@@ -387,11 +345,11 @@
                 const padding = 32;
 
                 ctx.fillStyle = bgColor;
-                drawRoundedRect(ctx, (canvas.width - textWidth) / 2 - padding, y - fontSize / 2 - 10, textWidth + padding * 2, fontSize + 20, 12);
+                drawRoundedRect(ctx, (canvas.width - textWidth) / 2 - padding + textOffsetX, y - fontSize / 2 - 10, textWidth + padding * 2, fontSize + 20, 12);
                 ctx.fill();
 
                 ctx.fillStyle = textColor;
-                ctx.fillText(text, canvas.width / 2, y);
+                ctx.fillText(text, canvas.width / 2 + textOffsetX, y);
             });
 
             const link = document.getElementById("downloadLink");
