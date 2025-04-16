@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告產生器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr"></script>
+    <style>
+        @font-face {
+            font-family: 'GenSenRounded';
+            src: url('GenSenRounded2TW-M.otf') format('opentype');
+        }
+
+        body {
+            font-family: 'GenSenRounded', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ced4da;
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">公告產生器</h2>
+
+        <div class="row">
+
+            <div class="col-md-5">
+                <div id="imageControls" class="mb-4 border rounded p-3">
+
+                    <div class="mb-3">
+                        <!-- <label class="form-label">選擇底圖：</label> -->
+                        <select id="imageSelect" class="form-select">
+                            <option value="duby.png">嘟比</option>
+                            <option value="karin.png">花燐</option>
+                            <option value="akari.png">灯理</option>
+                            <option value="chen.png">陳旭元</option>
+                            <option value="teru.png">煦</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <!-- <label class="form-label">標題：</label> -->
+                        <input type="text" id="titleInput" class="form-control" value="公告標題" placeholder="輸入標題...">
+                    </div>
+                    <div class="mb-3">
+                        <textarea id="contentInput" class="form-control" rows="5" placeholder="輸入內文...">內文</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">內文 X 軸偏移：</label>
+                        <input type="range" id="contentXOffset" class="form-range" min="0" max="400" value="160">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">內文 Y 軸偏移：</label>
+                        <input type="range" id="contentYOffset" class="form-range" min="100" max="600" value="300">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">簽名：</label>
+                        <input type="text" id="signatureInput" class="form-control" value="夢想之都工作室">
+                    </div>
+                    <div class="mb-3">
+                        <!-- <label class="form-label">日期：</label> -->
+                        <input type="date" id="dateInput" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">字體大小：</label>
+                        <input type="range" id="fontSizeInput" class="form-range" min="24" max="80" value="40">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">行距：</label>
+                        <input type="range" id="lineSpacingInput" class="form-range" min="10" max="100" value="30">
+                    </div>
+                    <!-- <div class="mb-3">
+                    <label class="form-label">文字顏色：</label>
+                    <div id="textColorPicker"></div>
+                </div> -->
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="textColorPicker" class="form-label mb-0">文字顏色：</label>
+                        <div id="textColorPicker"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-7">
+                <div class="text-end">
+                    <a id="downloadLink" class="btn btn-success w-100" download="announcement.png">下載圖片</a>
+                </div>
+                <div class="text-center">
+                    <canvas id="resultCanvas" width="1200" height="1200"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById("resultCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const imageSelect = document.getElementById("imageSelect");
+        const titleInput = document.getElementById("titleInput");
+        const contentInput = document.getElementById("contentInput");
+        const contentXOffset = document.getElementById("contentXOffset");
+        const contentYOffset = document.getElementById("contentYOffset");
+        const signatureInput = document.getElementById("signatureInput");
+        const dateInput = document.getElementById("dateInput");
+        const fontSizeInput = document.getElementById("fontSizeInput");
+        const lineSpacingInput = document.getElementById("lineSpacingInput");
+        const downloadLink = document.getElementById("downloadLink");
+
+        let textColor = 'rgb(33,37,41)';
+
+        const pickrText = Pickr.create({
+            el: '#textColorPicker',
+            theme: 'classic',
+            default: textColor,
+            components: {
+                preview: true,
+                opacity: true,
+                hue: true,
+                interaction: {
+                    input: true,
+                    save: true
+                }
+            }
+        });
+
+        pickrText.on('save', (color) => {
+            textColor = color.toHEXA().toString();
+            drawCanvas();
+        });
+
+        function drawCanvas() {
+            const img = new Image();
+            img.src = imageSelect.value;
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+
+                const fontSize = parseInt(fontSizeInput.value);
+                const lineSpacing = parseInt(lineSpacingInput.value);
+                const lines = contentInput.value.split('\n');
+                const offsetX = parseInt(contentXOffset.value);
+                const offsetY = parseInt(contentYOffset.value);
+
+                ctx.fillStyle = textColor;
+                ctx.textAlign = "center";
+                ctx.font = `bold ${fontSize + 24}px GenSenRounded`;
+                ctx.fillText(titleInput.value, canvas.width / 2, 200);
+
+                ctx.textAlign = "left";
+                ctx.font = `${fontSize}px GenSenRounded`;
+                lines.forEach((line, i) => {
+                    ctx.fillText(line, offsetX, offsetY + i * (fontSize + lineSpacing));
+                });
+
+                ctx.textAlign = "right";
+                ctx.fillText(signatureInput.value, canvas.width - 120, canvas.height - 300);
+                ctx.fillText(dateInput.value, canvas.width - 120, canvas.height - 240);
+
+                downloadLink.href = canvas.toDataURL("image/png");
+            }
+        }
+
+        [imageSelect, titleInput, contentInput, signatureInput, dateInput,
+            fontSizeInput, lineSpacingInput, contentXOffset, contentYOffset
+        ].forEach(el => {
+            el.addEventListener("input", drawCanvas);
+        });
+
+        window.onload = () => {
+            dateInput.valueAsDate = new Date();
+            drawCanvas();
+        }
+    </script>
+</body>
+
+</html>
