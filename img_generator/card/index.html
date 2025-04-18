@@ -137,8 +137,8 @@
             return raw.split(/\s|\d{12}$/)[0];
         }
 
-        const sheetId = "1FI25VQu3kEecAK4Jn76ywXYNt_g36fMF5xNeG8FFBK4";
-        const gid = "1";
+        const sheetId = "1FI25VQu3kEecAK4Jn76ywXYNt_g36fMF5xNeG8FFBK4"; //試算表ID
+        const gid = "1"; //表示試算表的第一個分頁
 
         const jsonUrl = `https://opensheet.elk.sh/${sheetId}/${gid}`;
 
@@ -148,6 +148,7 @@
                 sponsorData = [];
 
                 data.forEach((row, index) => {
+                    // 試算表的資料
                     const rawDate = row["訂單日期\n訂單編號"]?.trim().slice(0, 10);
                     const amount = parseInt((row["訂單金額\n(新台幣:元)"] || '0').replace(/,/g, ''));
                     const name = "【灯芯】"+row["贊助者"]?.trim();
