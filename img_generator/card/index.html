@@ -122,11 +122,11 @@
                 drawWrappedText(data.comment, 140, 704, 900, 36, '28px R');
 
                 ctx.fillStyle = '#959393';
-                ctx.fillText(data.date, 888, 868);
+                ctx.fillText(data.date, 888, 908);
                 // 打印 灯灯的話（M字體，多行換行）
                 ctx.font = '28px M';
                 ctx.fillStyle = '#2d2d2d';
-                const akariMsg = document.getElementById('akariMessage').value;
+                const akariMsg = "灯灯想說："+document.getElementById('akariMessage').value;
                 drawWrappedText(akariMsg, 179, 822, 900, 36, '28px M');
 
                 downloadLink.href = canvas.toDataURL('image/png');
