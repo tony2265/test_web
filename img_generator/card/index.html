@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>芯光錄</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'M';
+            src: url('GenSekiGothic2TW-M.otf') format('opentype');
+        }
+
+        @font-face {
+            font-family: 'R';
+            src: url('GenSekiGothic2TW-R.otf') format('opentype');
+        }
+
+        body {
+            font-family: 'R', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        canvas {
+            max-width: 100%;
+            border: 1px solid #ced4da;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">芯光錄</h2>
+        <div class="mb-3">
+            <label for="sponsorSelect" class="form-label">選擇贊助者</label>
+            <select id="sponsorSelect" class="form-select"></select>
+        </div>
+        <div class="mb-3">
+            <textarea id="akariMessage" class="form-control" rows="3" placeholder="請輸入灯灯的話..."></textarea>
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="toggleBackground" checked>
+            <label class="form-check-label" for="toggleBackground">
+                顯示背景圖
+            </label>
+        </div>
+        <div class="text-end mb-3 d-flex justify-content-end gap-2">
+            <a href="https://docs.google.com/spreadsheets/d/1FI25VQu3kEecAK4Jn76ywXYNt_g36fMF5xNeG8FFBK4/edit?usp=sharing"
+                class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                查看試算表
+            </a>
+            <a id="downloadLink" class="btn btn-success" download="shinguang.png">下載圖片</a>
+        </div>
+        <div class="text-center">
+            <canvas id="canvas" width="1200" height="1200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const sponsorSelect = document.getElementById('sponsorSelect');
+        const toggleBackground = document.getElementById('toggleBackground');
+        const downloadLink = document.getElementById('downloadLink');
+
+        let sponsorData = [];
+
+
+        // 自動換行繪製留言
+        function drawWrappedText(text, x, y, maxWidth, lineHeight, font) {
+            ctx.font = font;
+            const words = text.split('');
+            let line = '';
+            let lineCount = 0;
+
+            for (let i = 0; i < words.length; i++) {
+                const testLine = line + words[i];
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && line !== '') {
+                    ctx.fillText(line, x, y + lineCount * lineHeight);
+                    line = words[i];
+                    lineCount++;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y + lineCount * lineHeight);
+        }
+
+        function drawImage(data) {
+            const bg = new Image();
+            const fg = new Image();
+            const levelImg = new Image();
+
+            bg.src = 'akari-bg.png';
+            fg.src = 'akari-txt.png';
+
+            if (data.amount >= 3000) levelImg.src = '1.png';
+            else if (data.amount >= 1000) levelImg.src = '2.png';
+            else levelImg.src = '3.png';
+
+            Promise.all([
+                new Promise(res => { bg.onload = res }),
+                new Promise(res => { fg.onload = res }),
+                new Promise(res => { levelImg.onload = res })
+            ]).then(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (toggleBackground.checked) ctx.drawImage(bg, 0, 0);
+                ctx.drawImage(fg, 0, 0);
+                ctx.drawImage(levelImg, 998, 433);
+
+                ctx.font = '32px M';
+                ctx.fillStyle = '#2d2d2d';
+                ctx.fillText(data.name, 125, 647);
+
+                ctx.font = '28px R';
+                ctx.fillStyle = '#2d2d2d';
+                drawWrappedText(data.comment, 140, 704, 900, 36, '28px R');
+
+                ctx.fillStyle = '#959393';
+                ctx.fillText(data.date, 888, 868);
+                // 打印 灯灯的話（M字體，多行換行）
+                ctx.font = '28px M';
+                ctx.fillStyle = '#2d2d2d';
+                const akariMsg = document.getElementById('akariMessage').value;
+                drawWrappedText(akariMsg, 179, 822, 900, 36, '28px M');
+
+                downloadLink.href = canvas.toDataURL('image/png');
+            });
+        }
+
+        function parseDate(raw) {
+            return raw.split(/\s|\d{12}$/)[0];
+        }
+
+        const sheetId = "1FI25VQu3kEecAK4Jn76ywXYNt_g36fMF5xNeG8FFBK4";
+        const gid = "1";
+
+        const jsonUrl = `https://opensheet.elk.sh/${sheetId}/${gid}`;
+
+        fetch(jsonUrl)
+            .then(res => res.json())
+            .then(data => {
+                sponsorData = [];
+
+                data.forEach((row, index) => {
+                    const rawDate = row["訂單日期\n訂單編號"]?.trim().slice(0, 10);
+                    const amount = parseInt((row["訂單金額\n(新台幣:元)"] || '0').replace(/,/g, ''));
+                    const name = "【灯芯】"+row["贊助者"]?.trim();
+                    const status = row["訂單狀態"]?.trim();
+                    const comment = row["查詢 (歐付寶，需要手動點開輸入，匯入資料頁面為\"實況主收款\"頁面)"]?.trim() || "";
+
+                    if (!name || status !== '交易完成') return;
+
+                    sponsorData.push({
+                        name,
+                        amount,
+                        comment,
+                        date: rawDate,
+                        rowNumber: index + 2
+                    });
+                });
+
+                sponsorSelect.innerHTML = '';
+                sponsorData.forEach((item, i) => {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.textContent = `${item.rowNumber}. ${item.name}`;
+                    sponsorSelect.appendChild(opt);
+                });
+
+                drawImage(sponsorData[0]);
+            });
+
+
+        sponsorSelect.addEventListener('change', () => {
+            drawImage(sponsorData[sponsorSelect.value]);
+        });
+
+        toggleBackground.addEventListener('change', () => {
+            drawImage(sponsorData[sponsorSelect.value]);
+        });
+        document.getElementById('akariMessage').addEventListener('input', () => {
+            drawImage(sponsorData[sponsorSelect.value]);
+        });
+
+    </script>
+</body>
+
+</html>
