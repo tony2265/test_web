@@ -138,7 +138,7 @@
         }
 
         const sheetId = "1FI25VQu3kEecAK4Jn76ywXYNt_g36fMF5xNeG8FFBK4"; //試算表ID
-        const gid = "1"; //表示試算表的第一個分頁
+        const gid = "2"; //表示試算表的第一個分頁
 
         const jsonUrl = `https://opensheet.elk.sh/${sheetId}/${gid}`;
 
@@ -149,13 +149,13 @@
 
                 data.forEach((row, index) => {
                     // 試算表的資料
-                    const rawDate = row["訂單日期\n訂單編號"]?.trim().slice(0, 10);
-                    const amount = parseInt((row["訂單金額\n(新台幣:元)"] || '0').replace(/,/g, ''));
-                    const name = "【灯芯】"+row["贊助者"]?.trim();
+                    const rawDate = row["訂單日期"]?.trim().slice(0, 10);
+                    const amount = parseInt((row["交易金額"] || '0').replace(/,/g, ''));
+                    const name = "【灯芯】"+row["付款人"]?.trim();
                     const status = row["訂單狀態"]?.trim();
-                    const comment = row["查詢 (歐付寶，需要手動點開輸入，匯入資料頁面為\"實況主收款\"頁面)"]?.trim() || "";
+                    const comment = row["贊助者留言"]?.trim() || "";
 
-                    if (!name || status !== '交易完成') return;
+                    // if (!name || status !== '交易完成') return;
 
                     sponsorData.push({
                         name,
