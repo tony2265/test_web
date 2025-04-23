@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <title>詩肯周周抽</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light py-5">
+
+  <div class="container">
+    <div class="card shadow p-4">
+      <h2 class="mb-4">📋 詩肯周周抽</h2>
+
+      <p>目前總人數：<span class="fw-bold" id="total">載入中...</span></p>
+
+      <div class="mb-3">
+        <label for="phone" class="form-label">輸入手機號碼</label>
+        <input type="text" id="phone" class="form-control" placeholder="請輸入手機後按查詢">
+      </div>
+
+      <button class="btn btn-primary" onclick="search()">查詢抽獎資格</button>
+
+      <div id="query-result" class="mt-2"></div>
+      <div id="prize-message"></div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    const SHEET_URL = "https://opensheet.elk.sh/1CjvwFfWdEqdP_N6yxt4pRwXkZtB1T7ld7lVdEViq4FA/1";
+    let sheetData = [];
+    function normalizePhone(phone) {
+      return phone.replace(/\D/g, "");
+    }
+    function getTaiwanLocalDateString() {
+      const now = new Date();
+      const taiwanOffset = 8 * 60; // UTC+8
+      const local = new Date(now.getTime() + (taiwanOffset + now.getTimezoneOffset()) * 60000);
+      return local.toISOString().split("T")[0];
+    }
+
+    function getPrizeMessage() {
+      const deadlines = [
+        { date: "2025-04-25", message: "您參加的開獎日期是4/25" },
+        { date: "2025-05-09", message: "您參加的開獎日期是5/9" },
+        { date: "2025-05-23", message: "您參加的開獎日期是5/23" },
+        { date: "2025-06-06", message: "您參加的開獎日期是6/6" },
+        { date: "2025-06-20", message: "您參加的開獎日期是6/20" },
+        { date: "2025-07-04", message: "您參加的開獎日期是7/4" },
+        { date: "2025-07-18", message: "您參加的開獎日期是7/18" },
+        { date: "2025-08-01", message: "您參加的開獎日期是8/1" },
+        { date: "2025-08-15", message: "您參加的開獎日期是8/15" },
+        { date: "2025-08-29", message: "您參加的開獎日期是8/29" },
+      ];
+
+      const todayStr = getTaiwanLocalDateString();
+      
+      console.log("今天的日期：", todayStr); // Debugging log
+      for (let i = 0; i < deadlines.length; i++) {
+        if (todayStr <= deadlines[i].date) {
+          return deadlines[i].message;
+        }
+      }
+
+      return ""; // 沒有對應提示
+    }
+
+
+
+    fetch(SHEET_URL)
+      .then(res => res.json())
+      .then(data => {
+        if (!Array.isArray(data)) {
+          throw new Error("回傳格式錯誤，請確認工作表名稱");
+        }
+        sheetData = data;
+        document.getElementById("total").textContent = sheetData.length;
+      })
+      .catch(err => {
+        document.getElementById("total").textContent = "讀取失敗";
+        console.error("資料載入錯誤：", err);
+      });
+    function search() {
+      const input = document.getElementById("phone").value.trim();
+      const normalizedInput = normalizePhone(input);
+
+      // const result = sheetData.find(row => row["電話一"] === input);
+
+      const result = normalizedInput.trim() === ""
+        ? undefined
+        : sheetData.find(row => normalizePhone(row["電話一"]) === normalizedInput ||
+          normalizePhone(row["電話二"]) === normalizedInput);
+
+
+      // const output = document.getElementById("result");
+      const output = document.getElementById("query-result");
+      const prize = document.getElementById("prize-message");
+
+      if (result) {
+        output.innerHTML = `
+          <div class="alert alert-success">
+            <p><strong>客戶名稱：</strong>${result["客戶名稱"]}</p>
+            <p><strong>電話一：</strong>${result["電話一"]}</p>
+            <p><strong>電話二：</strong>${result["電話二"]}</p>
+            <p><strong>抽獎次數：</strong>${result["抽獎次數"]}</p>
+          </div>
+        `;
+
+        // 加入提示語句
+        const message = getPrizeMessage();
+        prize.innerHTML = `
+          <div class="alert alert-success">
+            ${message}
+          </div>
+        `;
+
+      } else {
+        output.innerHTML = `
+          <div class="alert alert-warning">
+            查無資料，請確認手機號碼是否正確。
+          </div>
+        `;
+        prize.innerHTML = ``;
+      }
+    }
+  </script>
+</body>
+
+</html>
