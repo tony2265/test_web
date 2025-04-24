@@ -48,7 +48,7 @@
             </label>
         </div>
         <div class="text-end mb-3 d-flex justify-content-end gap-2">
-            <a href="https://docs.google.com/spreadsheets/d/1FI25VQu3kEecAK4Jn76ywXYNt_g36fMF5xNeG8FFBK4/edit?usp=sharing"
+            <a href="https://docs.google.com/spreadsheets/d/1FI25VQu3kEecAK4Jn76ywXYNt_g36fMF5xNeG8FFBK4/edit?gid=482403073#gid=482403073"
                 class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                 查看試算表
             </a>
@@ -170,7 +170,7 @@
                 sponsorData.forEach((item, i) => {
                     const opt = document.createElement('option');
                     opt.value = i;
-                    opt.textContent = `${item.rowNumber}. ${item.name}`;
+                    opt.textContent = `${item.rowNumber}. ${item.name} - ${item.date.slice(5, 10)}`;
                     sponsorSelect.appendChild(opt);
                 });
 
