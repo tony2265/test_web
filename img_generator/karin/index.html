@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>燐皇聖旨</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'MasaFont';
+            src: url('MasaFont-Medium.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'NotoSansTC';
+            src: url('NotoSansTC-Medium.ttf') format('truetype');
+        }
+
+
+        body {
+            font-family: 'NotoSansTC', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        canvas {
+            max-width: 100%;
+            border: 1px solid #ced4da;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">燐皇聖旨</h2>
+        <div class="mb-3">
+            <label for="sponsorSelect" class="form-label">選擇贊助者</label>
+            <select id="sponsorSelect" class="form-select"></select>
+        </div>
+        <div class="mb-3">
+            <textarea id="akariMessage" class="form-control" rows="3" placeholder="請輸入留言..."></textarea>
+        </div>
+
+        <div class="text-end mb-3 d-flex justify-content-end gap-2">
+            <a href="https://docs.google.com/spreadsheets/d/1vGbAc1YY4jMXXcCb-NZbKqjM_Jv_ADUgiiD2TUfFBbA/edit?gid=0#gid=0"
+                class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                查看試算表
+            </a>
+            <a id="downloadLink" class="btn btn-success" download="shinguang.png">下載圖片</a>
+        </div>
+        <div class="text-center">
+            <canvas id="canvas" width="1200" height="1200"></canvas>
+        </div>
+    </div>
+    <span id="fontPreload" style="font-family: MasaFont; visibility: hidden; position: absolute;">
+        字體預載入測試
+    </span>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const sponsorSelect = document.getElementById('sponsorSelect');
+        const toggleBackground = document.getElementById('toggleBackground');
+        const downloadLink = document.getElementById('downloadLink');
+
+        let sponsorData = [];
+        let isBgLoaded = false;
+        let isSponsorLoaded = false;
+        function convertToImperialDate(dateStr) {
+            const [year, month, day] = dateStr.split('/').map(Number);
+            const imperialYear = year - 2023; // 2024 是帝燐元年
+
+            return `帝燐${toChineseNumber(imperialYear)}年 ${toChineseNumber(month)}月 ${toChineseNumber(day)}日 敬頒此旨`;
+        }
+
+        function toChineseNumber(num) {
+            const cnNums = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+            if (num <= 10) return cnNums[num];
+            const str = num.toString().split('');
+            return str.map(d => cnNums[parseInt(d)]).join('');
+        }
+
+        function tryDraw() {
+            if (isBgLoaded && isSponsorLoaded) {
+                drawImageWithAkariMessage();
+            }
+        }
+
+        function drawImageWithAkariMessage() {
+            const selectedIndex = sponsorSelect.value;
+            const baseData = sponsorData[selectedIndex];
+            const akariMsg = document.getElementById('akariMessage').value;
+
+            // 將 akariMsg 合併進 data 傳給 drawImage
+            drawImage({ ...baseData, akariMsg });
+        }
+
+        // 自動換行繪製留言
+        function drawVerticalText(text, x, y, maxHeight, lineHeight, font) {
+            ctx.font = font;
+            ctx.textBaseline = 'top';
+            ctx.textAlign = 'right'; // 垂直向下右對齊
+            const paragraphs = text.split('\n');
+
+            let offsetX = 0;
+            for (let p = 0; p < paragraphs.length; p++) {
+                const line = paragraphs[p];
+                let offsetY = 0;
+
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    ctx.fillText(char, x - offsetX, y + offsetY); // ✅ 修正這裡的 x、y
+                    offsetY += lineHeight;
+
+                    if (y + offsetY > maxHeight) {
+                        offsetX += lineHeight;
+                        offsetY = 0;
+                    }
+                }
+
+                offsetX += lineHeight;
+            }
+        }
+
+        const bg = new Image();
+        bg.src = 'karin-bg.png';
+
+        bg.onload = () => {
+            isBgLoaded = true;
+            tryDraw();
+        };
+
+
+        function drawImage(data) {
+            if (!isBgLoaded) return; // 若圖片尚未載入則跳過
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(bg, 0, 0);
+
+            drawVerticalText("" + data.name, 650, 220, 700, 52, '52px MasaFont');
+            drawVerticalText(data.comment, 590, 280, 900, 48, '48px MasaFont');
+            
+            console.log(data.date);
+            const imperialDate = convertToImperialDate(data.date);
+            
+            drawVerticalText(imperialDate, 220, 200, 1000, 48, '48px MasaFont');
+
+            const msg = data.akariMsg || '';
+            drawVerticalText(msg, 870, 280, 900, 48, '48px MasaFont');
+
+            downloadLink.href = canvas.toDataURL('image/png');
+        }
+
+        function parseDate(raw) {
+            return raw.split(/\s|\d{12}$/)[0];
+        }
+
+        const sheetId = "1vGbAc1YY4jMXXcCb-NZbKqjM_Jv_ADUgiiD2TUfFBbA"; //試算表ID
+        const gid = "1"; //表示試算表的第一個分頁
+
+        const jsonUrl = `https://opensheet.elk.sh/${sheetId}/${gid}`;
+
+        fetch(jsonUrl)
+            .then(res => res.json())
+            .then(data => {
+                sponsorData = [];
+
+                data.forEach((row, index) => {
+                    const rawDate = row["訂單日期"]?.trim().slice(0, 10);
+                    const name = "" + row["付款人"]?.trim();
+                    const comment = row["贊助者留言"]?.trim() || "";
+
+                    sponsorData.push({
+                        name,
+                        comment,
+                        date: rawDate,
+                        rowNumber: index + 2
+                    });
+                });
+
+                sponsorSelect.innerHTML = '';
+                sponsorData.forEach((item, i) => {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.textContent = `${item.rowNumber}. ${item.name}`;
+                    sponsorSelect.appendChild(opt);
+                });
+
+                isSponsorLoaded = true;
+                tryDraw(); // ✅ 移到這裡
+            });
+
+        document.getElementById('akariMessage').addEventListener('input', () => {
+            drawImageWithAkariMessage();
+        });
+
+    </script>
+</body>
+
+</html>
