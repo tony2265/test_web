@@ -140,10 +140,10 @@
 
             drawVerticalText("" + data.name, 650, 220, 700, 52, '52px MasaFont');
             drawVerticalText(data.comment, 590, 280, 900, 48, '48px MasaFont');
-            
+
             console.log(data.date);
             const imperialDate = convertToImperialDate(data.date);
-            
+
             drawVerticalText(imperialDate, 220, 200, 1000, 48, '48px MasaFont');
 
             const msg = data.akariMsg || '';
@@ -183,7 +183,7 @@
                 sponsorData.forEach((item, i) => {
                     const opt = document.createElement('option');
                     opt.value = i;
-                    opt.textContent = `${item.rowNumber}. ${item.name}`;
+                    opt.textContent = `${item.rowNumber}. ${item.name} (${item.date.slice(5)})`;
                     sponsorSelect.appendChild(opt);
                 });
 
@@ -192,6 +192,9 @@
             });
 
         document.getElementById('akariMessage').addEventListener('input', () => {
+            drawImageWithAkariMessage();
+        });
+        sponsorSelect.addEventListener('change', () => {
             drawImageWithAkariMessage();
         });
 
