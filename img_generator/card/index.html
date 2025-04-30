@@ -70,24 +70,42 @@
 
 
         // 自動換行繪製留言
-        function drawWrappedText(text, x, y, maxWidth, lineHeight, font) {
+        function drawWrappedText(text, x, y, maxWidth, lineHeight, font, maxLines = 3) {
             ctx.font = font;
-            const words = text.split('');
+            const chars = text.split('');
+            let lines = [];
             let line = '';
-            let lineCount = 0;
 
-            for (let i = 0; i < words.length; i++) {
-                const testLine = line + words[i];
+            for (let i = 0; i < chars.length; i++) {
+                const testLine = line + chars[i];
                 const metrics = ctx.measureText(testLine);
+
                 if (metrics.width > maxWidth && line !== '') {
-                    ctx.fillText(line, x, y + lineCount * lineHeight);
-                    line = words[i];
-                    lineCount++;
+                    lines.push(line);
+                    line = chars[i];
+
+                    if (lines.length === maxLines - 1) {
+                        // 準備最後一行，後續處理省略號
+                        break;
+                    }
                 } else {
                     line = testLine;
                 }
             }
-            ctx.fillText(line, x, y + lineCount * lineHeight);
+
+            // 最後一行處理：補上剩下的文字
+            let remaining = line + chars.slice(lines.join('').length + line.length).join('');
+            while (ctx.measureText(remaining + '...').width > maxWidth && remaining.length > 0) {
+                remaining = remaining.slice(0, -1);
+            }
+            lines.push(remaining + (remaining.length < text.length ? '...' : ''));
+
+            // 繪製行
+            lines.forEach((l, idx) => {
+                if (idx < maxLines) {
+                    ctx.fillText(l, x, y + idx * lineHeight);
+                }
+            });
         }
 
         function drawImage(data) {
@@ -126,7 +144,7 @@
                 // 打印 灯灯的話（M字體，多行換行）
                 ctx.font = '28px M';
                 ctx.fillStyle = '#2d2d2d';
-                const akariMsg = "灯灯想說："+document.getElementById('akariMessage').value;
+                const akariMsg = "灯灯想說：" + document.getElementById('akariMessage').value;
                 drawWrappedText(akariMsg, 179, 822, 900, 36, '28px M');
 
                 downloadLink.href = canvas.toDataURL('image/png');
@@ -151,7 +169,7 @@
                     // 試算表的資料
                     const rawDate = row["訂單日期"]?.trim().slice(0, 10);
                     const amount = parseInt((row["交易金額"] || '0').replace(/,/g, ''));
-                    const name = "【灯芯】"+row["付款人"]?.trim();
+                    const name = "【灯芯】" + row["付款人"]?.trim();
                     const status = row["訂單狀態"]?.trim();
                     const comment = row["贊助者留言"]?.trim() || "";
 
