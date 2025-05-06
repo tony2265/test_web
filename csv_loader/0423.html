@@ -78,7 +78,7 @@
     }
 
     .customer-name {
-      color: #bb1c2a;
+      color: #000;
       font-weight: 700;
       font-size: 48px;
       margin-bottom: 53px;
@@ -136,7 +136,7 @@
       }
 
       .customer-name {
-        color: #bb1c2a;
+        color: #000;
         font-weight: 700;
         font-size: 32px;
         margin-bottom: 34px;
@@ -219,8 +219,20 @@
       const input = document.getElementById("phone").value.trim();
       const normalizedInput = normalizePhone(input);
       const result = normalizedInput === "" ? undefined :
-        sheetData.find(row => normalizePhone(row["電話一"]) === normalizedInput ||
-          normalizePhone(row["電話二"]) === normalizedInput);
+        sheetData.find(row => {
+          return Object.keys(row).some(key => {
+            const cleanKey = key.trim().replace(/\s+/g, "");
+            const value = row[key];
+
+            // 如果 value 是空的，就跳過
+            if (!value) return false;
+
+            if (cleanKey.includes("電話")) {
+              return normalizePhone(value) === normalizedInput;
+            }
+            return false;
+          });
+        });
 
       const output = document.getElementById("query-result");
       const prize = document.getElementById("prize-message");
@@ -240,12 +252,11 @@
       <p class="customer-name">
         客戶名稱：${result["客戶名稱"]}
       </p>
-      <p style="margin:0px">電話一：${formatPhone(result["電話一"])}</p>
-      <p>電話二：${formatPhone(result["電話二"])}</p>
+      <p style="margin:0 0 0 13%;text-align:left;">電話一：${formatPhone(result["電話一"])}<br>電話二：${formatPhone(result["電話二"])}</p>
       <p class="count">抽獎次數：${result["抽獎次數"]}</p>
-    <div class="highlight">
-      ${getPrizeMessage()}
-    </div>
+      <div class="highlight">
+        ${getPrizeMessage()}
+      </div>
 
     </div>
   `;
