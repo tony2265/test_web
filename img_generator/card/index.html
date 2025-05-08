@@ -84,8 +84,7 @@
                     lines.push(line);
                     line = chars[i];
 
-                    if (lines.length === maxLines - 1) {
-                        // 準備最後一行，後續處理省略號
+                    if (lines.length >= maxLines) {
                         break;
                     }
                 } else {
@@ -93,18 +92,27 @@
                 }
             }
 
-            // 最後一行處理：補上剩下的文字
-            let remaining = line + chars.slice(lines.join('').length + line.length).join('');
-            while (ctx.measureText(remaining + '...').width > maxWidth && remaining.length > 0) {
-                remaining = remaining.slice(0, -1);
+            // 加入最後一行
+            if (line) {
+                lines.push(line);
             }
-            lines.push(remaining + (remaining.length < text.length ? '...' : ''));
 
-            // 繪製行
-            lines.forEach((l, idx) => {
-                if (idx < maxLines) {
-                    ctx.fillText(l, x, y + idx * lineHeight);
+            // 判斷是否超過 maxLines
+            const overMax = lines.length > maxLines;
+
+            if (overMax) {
+                // 超過才處理第三行的省略號
+                let lastLine = lines[maxLines - 1];
+                while (ctx.measureText(lastLine + '...').width > maxWidth && lastLine.length > 0) {
+                    lastLine = lastLine.slice(0, -1);
                 }
+                lines[maxLines - 1] = lastLine + '...';
+                lines = lines.slice(0, maxLines);
+            }
+
+            // 繪製
+            lines.forEach((l, idx) => {
+                ctx.fillText(l, x, y + idx * lineHeight);
             });
         }
 
@@ -140,12 +148,12 @@
                 drawWrappedText(data.comment, 140, 692, 900, 36, '28px R');
 
                 ctx.fillStyle = '#959393';
-                ctx.fillText(data.date, 888, 908);
+                ctx.fillText(data.date, 898, 908);
                 // 打印 灯灯的話（M字體，多行換行）
                 ctx.font = '28px M';
                 ctx.fillStyle = '#2d2d2d';
                 const akariMsg = "灯灯想說：" + document.getElementById('akariMessage').value;
-                drawWrappedText(akariMsg, 179, 822, 900, 36, '28px M');
+                drawWrappedText(akariMsg, 179, 822, 870, 36, '28px M');
 
                 downloadLink.href = canvas.toDataURL('image/png');
             });
