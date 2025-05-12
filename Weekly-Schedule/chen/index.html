@@ -266,75 +266,84 @@
 
                 for (const [date, eventName] of Object.entries(schedule)) {
                     const yPosition = artistPosition.y + rowIndex * 145;
-                    const fontSize = eventName.length > 20 ? 30 : 30;
-                    let color = "#3c678c";
-                    let subcolor = "#f6bb90";
-                    let match, timestr, mainTitle, subTitle, raw;
+                    const fontSize = 30;
+                    const defaultColor = "#3c678c"; //休息
+                    const activeColor = "#f1f1f1"; // 直播
+                    const guestColor = "#fe6b6e"; // 客座
+                    const mainTitleColor = "#82ff94"; // 主要標題
+                    const colonColor = activeColor;
+                    const defaultSubColor = "#f6bb90"; // 副標題
+                    const highlightColor = "#f4ff78"; // 附註顏色
+
+                    let color = defaultColor;
+                    let subcolor = defaultSubColor;
                     let sleep = false;
+                    let timestr = "";
+                    let mainTitle = "";
+                    let subTitle = "";
+                    let raw = "";
 
+                    // 1. 分析事件資料
                     if (eventName.includes("休息") || eventName.includes("周末陪女友")) {
-                        color = "#3c678c";
-                        timestr = "";
-                        mainTitle = eventName;
-                        subTitle = "";
                         sleep = true;
-                    }
-                    else {
-                        color = "#f1f1f1";
+                        mainTitle = eventName;
+                    } else {
+                        color = activeColor;
                         let cleanStr = eventName.replace(/【.*?】/g, "").replace(/、/g, "");
-                        match = cleanStr.match(/^(\d{1,2}:\d{2})\s*(.+?)(?:[:：](.+))?$/);
-
-                        [raw, timestr, mainTitle, subTitle = ""] = match;
+                        const match = cleanStr.match(/^(\d{1,2}:\d{2})\s*(.+?)(?:[:：](.+))?$/);
+                        if (match) {
+                            [raw, timestr, mainTitle, subTitle = ""] = match;
+                        }
                     }
 
-                    // 印文字
+                    // 2. 印時間與分隔線
                     drawTextLefted(ctx1, formatDate(date), 'cubic11', 30, artistPosition.x, yPosition, color);
                     drawTextLefted(ctx1, timestr, 'cubic11', fontSize, artistPosition.x + 180, yPosition, color);
-
-                    if (!sleep) drawTextLefted(ctx1, "｜ ", 'cubic11', fontSize, artistPosition.x + 260, yPosition, color); //不休息就白線分隔
-
-
-                    if (!sleep && mainTitle == "客座") drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x + 300, yPosition, "#fe6b6e"); //客座
-                    else if (!sleep) {
-                        drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x + 300, yPosition, "#82ff94");
-
+                    if (!sleep) {
+                        drawTextLefted(ctx1, "｜ ", 'cubic11', fontSize, artistPosition.x + 260, yPosition, color);
                     }
-                    else drawTextLefted(ctx1, "｜ " + mainTitle, 'cubic11', fontSize, artistPosition.x + 260, yPosition, color); //休息文字
 
+                    // 3. 主標題邏輯簡化
+                    let titleText = mainTitle;
+                    let titleColor = mainTitleColor;
+                    let titleX = artistPosition.x + 300;
+
+                    if (sleep) {
+                        titleText = "｜ " + mainTitle;
+                        titleColor = defaultColor;
+                        titleX = artistPosition.x + 260;
+                    } else if (mainTitle === "客座") {
+                        titleColor = guestColor;
+                    }
+
+                    drawTextLefted(ctx1, titleText, 'cubic11', fontSize, titleX, yPosition, titleColor);
+
+                    // 4. 印冒號
                     if (!sleep && raw.includes("：")) {
-                        drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x + 510, yPosition, color);
+                        drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x + 510, yPosition, colonColor);
                     }
 
-                    
-                    // 印副標
-                    console.log("mainTitle:", mainTitle, "subTitle:", subTitle);
-                    // 預設 subcolor
-                    const defaultSubColor = "#f6bb90";
-                    const highlightColor = "#f4ff78";
+                    // 5. 副標處理（支援 feat. / at. 高亮）
+                    function drawSubTitleWithHighlight(ctx, text, x, y, font, size, defaultColor, highlightColor) {
+                        const checkWords = ["feat.", "at."];
 
-                    // 判斷是否含 at. 或 feat.
-                    if (subTitle.includes("feat.")) {
-                        const parts = subTitle.split("feat.");
-                        const before = parts[0];                  // 冒號或其他部分
-                        const after = "feat." + parts[1];           // at. 加上後面的字
-                        drawTextLefted(ctx1, before, 'cubic11', fontSize, artistPosition.x + 540, yPosition, defaultSubColor);
-                        // 用 measureText 取得前段寬度
-                        const textWidth = ctx1.measureText(before).width;
-                        drawTextLefted(ctx1, after, 'cubic11', fontSize, artistPosition.x + 540 + textWidth, yPosition, highlightColor);
+                        for (const keyword of checkWords) {
+                            if (text.includes(keyword)) {
+                                const parts = text.split(keyword);
+                                const before = parts[0];
+                                const after = keyword + parts[1];
 
-                    } else if (subTitle.includes("at.")) {
-                        const parts = subTitle.split("at.");
-                        const before = parts[0];
-                        const after = "at." + parts[1];
-                        drawTextLefted(ctx1, before, 'cubic11', fontSize, artistPosition.x + 540, yPosition, defaultSubColor);
-                        const textWidth = ctx1.measureText(before).width;
-                        drawTextLefted(ctx1, after, 'cubic11', fontSize, artistPosition.x + 540 + textWidth, yPosition, highlightColor);
+                                drawTextLefted(ctx, before, font, size, x, y, defaultColor);
+                                const width = ctx.measureText(before).width;
+                                drawTextLefted(ctx, after, font, size, x + width, y, highlightColor);
+                                return;
+                            }
+                        }
 
-                    } else {
-                        // 一般情況直接整段使用淡橘色
-                        drawTextLefted(ctx1, subTitle, 'cubic11', fontSize, artistPosition.x + 540, yPosition, defaultSubColor);
+                        drawTextLefted(ctx, text, font, size, x, y, defaultColor);
                     }
 
+                    drawSubTitleWithHighlight(ctx1, subTitle, artistPosition.x + 540, yPosition, 'cubic11', fontSize, defaultSubColor, highlightColor);
 
                     rowIndex++;
                 }
