@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css">
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+
     <style>
         @font-face {
             font-family: 'cubic11';
@@ -29,12 +32,48 @@
         <h6>陳旭元</h6>
         <hr>
         <form>
+            <div>
+                <label for="mainHighlightWordsInput" class="form-label"
+                    style="background-color: #0d2b45; color: #fe6b6e;">主標題關鍵詞</label>
+                <input name="mainHighlightWordsInput" id="mainHighlightWordsInput" value="客座">
+            </div>
+            <div class="mb-3">
+                <label for="highlightWordsInput" class="form-label"
+                    style="background-color: #0d2b45;color: #f4ff78;">尾綴關鍵詞</label>
+                <input name="highlightWordsInput" id="highlightWordsInput" value="feat.,at.">
+            </div>
+            <div class="mb-3 text-center">
+                <label class="form-label">顏色設定</label>
+                <div class="d-flex justify-content-center flex-wrap gap-4">
+                    <div class="text-center">
+                        <label for="guestColorPicker" class="form-label d-block small">客座</label>
+                        <input type="color" id="guestColorPicker" value="#fe6b6e"
+                            style="width: 40px; height: 40px; padding: 0; border: none;">
+                    </div>
+                    <div class="text-center">
+                        <label for="mainColorPicker" class="form-label d-block small">主標</label>
+                        <input type="color" id="mainColorPicker" value="#82ff94"
+                            style="width: 40px; height: 40px; padding: 0; border: none;">
+                    </div>
+                    <div class="text-center">
+                        <label for="subColorPicker" class="form-label d-block small">副標</label>
+                        <input type="color" id="subColorPicker" value="#f6bb90"
+                            style="width: 40px; height: 40px; padding: 0; border: none;">
+                    </div>
+                    <div class="text-center">
+                        <label for="highlightColorPicker" class="form-label d-block small">尾綴</label>
+                        <input type="color" id="highlightColorPicker" value="#f4ff78"
+                            style="width: 40px; height: 40px; padding: 0; border: none;">
+                    </div>
+                </div>
+            </div>
 
-            <button type="button" class="btn btn-primary" onclick="generateImages()">生成週表 (需等待幾秒)</button>
+            <button type="button" class="btn btn-primary" onclick="generateImages()">抓取&生成</button>
             <button type="button" class="btn btn-success"
                 onclick="window.open('https://docs.google.com/spreadsheets/d/1rCeUZQb-fj47oFeih8wR8X_kYbLbPnXVwSN-FBUx37I/edit?gid=437236018#gid=437236018', '_blank')">
                 寫週表
             </button>
+            <button type="button" class="btn btn-secondary" onclick="resetDefaults()">恢復預設</button>
 
         </form>
         <div class="container mt-3">
@@ -45,7 +84,7 @@
         </div>
 
     </div>
-    <div class="container-lg text-center">
+    <div class="container-lg text-center" style="max-width: 660px;">
         <a id="download1" class="btn btn-info mt-3" role="button" style="display:none;">下載圖片1</a>
         <canvas id="canvas-preview1" class="img-fluid"></canvas>
 
@@ -56,6 +95,42 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <script>
+
+        const input = document.getElementById('highlightWordsInput');
+        const tagify = new Tagify(input, {
+            delimiters: ",", // 用逗號分隔
+            whitelist: [],   // 也可填入預設推薦詞
+            maxTags: 10,
+            dropdown: {
+                enabled: 0 // 關閉下拉選單
+            }
+        });
+        const mainInput = document.getElementById('mainHighlightWordsInput');
+        const mainTagify = new Tagify(mainInput, {
+            delimiters: ",",
+            whitelist: [],
+            maxTags: 10,
+            dropdown: { enabled: 0 }
+        });
+
+        function resetDefaults() {
+            // 重設顏色
+            document.getElementById('guestColorPicker').value = '#fe6b6e';
+            document.getElementById('mainColorPicker').value = '#82ff94';
+            document.getElementById('subColorPicker').value = '#f6bb90';
+            document.getElementById('highlightColorPicker').value = '#f4ff78';
+
+            // 重設關鍵詞
+            tagify.removeAllTags();
+            tagify.addTags(['feat.', 'at.']);
+
+            mainTagify.removeAllTags();
+            mainTagify.addTags(['客座']);
+
+            // 重新繪製圖像但不重抓資料
+            generateImages(false);
+        }
+
         async function loadFonts() {
             const cubic11 = new FontFace('Cubic11', 'url(Cubic_11.ttf)');
             await cubic11.load();
@@ -162,7 +237,9 @@
             return `${month}/${day} (${weekday[1]})`;
         }
 
-        async function generateImages() {
+        let cachedSchedule = null;
+
+        async function generateImages(fetchNewData = true) {
             const previewCanvas = document.getElementById('canvas-preview1');
             const previewCtx = previewCanvas.getContext('2d');
             previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
@@ -178,22 +255,67 @@
                 progressBar.textContent = `${percentage}% - ${stage}`;
             }
 
-
             try {
-
                 updateProgress(10, '正在加載字體...');
-
                 await loadFonts();
 
-                updateProgress(30, '正在獲取數據...');
-                const data = await fetchSheetData();
+                let schedule = cachedSchedule;
+                if (fetchNewData || !cachedSchedule) {
+                    updateProgress(30, '正在獲取數據...');
+                    const data = await fetchSheetData();
+
+                    updateProgress(40, '正在處理資料...');
+                    schedule = {};
+                    const { startOfWeek, endOfWeek } = getWeekDates();
+                    const currentDate = new Date(startOfWeek);
+                    currentDate.setDate(currentDate.getDate() + 1);
+
+                    while (currentDate <= endOfWeek) {
+                        const dateFormatted = currentDate.toISOString().split('T')[0];
+                        schedule[dateFormatted] = null;
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+
+                    for (const row of data.slice(1)) {
+                        const dateStr = row[4];
+                        const event = row[8];
+                        const datePart = dateStr.split(' ')[0];
+                        const currentYear = new Date().getFullYear();
+                        const currentMonth = new Date().getMonth() + 1;
+                        const eventMonth = parseInt(datePart.split('/')[0], 10);
+                        let eventYear = currentYear;
+                        if (eventMonth < currentMonth && currentMonth === 12) eventYear += 1;
+
+                        const date = new Date(`${eventYear}/${datePart}`);
+                        const dateFormatted = date.toLocaleDateString('zh-TW', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        }).replace(/\//g, '-');
+
+                        if (startOfWeek <= date && date <= endOfWeek) {
+                            if (!schedule[dateFormatted]) {
+                                schedule[dateFormatted] = event;
+                            }
+                        }
+                    }
+
+                    for (const date in schedule) {
+                        if (!schedule[date]) {
+                            const dayOfWeek = new Date(date).getDay();
+                            schedule[date] = (dayOfWeek === 0 || dayOfWeek === 6) ? "周末陪女友" : "休息";
+                        }
+                    }
+
+                    cachedSchedule = schedule;
+                }
 
                 updateProgress(50, '正在加載背景...');
                 const canvas1 = document.getElementById('canvas1');
                 const ctx1 = canvas1.getContext('2d');
                 const background1 = new Image();
-                const timestamp = new Date().getTime(); // 取得當前時間戳記
-                background1.src = `bg.jpg?cache=${timestamp}`; // 加上時間戳記
+                const timestamp = new Date().getTime();
+                background1.src = `bg.jpg?cache=${timestamp}`;
                 await new Promise(resolve => background1.onload = resolve);
 
                 updateProgress(70, '正在繪製圖片...');
@@ -201,79 +323,19 @@
                 canvas1.height = background1.height;
                 ctx1.drawImage(background1, 0, 0);
 
-                const schedule = {};
-                const { startOfWeek, endOfWeek } = getWeekDates();
-                const currentDate = new Date(startOfWeek);
-                currentDate.setDate(currentDate.getDate() + 1);
-
-                while (currentDate <= endOfWeek) {
-                    const dateFormatted = currentDate.toISOString().split('T')[0];
-                    schedule[dateFormatted] = null; // 先填入 null，後續決定是否填入節目
-                    currentDate.setDate(currentDate.getDate() + 1); // 移動到下一天
-                }
-
-                const importantEvents = [];
-                console.log(schedule);
-
-
-                for (const row of data.slice(1)) {
-
-                    const dateStr = row[4];
-                    const timeStr = row[5];
-                    const event = row[8];
-                    const datePart = dateStr.split(' ')[0];
-                    const currentYear = new Date().getFullYear();
-                    const currentMonth = new Date().getMonth() + 1;
-                    const eventMonth = parseInt(datePart.split('/')[0], 10);
-
-                    let eventYear = currentYear;
-                    if (eventMonth < currentMonth && currentMonth === 12) {
-                        eventYear += 1; // 如果跨年，事件日期屬於下一年
-                    }
-
-                    date = new Date(`${eventYear}/${datePart}`);
-                    dateFormatted = date.toLocaleDateString('zh-TW', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                    }).replace(/\//g, '-');
-                    if (startOfWeek <= date && date <= endOfWeek) {
-                        console.log(date);
-                        console.log(dateFormatted);
-
-                        let eventName = event;
-
-                        if (!schedule[dateFormatted]) {
-                            schedule[dateFormatted] = eventName;
-
-                        }
-                    }
-
-                }
-                console.log(schedule);
-
-                for (const date in schedule) {
-                    if (!schedule[date]) {
-                        const dayOfWeek = new Date(date).getDay();
-                        const eventName = (dayOfWeek === 0 || dayOfWeek === 6) ? "周末陪女友" : "休息";
-                        schedule[date] = eventName;
-                    }
-                }
-
-
                 const artistPosition = { x: 140, y: 153 };
                 let rowIndex = 0;
 
                 for (const [date, eventName] of Object.entries(schedule)) {
                     const yPosition = artistPosition.y + rowIndex * 145;
                     const fontSize = 30;
-                    const defaultColor = "#3c678c"; //休息
-                    const activeColor = "#f1f1f1"; // 直播
-                    const guestColor = "#fe6b6e"; // 客座
-                    const mainTitleColor = "#82ff94"; // 主要標題
+                    const defaultColor = "#3c678c";
+                    const activeColor = "#f1f1f1";
                     const colonColor = activeColor;
-                    const defaultSubColor = "#f6bb90"; // 副標題
-                    const highlightColor = "#f4ff78"; // 附註顏色
+                    const guestColor = document.getElementById('guestColorPicker').value;
+                    const mainTitleColor = document.getElementById('mainColorPicker').value;
+                    const defaultSubColor = document.getElementById('subColorPicker').value;
+                    const highlightColor = document.getElementById('highlightColorPicker').value;
 
                     let color = defaultColor;
                     let subcolor = defaultSubColor;
@@ -283,7 +345,6 @@
                     let subTitle = "";
                     let raw = "";
 
-                    // 1. 分析事件資料
                     if (eventName.includes("休息") || eventName.includes("周末陪女友")) {
                         sleep = true;
                         mainTitle = eventName;
@@ -296,62 +357,53 @@
                         }
                     }
 
-                    // 2. 印時間與分隔線
                     drawTextLefted(ctx1, formatDate(date), 'cubic11', 30, artistPosition.x, yPosition, color);
                     drawTextLefted(ctx1, timestr, 'cubic11', fontSize, artistPosition.x + 180, yPosition, color);
                     if (!sleep) {
                         drawTextLefted(ctx1, "｜ ", 'cubic11', fontSize, artistPosition.x + 260, yPosition, color);
                     }
 
-                    // 3. 主標題邏輯簡化
                     let titleText = mainTitle;
                     let titleColor = mainTitleColor;
                     let titleX = artistPosition.x + 300;
+
+                    const mainHighlightWords = mainTagify.value.map(tag => tag.value.trim()).filter(Boolean);
 
                     if (sleep) {
                         titleText = "｜ " + mainTitle;
                         titleColor = defaultColor;
                         titleX = artistPosition.x + 260;
-                    } else if (mainTitle === "客座") {
+                    } else if (mainHighlightWords.includes(mainTitle)) {
                         titleColor = guestColor;
                     }
-
                     drawTextLefted(ctx1, titleText, 'cubic11', fontSize, titleX, yPosition, titleColor);
 
-                    // 4. 印冒號
                     if (!sleep && raw.includes("：")) {
                         drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x + 510, yPosition, colonColor);
                     }
 
-                    // 5. 副標處理（支援 feat. / at. 高亮）
                     function drawSubTitleWithHighlight(ctx, text, x, y, font, size, defaultColor, highlightColor) {
-                        const checkWords = ["feat.", "at."];
-
+                        const checkWords = tagify.value.map(tag => tag.value.trim()).filter(s => s.length > 0);
                         for (const keyword of checkWords) {
                             if (text.includes(keyword)) {
                                 const parts = text.split(keyword);
                                 const before = parts[0];
                                 const after = keyword + parts[1];
-
                                 drawTextLefted(ctx, before, font, size, x, y, defaultColor);
                                 const width = ctx.measureText(before).width;
                                 drawTextLefted(ctx, after, font, size, x + width, y, highlightColor);
                                 return;
                             }
                         }
-
                         drawTextLefted(ctx, text, font, size, x, y, defaultColor);
                     }
 
                     drawSubTitleWithHighlight(ctx1, subTitle, artistPosition.x + 540, yPosition, 'cubic11', fontSize, defaultSubColor, highlightColor);
-
                     rowIndex++;
                 }
 
-
                 updateProgress(90, '生成預覽...');
                 const previewScale = 1;
-
                 previewCanvas.width = canvas1.width * previewScale;
                 previewCanvas.height = canvas1.height * previewScale;
                 previewCtx.drawImage(canvas1, 0, 0, previewCanvas.width, previewCanvas.height);
@@ -361,6 +413,7 @@
                 downloadLink.download = 'chen-schedule.jpg';
                 downloadLink.style.display = 'block';
                 updateProgress(100, '完成！');
+
             } catch (error) {
                 console.error(error);
                 alert('生成失敗，請重試！');
@@ -369,10 +422,15 @@
                     progressContainer.style.display = 'none';
                 }, 1000);
             }
-
-
         }
 
+        ['guestColorPicker', 'mainColorPicker', 'subColorPicker', 'highlightColorPicker'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                generateImages(false); // 不抓資料，僅重繪
+            });
+        });
+        tagify.on('change', () => generateImages(false));
+        mainTagify.on('change', () => generateImages(false));
 
 
     </script>
