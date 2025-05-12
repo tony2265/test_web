@@ -32,6 +32,13 @@
         <h6>陳旭元</h6>
         <hr>
         <form>
+            <div class="mb-3">
+                <select id="bgSelector" class="form-select" style="max-width: 200px; margin: auto;">
+                    <option value="bg.jpg">正常背景</option>
+                    <option value="week.png">透明背景</option>
+                </select>
+            </div>
+
             <div>
                 <label for="mainHighlightWordsInput" class="form-label"
                     style="background-color: #0d2b45; color: #fe6b6e;">主標題關鍵詞</label>
@@ -315,7 +322,8 @@
                 const ctx1 = canvas1.getContext('2d');
                 const background1 = new Image();
                 const timestamp = new Date().getTime();
-                background1.src = `bg.jpg?cache=${timestamp}`;
+                const bgSrc = document.getElementById('bgSelector').value;
+                background1.src = `${bgSrc}?cache=${timestamp}`;
                 await new Promise(resolve => background1.onload = resolve);
 
                 updateProgress(70, '正在繪製圖片...');
@@ -409,8 +417,8 @@
                 previewCtx.drawImage(canvas1, 0, 0, previewCanvas.width, previewCanvas.height);
 
                 const downloadLink = document.getElementById('download1');
-                downloadLink.href = canvas1.toDataURL('image/jpeg', 0.9);
-                downloadLink.download = 'chen-schedule.jpg';
+                downloadLink.href = canvas1.toDataURL('image/png', 0.9);
+                downloadLink.download = 'chen-schedule.png';
                 downloadLink.style.display = 'block';
                 updateProgress(100, '完成！');
 
@@ -432,6 +440,9 @@
         tagify.on('change', () => generateImages(false));
         mainTagify.on('change', () => generateImages(false));
 
+        document.getElementById('bgSelector').addEventListener('change', () => {
+            generateImages(false); // 不抓資料，只切換背景並重繪
+        });
 
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
