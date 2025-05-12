@@ -8,7 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
-
         @font-face {
             font-family: 'cubic11';
             src: url('Cubic_11.ttf') format('truetype');
@@ -32,10 +31,11 @@
         <form>
 
             <button type="button" class="btn btn-primary" onclick="generateImages()">生成週表 (需等待幾秒)</button>
-            <button type="button" class="btn btn-success" onclick="window.open('https://docs.google.com/spreadsheets/d/1rCeUZQb-fj47oFeih8wR8X_kYbLbPnXVwSN-FBUx37I/edit?gid=437236018#gid=437236018', '_blank')">
+            <button type="button" class="btn btn-success"
+                onclick="window.open('https://docs.google.com/spreadsheets/d/1rCeUZQb-fj47oFeih8wR8X_kYbLbPnXVwSN-FBUx37I/edit?gid=437236018#gid=437236018', '_blank')">
                 寫週表
             </button>
-                        
+
         </form>
         <div class="container mt-3">
             <div class="progress" id="progress-container" style="display:none;">
@@ -43,7 +43,7 @@
                     style="width: 0%;" id="progress-bar">0%</div>
             </div>
         </div>
-        
+
     </div>
     <div class="container-lg text-center">
         <a id="download1" class="btn btn-info mt-3" role="button" style="display:none;">下載圖片1</a>
@@ -101,14 +101,17 @@
         }
 
         function drawTextLefted(ctx, text, font, fontSize, centerX, centerY, fillColor) {
-            ctx.save(); // 保存當前繪圖狀態
-            ctx.translate(centerX, centerY); // 將畫布的原點移到文字的起始點
+            // ctx.save(); // 保存當前繪圖狀態
+            // ctx.translate(centerX, centerY); // 將畫布的原點移到文字的起始點
             // ctx.rotate(-0.030); // 旋轉畫布
             ctx.font = `${fontSize}px ${font}`;
             ctx.fillStyle = fillColor;
             ctx.textAlign = 'left'; // 設置文字左對齊
-            ctx.fillText(text, 0, 0); // 在旋轉後的位置繪製文字
-            ctx.restore(); // 恢復繪圖狀態
+            ctx.textBaseline = 'top'; // 確保 Y 是從文字頂部對齊
+            ctx.fillText(text, centerX, centerY);
+
+            // ctx.fillText(text, 0, 0); // 在旋轉後的位置繪製文字
+            // ctx.restore(); // 恢復繪圖狀態
         }
         function drawRoundedRect(ctx, x, y, width, height, radius, fillColor) {
             ctx.save();
@@ -147,7 +150,7 @@
         }
 
         function formatDate(dateStr) {
-            const date = new Date(dateStr); 
+            const date = new Date(dateStr);
             const options = { month: '2-digit', day: '2-digit', weekday: 'short' };
             const formatter = new Intl.DateTimeFormat('zh-TW', options);
             const parts = formatter.formatToParts(date);
@@ -156,7 +159,7 @@
             const day = parts.find(part => part.type === 'day').value;
             const weekday = parts.find(part => part.type === 'weekday').value;
 
-            return `${month}/${day} (${weekday[1]})`; 
+            return `${month}/${day} (${weekday[1]})`;
         }
 
         async function generateImages() {
@@ -229,10 +232,10 @@
                     }
 
                     date = new Date(`${eventYear}/${datePart}`);
-                    dateFormatted = date.toLocaleDateString('zh-TW', { 
-                        year: 'numeric', 
-                        month: '2-digit', 
-                        day: '2-digit' 
+                    dateFormatted = date.toLocaleDateString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
                     }).replace(/\//g, '-');
                     if (startOfWeek <= date && date <= endOfWeek) {
                         console.log(date);
@@ -258,7 +261,7 @@
                 }
 
 
-                const artistPosition = { x: 140, y: 170 };
+                const artistPosition = { x: 140, y: 153 };
                 let rowIndex = 0;
 
                 for (const [date, eventName] of Object.entries(schedule)) {
@@ -276,39 +279,61 @@
                         subTitle = "";
                         sleep = true;
                     }
-                    else
-                    {
+                    else {
                         color = "#f1f1f1";
                         let cleanStr = eventName.replace(/【.*?】/g, "").replace(/、/g, "");
                         match = cleanStr.match(/^(\d{1,2}:\d{2})\s*(.+?)(?:[:：](.+))?$/);
-                        
+
                         [raw, timestr, mainTitle, subTitle = ""] = match;
                     }
 
                     // 印文字
-                    drawTextLefted(ctx1, formatDate(date), 'cubic11', 30, artistPosition.x , yPosition, color);
-                    drawTextLefted(ctx1, timestr, 'cubic11', fontSize, artistPosition.x+180 , yPosition, color);
+                    drawTextLefted(ctx1, formatDate(date), 'cubic11', 30, artistPosition.x, yPosition, color);
+                    drawTextLefted(ctx1, timestr, 'cubic11', fontSize, artistPosition.x + 180, yPosition, color);
 
-                    if (!sleep) drawTextLefted(ctx1, "｜ ", 'cubic11', fontSize, artistPosition.x+260 , yPosition, color); //不休息就白線分隔
+                    if (!sleep) drawTextLefted(ctx1, "｜ ", 'cubic11', fontSize, artistPosition.x + 260, yPosition, color); //不休息就白線分隔
 
-                    if (!sleep && mainTitle == "客座") drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#fe6b6e"); //客座
-                    else if (!sleep) { 
-                        //其他主標
-                        if (mainTitle.includes("feat.")){
-                            const parts = mainTitle.split(" feat.");
-                            mainTitle = parts[0]; 
-                            subTitle = "feat." + parts[1];
-                            subcolor = "#f4ff78";
-                        }
-                        drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x+300 , yPosition, "#82ff94"); 
+
+                    if (!sleep && mainTitle == "客座") drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x + 300, yPosition, "#fe6b6e"); //客座
+                    else if (!sleep) {
+                        drawTextLefted(ctx1, mainTitle, 'cubic11', fontSize, artistPosition.x + 300, yPosition, "#82ff94");
 
                     }
-                    else drawTextLefted(ctx1, "｜ "+mainTitle, 'cubic11', fontSize, artistPosition.x+260 , yPosition, color); //休息文字
+                    else drawTextLefted(ctx1, "｜ " + mainTitle, 'cubic11', fontSize, artistPosition.x + 260, yPosition, color); //休息文字
 
                     if (!sleep && raw.includes("：")) {
-                        drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x+510 , yPosition, color);
+                        drawTextLefted(ctx1, "：", 'cubic11', fontSize, artistPosition.x + 510, yPosition, color);
                     }
-                    drawTextLefted(ctx1, subTitle, 'cubic11', fontSize, artistPosition.x+540 , yPosition, subcolor); //冒號後的文字
+                    // 印副標
+                    console.log("mainTitle:", mainTitle, "subTitle:", subTitle);
+                    // 預設 subcolor
+                    const defaultSubColor = "#f6bb90";
+                    const highlightColor = "#f4ff78";
+
+                    // 判斷是否含 at. 或 feat.
+                    if (subTitle.includes("feat.")) {
+                        const parts = subTitle.split("feat.");
+                        const before = parts[0];                  // 冒號或其他部分
+                        const after = "feat." + parts[1];           // at. 加上後面的字
+                        drawTextLefted(ctx1, before, 'cubic11', fontSize, artistPosition.x + 540, yPosition, defaultSubColor);
+                        // 用 measureText 取得前段寬度
+                        const textWidth = ctx1.measureText(before).width;
+                        drawTextLefted(ctx1, after, 'cubic11', fontSize, artistPosition.x + 540 + textWidth, yPosition, highlightColor);
+
+                    } else if (subTitle.includes("at.")) {
+                        const parts = subTitle.split("at.");
+                        const before = parts[0];
+                        const after = "at." + parts[1];
+                        drawTextLefted(ctx1, before, 'cubic11', fontSize, artistPosition.x + 540, yPosition, defaultSubColor);
+                        const textWidth = ctx1.measureText(before).width;
+                        drawTextLefted(ctx1, after, 'cubic11', fontSize, artistPosition.x + 540 + textWidth, yPosition, highlightColor);
+
+                    } else {
+                        // 一般情況直接整段使用淡橘色
+                        drawTextLefted(ctx1, subTitle, 'cubic11', fontSize, artistPosition.x + 540, yPosition, defaultSubColor);
+                    }
+
+
                     rowIndex++;
                 }
 
@@ -327,12 +352,12 @@
                 updateProgress(100, '完成！');
             } catch (error) {
                 console.error(error);
-            alert('生成失敗，請重試！');
-        } finally {
-            setTimeout(() => {
-                progressContainer.style.display = 'none';
-            }, 1000);
-        }
+                alert('生成失敗，請重試！');
+            } finally {
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 1000);
+            }
 
 
         }
