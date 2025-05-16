@@ -13,8 +13,8 @@
         }
 
         @font-face {
-            font-family: 'GenSenRounded';
-            src: url('GenSenRounded-M.ttf') format('truetype');
+            font-family: 'SourceHanSerifTC-H';
+            src: url('SourceHanSerifTC-SemiBold.otf') format('opentype');
         }
 
         body {
@@ -63,13 +63,11 @@
     <script>
         async function loadFonts() {
             const sourceHanSerif = new FontFace('SourceHanSerifTC', 'url(SourceHanSerifTC-Medium.otf)');
-            const genSenRounded = new FontFace('GenSenRounded', 'url(GenSenRounded-M.ttf)');
-
+            const sourceHanSerifHeavy = new FontFace('SourceHanSerifTC-H', 'url(SourceHanSerifTC-SemiBold.otf)');
+            await sourceHanSerifHeavy.load();
             await sourceHanSerif.load();
-            await genSenRounded.load();
 
             document.fonts.add(sourceHanSerif);
-            document.fonts.add(genSenRounded);
         }
 
         async function fetchSheetData() {
@@ -299,12 +297,12 @@
                 const lineHeight = 85;
 
                 const yearMonthStr = `${selectedMonday.getFullYear()}${(selectedMonday.getMonth() + 1).toString().padStart(2, '0')}`;
-                drawTextWithSpacing(ctx1, yearMonthStr, 'GenSenRounded', 20, 182, 157, '#535353', 15);
+                drawTextWithSpacing(ctx1, yearMonthStr, 'SourceHanSerifTC-H', 20, 182, 157, '#535353', 15);
                 const monthName = selectedMonday.toLocaleString('en-US', { month: 'long' }).toUpperCase();
 
                 const startX = 180;
                 const y = 220;
-                drawTextWithSpacing(ctx1, monthName, 'SourceHanSerifTC', 50, startX, y, '#646466', 0);
+                drawTextWithSpacing(ctx1, monthName, 'SourceHanSerifTC-H', 50, startX, y, '#646466', 0);
                 const monthWidth = ctx1.measureText(monthName).width;
 
                 const dateX = startX + monthWidth + 20;
@@ -367,7 +365,7 @@
                         drawTextLefted(ctx1, item.time, 'SourceHanSerifTC', 19, baseX, y, '#fff');
 
                     }
-                    drawTextLefted(ctx1, item.event, 'SourceHanSerifTC', 25, baseX + 100, y, '#505c53');
+                    drawTextLefted(ctx1, item.event, 'SourceHanSerifTC-H', 25, baseX + 100, y, '#505c53');
                 });
 
                 updateProgress(90, '生成預覽...');
