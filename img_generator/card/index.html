@@ -156,7 +156,7 @@
 
                     ctx.font = '28px R';
                     ctx.fillStyle = '#2d2d2d';
-                    drawWrappedText(data.comment, 105, 240, 980, 36, '28px R',2);
+                    drawWrappedText(data.comment, 105, 240, 980, 36, '28px R', 2);
 
                     ctx.fillStyle = '#959393';
                     ctx.fillText(data.date, 938, 190);
@@ -164,7 +164,7 @@
                     ctx.font = '28px M';
                     ctx.fillStyle = '#2d2d2d';
                     const akariMsg = "灯灯想說：" + document.getElementById('akariMessage').value;
-                    drawWrappedText(akariMsg, 139, 340, 950, 36, '28px M',1);
+                    drawWrappedText(akariMsg, 139, 340, 950, 36, '28px M', 1);
 
                 }
                 else {
@@ -224,6 +224,7 @@
                         rowNumber: index + 2
                     });
                 });
+                sponsorData.reverse(); // 👉 倒序排列，最新的在最上面
 
                 sponsorSelect.innerHTML = '';
                 sponsorData.forEach((item, i) => {
