@@ -225,7 +225,7 @@
                     });
                 });
                 sponsorData.reverse(); // 👉 倒序排列，最新的在最上面
-
+                sponsorData = sponsorData.slice(0,30); // 👉 只取前30筆資料
                 sponsorSelect.innerHTML = '';
                 sponsorData.forEach((item, i) => {
                     const opt = document.createElement('option');
