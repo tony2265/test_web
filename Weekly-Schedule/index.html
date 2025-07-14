@@ -150,7 +150,7 @@
             const text = await response.text();
             const data = text.split('\n').map(row => row.split(','));
             const firstRow = data[0];
-            const last50Rows = data.slice(-50);
+            const last50Rows = data.slice(-100);
             const filteredData = [firstRow, ...last50Rows];
 
             console.log(filteredData);
