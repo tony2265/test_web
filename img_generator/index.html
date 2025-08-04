@@ -142,6 +142,15 @@
                     </div>
                 </div>
 
+                <!-- 新增：輸出比例選單 -->
+                <div class="mb-3">
+                    <label class="form-label">輸出比例：</label>
+                    <select id="aspectRatioSelect" class="form-select" onchange="changeAspectRatio()">
+                        <option value="1:1" selected>1:1 (正方形)</option>
+                        <option value="16:9">16:9 (橫向)</option>
+                    </select>
+                </div>
+
                 <div class="text-end">
                     <button class="btn btn-sm btn-outline-dark" onclick="resetImageControls()">預設值</button>
                 </div>
@@ -155,6 +164,7 @@
                 <a id="downloadLink" class="btn btn-success w-100" download="result.jpg">下載圖片</a>
             </div>
             <div class="canvas-wrapper text-center">
+                <!-- 修改：canvas 初始寬高設為 1200x1200，後續由 JS 控制 -->
                 <canvas id="resultCanvas" width="1200" height="1200"></canvas>
             </div>
         </div>
@@ -166,6 +176,7 @@
         let uploadedImage = null;
         let textColor = 'rgb(255,255,255)';
         let bgColor = 'rgba(0,0,0,0.9)';
+        let aspectRatio = "1:1"; // 新增：預設比例
 
         const pickrText = Pickr.create({
             el: '#textColorPicker',
@@ -207,6 +218,19 @@
 
         const uploadStatus = document.getElementById("uploadStatus");
 
+        function changeAspectRatio() {
+            aspectRatio = document.getElementById("aspectRatioSelect").value;
+            const canvas = document.getElementById("resultCanvas");
+            if (aspectRatio === "1:1") {
+                canvas.width = 1200;
+                canvas.height = 1200;
+            } else if (aspectRatio === "16:9") {
+                canvas.width = 1600;
+                canvas.height = 900;
+            }
+            generateImage();
+        }
+
         function resetImageControls() {
             document.getElementById("scaleInput").value = 100;
             document.getElementById("offsetXInput").value = 0;
@@ -221,6 +245,8 @@
             bgColor = 'rgba(0,0,0,0.9)';
             pickrText.setColor(textColor);
             pickrBg.setColor(bgColor);
+            document.getElementById("aspectRatioSelect").value = "1:1";
+            changeAspectRatio();
 
 
             generateImage();
@@ -231,15 +257,30 @@
             controls.classList.toggle("d-none");
         }
 
-        function addTextInput(defaultText = '') {
+        function addTextInput(defaultText = '', autoFocus = false) {
             const container = document.getElementById("textInputs");
             const wrapper = document.createElement("div");
             wrapper.className = "text-row";
             wrapper.innerHTML = `
-        <input type="text" class="form-control" placeholder="輸入文字內容..." value="${defaultText}" oninput="generateImage()">
+        <input type="text" class="form-control" placeholder="輸入文字內容..." value="${defaultText}" 
+            oninput="generateImage()" 
+            onkeydown="handleTextInputKey(event, this)">
         <button class="btn btn-outline-danger btn-sm" onclick="this.parentNode.remove(); generateImage();">刪除</button>
       `;
             container.appendChild(wrapper);
+            if (autoFocus) {
+                // 自動 focus 新增的 input
+                const input = wrapper.querySelector('input');
+                input.focus();
+            }
+        }
+
+        // 新增：處理 Enter 鍵事件
+        function handleTextInputKey(e, inputElem) {
+            if (e.key === 'Enter') {
+                addTextInput('', true);
+                e.preventDefault();
+            }
         }
 
         function drawRoundedRect(ctx, x, y, width, height, radius) {
@@ -314,11 +355,12 @@
             const fontSize = parseFloat(document.getElementById("fontSizeInput").value) || 48;
             const lineSpacing = parseFloat(document.getElementById("lineSpacingInput").value) || 30;
 
-
+            // 根據比例調整底色
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             if (uploadedImage) {
+                // 根據比例調整圖片縮放與置中
                 const scale = Math.max(canvas.width / uploadedImage.width, canvas.height / uploadedImage.height) * (scalePercent / 100);
                 const imgWidth = uploadedImage.width * scale;
                 const imgHeight = uploadedImage.height * scale;
@@ -330,8 +372,13 @@
             const inputs = document.querySelectorAll("#textInputs input");
             const textLines = Array.from(inputs).map(input => input.value).filter(text => text);
 
-            const totalTextHeight = textLines.length * fontSize + (textLines.length - 1) * lineSpacing;
-            const baseY = 1200 - 50 - totalTextHeight + textOffsetY;
+            // 根據比例調整文字區域的底部距離
+            let baseY;
+            if (aspectRatio === "1:1") {
+                baseY = canvas.height - 50 - (textLines.length * fontSize + (textLines.length - 1) * lineSpacing) + textOffsetY;
+            } else if (aspectRatio === "16:9") {
+                baseY = canvas.height - 40 - (textLines.length * fontSize + (textLines.length - 1) * lineSpacing) + textOffsetY;
+            }
 
             const selectedFont = document.getElementById("fontFamilySelect")?.value || "GenSenRounded";
             const fontWeight = parseInt(document.getElementById("fontWeightInput")?.value) || 400;
@@ -359,6 +406,7 @@
 
         window.onload = () => {
             addTextInput();
+            changeAspectRatio(); // 初始化比例
         };
     </script>
 </body>
