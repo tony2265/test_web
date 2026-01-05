@@ -96,52 +96,141 @@
 
         async function populateWeekSelect() {
             const data = await fetchSheetData();
-            const dates = new Set();
+
+            // ===== 工具：解析 YYYY/MM/DD（本地時區建 Date，最穩） =====
+            function parseYMDslash(dateStr) {
+                if (!dateStr) return null;
+                const m = dateStr.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+                if (!m) return null;
+
+                const yy = Number(m[1]);
+                const mm = Number(m[2]);
+                const dd = Number(m[3]);
+
+                // 用 new Date(yy, mm-1, dd) 避免字串解析差異
+                const d = new Date(yy, mm - 1, dd);
+                d.setHours(0, 0, 0, 0);
+
+                // 防呆：避免 2026/02/31 被自動滾到 3 月
+                if (d.getFullYear() !== yy || d.getMonth() !== mm - 1 || d.getDate() !== dd) {
+                    return null;
+                }
+                return d;
+            }
+
+            // ===== 工具：取得週一（本地時區） =====
+            function getMondayLocal(date) {
+                const d = new Date(date);
+                const day = d.getDay(); // 0=Sun,1=Mon,...
+                const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                d.setDate(diff);
+                d.setHours(0, 0, 0, 0);
+                return d;
+            }
+
+            // ===== 工具：format YYYY-MM-DD（你原本有 formatDate 也可用）=====
+            function formatDateLocal(date) {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+
+            // ===== 1) 掃描試算表，找出 minDate / maxDate（以日期欄為準） =====
+            let minDate = null;
+            let maxDate = null;
 
             for (let i = 1; i < data.length; i++) {
                 const dateStr = data[i][0];
-                const parsedDate = new Date(dateStr);
-                if (!isNaN(parsedDate)) {
-                    const monday = new Date(getMonday(parsedDate));
-                    monday.setHours(0, 0, 0, 0);
-                    dates.add(monday.getTime());
-                }
+                const d = parseYMDslash(dateStr);
+                if (!d) continue;
+
+                if (!minDate || d < minDate) minDate = d;
+                if (!maxDate || d > maxDate) maxDate = d;
             }
 
-            const sortedTimestamps = Array.from(dates).sort((a, b) => b - a);
-            const select = document.getElementById('week-select');
-            select.innerHTML = '';
-
+            // 如果整張表沒有任何有效日期：退化成只顯示本週（避免選單空）
             const today = new Date();
-            const todayMonday = getMonday(today);
-            todayMonday.setHours(0, 0, 0, 0);
+            const todayMonday = getMondayLocal(today);
 
-            let selectedValue = null;
+            if (!minDate || !maxDate) {
+                const select = document.getElementById('week-select');
+                select.innerHTML = '';
 
-            for (const ts of sortedTimestamps) {
-                const monday = new Date(ts);
+                const monday = todayMonday;
                 const sunday = new Date(monday);
                 sunday.setDate(sunday.getDate() + 6);
 
-                const label = `${monday.getFullYear()}/${(monday.getMonth() + 1).toString().padStart(2, '0')}/${monday.getDate().toString().padStart(2, '0')} ～ ${(sunday.getMonth() + 1).toString().padStart(2, '0')}/${sunday.getDate().toString().padStart(2, '0')}`;
+                const label = `${monday.getFullYear()}/${String(monday.getMonth() + 1).padStart(2, '0')}/${String(monday.getDate()).padStart(2, '0')} ～ ${String(sunday.getMonth() + 1).padStart(2, '0')}/${String(sunday.getDate()).padStart(2, '0')}`;
+
+                const option = document.createElement('option');
+                option.value = formatDateLocal(monday);
+                option.textContent = `${label}（本週）`;
+                select.appendChild(option);
+                select.value = option.value;
+                return;
+            }
+
+            // ===== 2) 以 min/max 推出連續週（週一清單） =====
+            // 從最早日期所在週的週一開始
+            let startMonday = getMondayLocal(minDate);
+
+            // 到最晚日期所在週的週一結束
+            const endMonday = getMondayLocal(maxDate);
+
+            // 額外確保「本週」也在範圍內（表太舊或未來週也能選）
+            if (todayMonday < startMonday) startMonday = todayMonday;
+
+            // 產生所有週一
+            const mondays = [];
+            for (let d = new Date(startMonday); d <= endMonday; d.setDate(d.getDate() + 7)) {
+                d.setHours(0, 0, 0, 0);
+                mondays.push(new Date(d));
+            }
+
+            // 如果 endMonday 比本週早，也把本週加進去（可選未填寫週）
+            if (todayMonday > endMonday) {
+                // 從 endMonday + 7 一路加到 todayMonday
+                for (let d = new Date(endMonday); d < todayMonday; d.setDate(d.getDate() + 7)) {
+                    const next = new Date(d);
+                    next.setDate(next.getDate() + 7);
+                    next.setHours(0, 0, 0, 0);
+                    mondays.push(next);
+                }
+            }
+
+            // ===== 3) 排序：最新在最上 =====
+            mondays.sort((a, b) => b.getTime() - a.getTime());
+
+            // ===== 4) 填入下拉選單 =====
+            const select = document.getElementById('week-select');
+            select.innerHTML = '';
+
+            let selectedValue = null;
+
+            for (const monday of mondays) {
+                const sunday = new Date(monday);
+                sunday.setDate(sunday.getDate() + 6);
+
+                const label = `${monday.getFullYear()}/${String(monday.getMonth() + 1).padStart(2, '0')}/${String(monday.getDate()).padStart(2, '0')} ～ ${String(sunday.getMonth() + 1).padStart(2, '0')}/${String(sunday.getDate()).padStart(2, '0')}`;
+
                 const isThisWeek = monday.getTime() === todayMonday.getTime();
 
                 const option = document.createElement('option');
-                option.value = formatDate(monday);
+                option.value = formatDateLocal(monday);
                 option.textContent = isThisWeek ? `${label}（本週）` : label;
 
-                if (isThisWeek) {
-                    selectedValue = option.value;
-                }
-
+                if (isThisWeek) selectedValue = option.value;
                 select.appendChild(option);
             }
 
             if (selectedValue) {
                 select.value = selectedValue;
+            } else if (select.options.length > 0) {
+                // 若本週不在範圍（理論上不會），就選第一個（最新週）
+                select.selectedIndex = 0;
             }
         }
-
         // 初始執行
         window.onload = async () => {
             await loadFonts();
@@ -258,8 +347,8 @@
                 for (let i = 0; i < 7; i++) {
                     const day = new Date(selectedMonday);
                     day.setDate(selectedMonday.getDate() + i);
-                    const key = day.toISOString().split('T')[0];
-                    weekMap[key] = { date: day, time: '', event: '熄灯' }; // 預設為熄灯
+                    const key = formatDate(day); // ✅ 不用 toISOString()
+                    weekMap[key] = { date: day, time: '', event: '熄灯' };
                 }
 
                 for (let i = 1; i < data.length; i++) {
@@ -269,23 +358,18 @@
                     const timeStr = row[1];
                     const eventStr = row[7];
 
-                    if (!dateStr || !timeStr || !eventStr) {
-                        continue;
-                    }
+                    if (!dateStr || !timeStr || !eventStr) continue;
 
                     const [yy, mm, dd] = dateStr.split('/').map(s => parseInt(s, 10));
-                    if (isNaN(mm) || isNaN(dd)) continue;
+                    if (isNaN(yy) || isNaN(mm) || isNaN(dd)) continue;
 
-                    const currentYear = selectedMonday.getFullYear();
-                    const fullDate = new Date(`${currentYear}-${mm.toString().padStart(2, '0')}-${dd.toString().padStart(2, '0')}T00:00:00`);
+                    const fullDate = new Date(`${yy}-${mm.toString().padStart(2, '0')}-${dd.toString().padStart(2, '0')}T00:00:00`);
 
                     if (fullDate >= selectedMonday && fullDate <= selectedSunday) {
-                        // filteredRows.push({ date: fullDate, time: timeStr, event: eventStr });
-                        const key = fullDate.toISOString().split('T')[0];
+                        const key = formatDate(fullDate); // ✅ 不用 toISOString()
                         if (weekMap[key]) {
                             weekMap[key] = { date: fullDate, time: timeStr, event: eventStr };
                         }
-
                     }
                 }
 
